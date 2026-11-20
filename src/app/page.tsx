@@ -5,10 +5,9 @@ import { useRouter } from "next/navigation";
 import { CultureCard, CultureInfo } from "@/components/hub/CultureCard";
 import { AttractMode } from "@/components/hub/AttractMode";
 import { CRTOverlay } from "@/components/arcade/CRTOverlay";
-import { ArcadeHUD, ArcadeControlsFooter } from "@/components/arcade/ArcadeHUD";
 import { useArcadeInput, ArcadeInputs } from "@/hooks/useArcadeInput";
 import { ArcadeAudio } from "@/utils/audio";
-import { Sparkles, Gamepad2, Play, Users, Tv, Compass, Info } from "lucide-react";
+import { Sparkles, Gamepad2, Play, Users, Tv, Compass, Info, ArrowLeft } from "lucide-react";
 
 const CULTURES: CultureInfo[] = [
   {
@@ -193,111 +192,125 @@ export default function ArcadeLauncherHub() {
       )}
 
       {/* =================================================================== */}
-      {/* 1. EXHIBITION PRESENTATION WELCOME SCREEN                          */}
+      {/* 1. EXHIBITION PRESENTATION WELCOME SCREEN (STARK NEGATIVE B&W)     */}
       {/* =================================================================== */}
       {viewMode === "welcome" ? (
-        <div className="flex-1 flex flex-col justify-between p-4 md:p-6 text-center select-none font-mono relative">
+        <div className="flex-1 flex flex-col justify-between p-4 md:p-6 text-center select-none font-mono bg-black text-white relative">
           {/* Header Marquee */}
           <div className="flex flex-col items-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-cyan-950/60 border-2 border-cyan-400/70 rounded-full mb-2">
-              <Sparkles className="w-3.5 h-3.5 text-cyan-300 animate-spin" />
-              <span className="text-[10px] text-cyan-300 font-bold uppercase tracking-widest">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white text-black border-2 border-white mb-2">
+              <Sparkles className="w-3.5 h-3.5 text-black animate-spin" />
+              <span className="text-[10px] font-bold uppercase tracking-widest">
                 EXHIBITION ARCADE CABINET • GALLERY SHOWCASE
               </span>
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-amber-300 to-magenta-400 drop-shadow-[0_0_15px_rgba(0,240,255,0.7)]">
+            <h1 className="text-3xl md:text-4xl font-bold tracking-[0.25em] text-white uppercase drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]">
               EXO-CULTURES
             </h1>
-            <p className="text-xs text-neutral-400 tracking-wider mt-1">
+            <p className="text-xs text-neutral-300 tracking-wider mt-1">
               4 SPECULATIVE ALIEN CIVILIZATIONS • 14&quot; CRT INSTALLATION
             </p>
           </div>
 
-          {/* Exhibition Experience Statement Card */}
-          <div className="w-full max-w-lg mx-auto bg-neutral-950/80 border-2 border-neutral-700 rounded-xl p-5 shadow-2xl flex flex-col items-center text-center my-auto">
-            <div className="w-full flex items-center justify-between border-b-2 border-neutral-800 pb-2 mb-3 text-[11px] text-neutral-400">
-              <div className="flex items-center gap-1.5 text-amber-300 font-bold">
-                <Users className="w-4 h-4" />
+          {/* Exhibition Statement Card (Negative Contrast Block) */}
+          <div className="w-full max-w-lg mx-auto bg-black border-2 border-white p-6 shadow-[8px_8px_0px_#ffffff] flex flex-col items-center text-center my-auto">
+            <div className="w-full flex items-center justify-between border-b-2 border-white/20 pb-2 mb-3 text-[11px]">
+              <div className="flex items-center gap-1.5 text-white font-bold uppercase tracking-wider">
+                <Users className="w-4 h-4 text-white" />
                 <span>TEAM CREATORS</span>
               </div>
-              <span className="text-neutral-300 font-bold">
+              <span className="text-white font-bold tracking-wide">
                 Maxime • Aisah • Martin • Mana
               </span>
             </div>
 
-            <p className="text-xs md:text-sm text-neutral-300 leading-relaxed mb-4">
-              Welcome to our interactive exhibition experience! Powered by a <strong>Raspberry Pi 400</strong>, custom <strong>8BitDo arcade sticks</strong>, and authentic <strong>15kHz analog RGB CRT output</strong>, this installation lets visitors step into four extraordinary extraterrestrial worlds.
+            <p className="text-xs md:text-sm text-neutral-200 leading-relaxed mb-5">
+              Welcome to our interactive exhibition experience. Powered by a <strong>Raspberry Pi 400</strong>, custom <strong>8BitDo arcade sticks</strong>, and authentic <strong>15kHz analog RGB CRT output</strong>, this installation lets visitors step into four extraordinary extraterrestrial worlds.
             </p>
 
             {/* Hardware & Spec Pills */}
-            <div className="flex flex-wrap justify-center gap-2 mb-5">
-              <span className="flex items-center gap-1 text-[10px] px-2.5 py-1 bg-neutral-900 border border-neutral-700 text-cyan-300 rounded font-bold">
-                <Tv className="w-3 h-3 text-cyan-400" />
-                14&quot; CRT TV (4:3 Native)
+            <div className="flex flex-wrap justify-center gap-2 mb-6">
+              <span className="flex items-center gap-1.5 text-[10px] px-3 py-1 bg-black border-2 border-white text-white font-bold uppercase">
+                <Tv className="w-3 h-3 text-white" />
+                14&quot; CRT TV (4:3)
               </span>
-              <span className="flex items-center gap-1 text-[10px] px-2.5 py-1 bg-neutral-900 border border-neutral-700 text-amber-300 rounded font-bold">
-                <Gamepad2 className="w-3 h-3 text-amber-400" />
+              <span className="flex items-center gap-1.5 text-[10px] px-3 py-1 bg-black border-2 border-white text-white font-bold uppercase">
+                <Gamepad2 className="w-3 h-3 text-white" />
                 8BitDo Arcade Stick
               </span>
-              <span className="flex items-center gap-1 text-[10px] px-2.5 py-1 bg-neutral-900 border border-neutral-700 text-emerald-300 rounded font-bold">
-                <Compass className="w-3 h-3 text-emerald-400" />
+              <span className="flex items-center gap-1.5 text-[10px] px-3 py-1 bg-black border-2 border-white text-white font-bold uppercase">
+                <Compass className="w-3 h-3 text-white" />
                 Locked 60 FPS
               </span>
             </div>
 
-            {/* PROMINENT CALL TO ACTION BUTTON */}
+            {/* PROMINENT NEGATIVE CALL TO ACTION BUTTON */}
             <button
               onClick={enterHub}
-              className="w-full max-w-sm flex items-center justify-center gap-2.5 py-3 px-6 bg-gradient-to-r from-cyan-400 via-amber-300 to-cyan-400 hover:brightness-110 text-black font-bold text-sm tracking-wider uppercase rounded-lg shadow-[0_0_25px_rgba(0,240,255,0.6)] transition-all animate-bounce cursor-pointer"
+              className="w-full max-w-sm flex items-center justify-center gap-3 py-3.5 px-6 bg-white hover:bg-black text-black hover:text-white border-2 border-white font-bold text-sm tracking-[0.15em] uppercase shadow-[5px_5px_0px_#888888] transition-all cursor-pointer active:translate-x-1 active:translate-y-1"
             >
               <Play className="w-4 h-4 fill-current" />
               <span>ENTER THE ARCADE CABINET</span>
             </button>
-            <span className="text-[10px] text-neutral-500 mt-2 font-mono">
+            <span className="text-[10px] text-neutral-400 mt-2 font-mono">
               Press [A] Button, Spacebar, or Click to Start
             </span>
           </div>
 
           {/* Exhibition Footer */}
-          <div className="text-[10px] text-neutral-500 border-t-2 border-neutral-800 pt-2 flex items-center justify-between">
+          <div className="text-[10px] text-neutral-400 border-t-2 border-white/20 pt-2 flex items-center justify-between">
             <span>EXHIBITION INSTALLATION BUILD</span>
             <span>NEXT.JS APP ROUTER • VERCEL</span>
           </div>
         </div>
       ) : (
         /* =================================================================== */
-        /* 2. ARCADE CABINET 4-CULTURES SELECTION HUB                          */
+        /* 2. ARCADE CABINET 4-CULTURES SELECTION HUB (MONOCHROME B&W)        */
         /* =================================================================== */
-        <>
-          <ArcadeHUD
-            title="EXO-CULTURES ARCADE"
-            subtitle="4 ALIEN CIVILIZATIONS • SELECT YOUR WORLD"
-          />
-
-          {/* Subtitle Bar with Back to Exhibition Intro Button */}
-          <div className="flex items-center justify-between mb-2 font-mono">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-amber-400">
-                [0{selectedIndex + 1}/04]
-              </span>
-              <span className="text-xs text-neutral-300 uppercase tracking-wider">
-                {CULTURES[selectedIndex].name} — {CULTURES[selectedIndex].title}
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
+        <div className="flex-1 flex flex-col justify-between font-mono bg-black text-white">
+          {/* Header */}
+          <header className="w-full flex items-center justify-between border-b-2 border-white pb-2 mb-3 select-none">
+            <div className="flex items-center gap-3">
               <button
                 onClick={() => setViewMode("welcome")}
-                className="text-[10px] text-neutral-400 hover:text-white border border-neutral-700 hover:border-neutral-500 px-2 py-0.5 rounded transition-colors flex items-center gap-1"
+                className="flex items-center gap-1.5 px-2.5 py-1 bg-white text-black font-bold text-xs border-2 border-white transition-colors"
               >
-                <Info className="w-3 h-3 text-cyan-400" />
-                <span>EXHIBITION INTRO [B]</span>
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>[B] INTRO</span>
               </button>
+              <div>
+                <h1 className="text-sm md:text-base font-bold tracking-wider text-white uppercase">
+                  EXO-CULTURES ARCADE
+                </h1>
+                <p className="text-[10px] text-neutral-400 tracking-widest">
+                  4 ALIEN CIVILIZATIONS • SELECT YOUR WORLD
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsAttractMode(true)}
-                className="text-[10px] text-cyan-400/80 hover:text-cyan-300 border border-cyan-800/80 hover:border-cyan-400 px-2 py-0.5 rounded transition-colors"
+                className="text-[10px] text-white border-2 border-white px-2 py-0.5 font-bold hover:bg-white hover:text-black transition-colors"
               >
                 [X] PREVIEW REEL
               </button>
+              <div className="hidden sm:flex items-center gap-1 text-[10px] text-white border-2 border-white px-2 py-0.5 font-bold">
+                <span className="w-1.5 h-1.5 bg-white inline-block animate-ping" />
+                <span>FREE PLAY</span>
+              </div>
+            </div>
+          </header>
+
+          {/* Subtitle Bar */}
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-white bg-neutral-900 border border-white px-1.5 py-0.5">
+                [0{selectedIndex + 1}/04]
+              </span>
+              <span className="text-xs text-neutral-200 uppercase tracking-wider font-bold">
+                {CULTURES[selectedIndex].name} — {CULTURES[selectedIndex].title}
+              </span>
             </div>
           </div>
 
@@ -314,8 +327,23 @@ export default function ArcadeLauncherHub() {
             ))}
           </div>
 
-          <ArcadeControlsFooter />
-        </>
+          {/* Footer Controls */}
+          <footer className="w-full mt-auto pt-2 border-t-2 border-white text-[10px] text-neutral-300 flex flex-wrap items-center justify-between select-none">
+            <div className="flex items-center gap-2">
+              <span className="text-white font-bold">JOYSTICK:</span>
+              <span>Move / Aim</span>
+              <span className="text-neutral-600">|</span>
+              <span className="text-white font-bold">[A]</span>
+              <span>Confirm / Launch</span>
+              <span className="text-neutral-600">|</span>
+              <span className="text-white font-bold">[B]</span>
+              <span>Exhibition Intro</span>
+            </div>
+            <div className="text-neutral-400">
+              <span className="text-white font-bold">[SEL+START]</span> Hold 2s Hub
+            </div>
+          </footer>
+        </div>
       )}
     </CRTOverlay>
   );

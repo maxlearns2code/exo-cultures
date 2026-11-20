@@ -26,55 +26,16 @@ interface CultureCardProps {
 }
 
 export function CultureCard({ culture, isSelected, onSelect, onLaunch }: CultureCardProps) {
-  const colorMap = {
-    cyan: {
-      border: "border-cyan-400",
-      borderInactive: "border-cyan-900/40",
-      glow: "shadow-[0_0_24px_rgba(0,240,255,0.45)]",
-      text: "text-cyan-400",
-      bg: "bg-cyan-950/30",
-      badge: "bg-cyan-500/20 text-cyan-300 border-cyan-400/50",
-      accent: "#00f0ff",
-    },
-    emerald: {
-      border: "border-emerald-400",
-      borderInactive: "border-emerald-900/40",
-      glow: "shadow-[0_0_24px_rgba(16,185,129,0.45)]",
-      text: "text-emerald-400",
-      bg: "bg-emerald-950/30",
-      badge: "bg-emerald-500/20 text-emerald-300 border-emerald-400/50",
-      accent: "#10b981",
-    },
-    violet: {
-      border: "border-violet-400",
-      borderInactive: "border-violet-900/40",
-      glow: "shadow-[0_0_24px_rgba(168,85,247,0.45)]",
-      text: "text-violet-400",
-      bg: "bg-violet-950/30",
-      badge: "bg-violet-500/20 text-violet-300 border-violet-400/50",
-      accent: "#a855f7",
-    },
-    amber: {
-      border: "border-amber-400",
-      borderInactive: "border-amber-900/40",
-      glow: "shadow-[0_0_24px_rgba(255,183,3,0.45)]",
-      text: "text-amber-400",
-      bg: "bg-amber-950/30",
-      badge: "bg-amber-500/20 text-amber-300 border-amber-400/50",
-      accent: "#ffb703",
-    },
-  }[culture.themeColor];
-
   const getIcon = () => {
     switch (culture.themeColor) {
       case "cyan":
-        return <Sparkles className="w-4 h-4 text-cyan-400" />;
+        return <Sparkles className="w-4 h-4 text-white" />;
       case "emerald":
-        return <Compass className="w-4 h-4 text-emerald-400" />;
+        return <Compass className="w-4 h-4 text-white" />;
       case "violet":
-        return <Cpu className="w-4 h-4 text-violet-400" />;
+        return <Cpu className="w-4 h-4 text-white" />;
       case "amber":
-        return <Wind className="w-4 h-4 text-amber-400" />;
+        return <Wind className="w-4 h-4 text-white" />;
     }
   };
 
@@ -86,29 +47,31 @@ export function CultureCard({ culture, isSelected, onSelect, onLaunch }: Culture
         onSelect();
         onLaunch();
       }}
-      className={`relative flex flex-col justify-between p-3.5 rounded-lg border-2 transition-all duration-200 cursor-pointer overflow-hidden ${
+      className={`relative flex flex-col justify-between p-3.5 border-2 transition-all duration-150 cursor-pointer overflow-hidden ${
         isSelected
-          ? `${colorMap.border} ${colorMap.glow} ${colorMap.bg} scale-[1.02] z-20`
-          : `${colorMap.borderInactive} bg-neutral-950/60 opacity-80 hover:opacity-100 hover:border-neutral-700`
+          ? "border-white bg-white text-black shadow-[6px_6px_0px_#ffffff] scale-[1.01] z-20"
+          : "border-neutral-800 bg-black text-white opacity-85 hover:opacity-100 hover:border-neutral-500"
       }`}
     >
-      {/* Background Subtle Gradient Glow */}
-      <div
-        className="absolute -top-12 -right-12 w-28 h-28 rounded-full blur-2xl opacity-20 pointer-events-none"
-        style={{ backgroundColor: colorMap.accent }}
-      />
-
       {/* Header with Author and Status Badge */}
       <div className="flex items-center justify-between gap-1 mb-2 z-10">
         <div className="flex items-center gap-1.5">
-          {getIcon()}
-          <span className="text-[11px] font-mono font-bold tracking-widest text-neutral-300 uppercase">
+          <span className={isSelected ? "text-black" : "text-white"}>{getIcon()}</span>
+          <span
+            className={`text-[11px] font-mono font-bold tracking-widest uppercase ${
+              isSelected ? "text-black" : "text-neutral-300"
+            }`}
+          >
             {culture.author}
           </span>
         </div>
         <span
-          className={`text-[9px] font-mono px-2 py-0.5 rounded border uppercase font-bold tracking-wider ${
-            isPlayable ? colorMap.badge : "bg-neutral-900 border-neutral-700 text-neutral-400"
+          className={`text-[9px] font-mono px-2 py-0.5 border uppercase font-bold tracking-wider ${
+            isSelected
+              ? "bg-black text-white border-black"
+              : isPlayable
+              ? "bg-white text-black border-white"
+              : "bg-neutral-900 border-neutral-700 text-neutral-400"
           }`}
         >
           {culture.status}
@@ -117,54 +80,71 @@ export function CultureCard({ culture, isSelected, onSelect, onLaunch }: Culture
 
       {/* Main Culture Title */}
       <div className="z-10 mb-2">
-        <h2 className={`text-base md:text-lg font-bold font-mono tracking-wide ${colorMap.text}`}>
+        <h2 className={`text-base md:text-lg font-bold font-mono tracking-wide ${isSelected ? "text-black" : "text-white"}`}>
           {culture.title}
         </h2>
-        <p className="text-[11px] text-neutral-400 font-mono tracking-tight leading-snug">
+        <p
+          className={`text-[11px] font-mono tracking-tight leading-snug ${
+            isSelected ? "text-neutral-800" : "text-neutral-400"
+          }`}
+        >
           {culture.subtitle}
         </p>
       </div>
 
-      {/* Visual Preview Box */}
-      <div className="relative w-full h-24 md:h-28 bg-black/80 rounded border-2 border-neutral-800 overflow-hidden mb-2 z-10 flex items-center justify-center">
+      {/* Visual Preview Box (Black & White Negative Grayscale) */}
+      <div
+        className={`relative w-full h-24 md:h-28 rounded border-2 overflow-hidden mb-2 z-10 flex items-center justify-center ${
+          isSelected ? "bg-black border-black" : "bg-neutral-950 border-neutral-800"
+        }`}
+      >
         {culture.imageSrc ? (
           <Image
             src={culture.imageSrc}
             alt={culture.title}
             fill
-            className="object-cover opacity-85 hover:opacity-100 transition-opacity"
+            className="object-cover grayscale contrast-150 opacity-90 hover:opacity-100 transition-opacity"
           />
         ) : (
           <div className="flex flex-col items-center justify-center text-center p-2">
-            <Radio className="w-6 h-6 text-neutral-600 mb-1.5 animate-pulse" />
-            <span className="text-[10px] font-mono text-neutral-400 uppercase font-bold tracking-wider">
+            <Radio className="w-6 h-6 text-neutral-500 mb-1.5 animate-pulse" />
+            <span className="text-[10px] font-mono text-neutral-300 uppercase font-bold tracking-wider">
               AWAITING TRANSMISSION
             </span>
-            <span className="text-[8px] font-mono text-neutral-600 mt-0.5">
+            <span className="text-[8px] font-mono text-neutral-500 mt-0.5">
               Portal Chamber Primed
             </span>
           </div>
         )}
 
-        {/* Scanline texture over image */}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
       </div>
 
       {/* Description */}
-      <p className="text-[10px] text-neutral-300/90 leading-relaxed mb-3 line-clamp-2 z-10">
+      <p
+        className={`text-[10px] leading-relaxed mb-3 line-clamp-2 z-10 ${
+          isSelected ? "text-neutral-900 font-medium" : "text-neutral-300/90"
+        }`}
+      >
         {culture.description}
       </p>
 
       {/* Footer launch prompt */}
-      <div className="mt-auto pt-2 border-t-2 border-neutral-800/80 flex items-center justify-between z-10">
+      <div
+        className={`mt-auto pt-2 border-t-2 flex items-center justify-between z-10 ${
+          isSelected ? "border-black/30" : "border-neutral-800/80"
+        }`}
+      >
         <div className="flex items-center gap-1 text-[10px] font-mono">
-          <span className="text-neutral-500 font-bold">STATUS:</span>
-          <span className={isPlayable ? "text-cyan-300 font-bold" : "text-neutral-400"}>
+          <span className={isSelected ? "text-neutral-700 font-bold" : "text-neutral-500 font-bold"}>
+            STATUS:
+          </span>
+          <span className={isSelected ? "text-black font-bold" : "text-neutral-300"}>
             {culture.mechanics[0]}
           </span>
         </div>
         {isSelected ? (
-          <div className="flex items-center gap-1 bg-white text-black font-mono font-bold text-[10px] px-2 py-0.5 rounded animate-pulse shadow-md">
+          <div className="flex items-center gap-1 bg-black text-white font-mono font-bold text-[10px] px-2.5 py-0.5 shadow">
             <Play className="w-3 h-3 fill-current" />
             <span>{isPlayable ? "PRESS [A] PLAY" : "PRESS [A] VIEW"}</span>
           </div>
