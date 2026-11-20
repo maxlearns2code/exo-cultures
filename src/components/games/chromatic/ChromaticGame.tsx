@@ -2,11 +2,28 @@
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import confetti from "canvas-confetti";
-import { LEVELS } from "./levels";
-import { LevelData, WavelengthColor, BeamSegment, Shrine, Crystal } from "./types";
 import { useArcadeInput, ArcadeInputs } from "@/hooks/useArcadeInput";
 import { ArcadeAudio } from "@/utils/audio";
-import { Sparkles, Trophy, RotateCcw, ArrowRight } from "lucide-react";
+import { Sparkles, Trophy, ArrowRight, Flame } from "lucide-react";
+
+export type WavelengthColor = "cyan" | "magenta" | "amber" | "violet";
+
+interface FloatingLeaf {
+  id: number;
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  angle: number;
+  va: number; // angular velocity
+  color: WavelengthColor;
+  awakened: boolean;
+  absorbed: boolean;
+  absorbProgress: number; // 0 to 1
+  startX: number;
+  startY: number;
+  scale: number;
+}
 
 interface Particle {
   x: number;
@@ -23,74 +40,147 @@ interface ChromaticGameProps {
   onReturnToHub: () => void;
 }
 
+const WAVES = [
+  {
+    stage: 1,
+    title: "Wave I: The Wavelength Awakening",
+    subtitle: "Calm Sub-Ice Drift",
+    targetResonance: 5,
+    leafSpeed: 0.7,
+    spawnInterval: 2800,
+    colors: ["cyan", "magenta"] as WavelengthColor[],
+  },
+  {
+    stage: 2,
+    title: "Wave II: Hydrothermal Cryo-Drift",
+    subtitle: "Rising Subterranean Currents",
+    targetResonance: 7,
+    leafSpeed: 1.1,
+    spawnInterval: 2200,
+    colors: ["cyan", "magenta", "amber"] as WavelengthColor[],
+  },
+  {
+    stage: 3,
+    title: "Wave III: The Abyssal Singularity",
+    subtitle: "Dimensional Convergence",
+    targetResonance: 9,
+    leafSpeed: 1.4,
+    spawnInterval: 1700,
+    colors: ["cyan", "magenta", "amber", "violet"] as WavelengthColor[],
+  },
+];
+
 export function ChromaticGame({ onReturnToHub }: ChromaticGameProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // Game state
-  const [currentLevelIndex, setCurrentLevelIndex] = useState(0);
+  // Game Progress
+  const [currentWave, setCurrentWave] = useState(0);
   const [score, setScore] = useState(0);
+  const [portalResonance, setPortalResonance] = useState(0); // 0 to 100
   const [thermalWarmth, setThermalWarmth] = useState(100);
   const [activeWavelength, setActiveWavelength] = useState<WavelengthColor>("cyan");
   const [isMerged, setIsMerged] = useState(false);
-  const [levelCleared, setLevelCleared] = useState(false);
+  const [waveCleared, setWaveCleared] = useState(false);
   const [gameCompleted, setGameCompleted] = useState(false);
+  const [assetsLoaded, setAssetsLoaded] = useState(false);
 
-  // Entities state
-  const levelDataRef = useRef<LevelData>(JSON.parse(JSON.stringify(LEVELS[0])));
-  const playerPosRef = useRef({ x: 260, y: 320, vx: 0, vy: 0, angle: -Math.PI / 2 });
-  const twinPosRef = useRef({ x: 380, y: 320, vx: 0, vy: 0 });
+  // Entities & Simulation Refs
+  const imagesRef = useRef<{
+    bg: HTMLImageElement | null;
+    soil: HTMLImageElement | null;
+    father: HTMLImageElement | null;
+    tree: HTMLImageElement | null;
+    smoke: HTMLImageElement | null;
+    leftKid: HTMLImageElement | null;
+    rightKid: HTMLImageElement | null;
+    leaf: HTMLImageElement | null;
+  }>({
+    bg: null,
+    soil: null,
+    father: null,
+    tree: null,
+    smoke: null,
+    leftKid: null,
+    rightKid: null,
+    leaf: null,
+  });
+
+  const playerPosRef = useRef({ x: 380, y: 380, vx: 0, vy: 0, angle: -Math.PI / 2 });
+  const twinPosRef = useRef({ x: 440, y: 380, vx: 0, vy: 0 });
+  const leavesRef = useRef<FloatingLeaf[]>([]);
   const particlesRef = useRef<Particle[]>([]);
-  const isEmittingBeamRef = useRef(false);
   const activeWavelengthRef = useRef<WavelengthColor>("cyan");
   const isMergedRef = useRef(false);
   const thermalWarmthRef = useRef(100);
+  const portalResonanceRef = useRef(0);
+  const isEmittingBeamRef = useRef(false);
   const prevInputsRef = useRef<ArcadeInputs | null>(null);
+  const lastSpawnTimeRef = useRef(0);
+  const leavesAwakenedCountRef = useRef(0);
 
-  // Reset or load level
-  const loadLevel = useCallback((levelIdx: number) => {
-    const base = LEVELS[levelIdx];
-    if (!base) return;
-    const freshLevel: LevelData = JSON.parse(JSON.stringify(base));
-    levelDataRef.current = freshLevel;
-    playerPosRef.current = {
-      x: freshLevel.playerStart.x,
-      y: freshLevel.playerStart.y,
-      vx: 0,
-      vy: 0,
-      angle: -Math.PI / 2,
-    };
-    twinPosRef.current = {
-      x: freshLevel.twinStart.x,
-      y: freshLevel.twinStart.y,
-      vx: 0,
-      vy: 0,
-    };
-    setLevelCleared(false);
+  // Preload all 8 Photoshop layers
+  useEffect(() => {
+    const layers = [
+      { key: "bg", src: "/assets/chromatic-symbiosis/layers/background.png" },
+      { key: "soil", src: "/assets/chromatic-symbiosis/layers/soil.png" },
+      { key: "father", src: "/assets/chromatic-symbiosis/layers/father.png" },
+      { key: "tree", src: "/assets/chromatic-symbiosis/layers/tree.png" },
+      { key: "smoke", src: "/assets/chromatic-symbiosis/layers/smoke.png" },
+      { key: "leftKid", src: "/assets/chromatic-symbiosis/layers/left-kid.png" },
+      { key: "rightKid", src: "/assets/chromatic-symbiosis/layers/right-kid.png" },
+      { key: "leaf", src: "/assets/chromatic-symbiosis/layers/leaf.png" },
+    ];
+
+    let loadedCount = 0;
+    layers.forEach(({ key, src }) => {
+      const img = new Image();
+      img.src = src;
+      img.onload = () => {
+        // @ts-expect-error dynamic assign
+        imagesRef.current[key] = img;
+        loadedCount++;
+        if (loadedCount === layers.length) {
+          setAssetsLoaded(true);
+        }
+      };
+      img.onerror = () => {
+        console.warn("Could not load image layer:", src);
+        loadedCount++;
+        if (loadedCount === layers.length) {
+          setAssetsLoaded(true);
+        }
+      };
+    });
+  }, []);
+
+  // Initialize or reset wave
+  const startWave = useCallback((waveIndex: number) => {
+    setCurrentWave(waveIndex);
+    setPortalResonance(0);
+    portalResonanceRef.current = 0;
+    leavesAwakenedCountRef.current = 0;
+    leavesRef.current = [];
+    particlesRef.current = [];
+    setWaveCleared(false);
     thermalWarmthRef.current = 100;
     setThermalWarmth(100);
     isMergedRef.current = false;
     setIsMerged(false);
-    particlesRef.current = [];
+    playerPosRef.current = { x: 380, y: 380, vx: 0, vy: 0, angle: -Math.PI / 2 };
+    twinPosRef.current = { x: 440, y: 380, vx: 0, vy: 0 };
   }, []);
 
-  // Initialize first level
-  useEffect(() => {
-    loadLevel(0);
-  }, [loadLevel]);
-
-  // Handle inputs
+  // Handle Arcade Inputs
   const handleInputs = useCallback(
     (inputs: ArcadeInputs) => {
       const prev = prevInputsRef.current;
       prevInputsRef.current = inputs;
 
-      // When level is cleared, pressing [A] advances to next level
-      if (levelCleared) {
+      // In victory/cleared screen: press [A] to advance
+      if (waveCleared) {
         if (inputs.action1 && (!prev || !prev.action1)) {
-          if (currentLevelIndex < LEVELS.length - 1) {
-            const nextIdx = currentLevelIndex + 1;
-            setCurrentLevelIndex(nextIdx);
-            loadLevel(nextIdx);
+          if (currentWave < WAVES.length - 1) {
+            startWave(currentWave + 1);
           } else {
             setGameCompleted(true);
           }
@@ -98,11 +188,10 @@ export function ChromaticGame({ onReturnToHub }: ChromaticGameProps) {
         return;
       }
 
-      // Movement: Joystick or WASD / Arrows
-      const speed = 2.8;
+      // Movement: Joystick or Arrows/WASD
+      const speed = 3.2;
       let vx = 0;
       let vy = 0;
-
       if (inputs.left) vx -= speed;
       if (inputs.right) vx += speed;
       if (inputs.up) vy -= speed;
@@ -121,17 +210,17 @@ export function ChromaticGame({ onReturnToHub }: ChromaticGameProps) {
         ArcadeAudio.playBeamShoot(isMergedRef.current ? "violet" : activeWavelengthRef.current);
       }
 
-      // Action 2: Button B -> Cycle wavelength
+      // Action 2: Button B -> Cycle light frequency
       if (inputs.action2 && (!prev || !prev.action2)) {
         ArcadeAudio.playNavMove();
         const colors: WavelengthColor[] = ["cyan", "magenta", "amber"];
-        const currentIdx = colors.indexOf(activeWavelengthRef.current);
-        const nextColor = colors[(currentIdx + 1) % colors.length];
-        activeWavelengthRef.current = nextColor;
-        setActiveWavelength(nextColor);
+        const curIdx = colors.indexOf(activeWavelengthRef.current);
+        const nextCol = colors[(curIdx + 1) % colors.length];
+        activeWavelengthRef.current = nextCol;
+        setActiveWavelength(nextCol);
       }
 
-      // Action 3: Button X -> Harmonize with Twin / Hold hands
+      // Action 3: Button X -> Whistle / Call twin brother to hold hands
       if (inputs.action3 && (!prev || !prev.action3)) {
         const nextMerged = !isMergedRef.current;
         isMergedRef.current = nextMerged;
@@ -139,20 +228,26 @@ export function ChromaticGame({ onReturnToHub }: ChromaticGameProps) {
         ArcadeAudio.playHarmonizePulse();
       }
 
-      // Action 4: Button Y -> Quick Reset current level
+      // Action 4: Button Y -> Radial harmonic chime
       if (inputs.action4 && (!prev || !prev.action4)) {
-        ArcadeAudio.playCancel();
-        loadLevel(currentLevelIndex);
+        ArcadeAudio.playHarmonizePulse();
+        // Awaken any close matching leaf
+        leavesRef.current.forEach((leaf) => {
+          const d = Math.hypot(leaf.x - playerPosRef.current.x, leaf.y - playerPosRef.current.y);
+          if (d < 140) {
+            leaf.awakened = true;
+          }
+        });
       }
     },
-    [currentLevelIndex, levelCleared, loadLevel]
+    [currentWave, startWave, waveCleared]
   );
 
   const { exitHoldProgress, hasGamepad } = useArcadeInput(handleInputs, onReturnToHub);
 
   // Main 60 FPS Game Loop
   useEffect(() => {
-    let animationId: number;
+    let animId: number;
     let lastTime = performance.now();
 
     const canvas = canvasRef.current;
@@ -160,194 +255,197 @@ export function ChromaticGame({ onReturnToHub }: ChromaticGameProps) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const gameLoop = (timestamp: number) => {
+    // Sprite Bounding Box Constants from layers
+    const LEFT_KID_BOUNDS = { sx: 595, sy: 853, sw: 384, sh: 623 };
+    const RIGHT_KID_BOUNDS = { sx: 371, sy: 852, sw: 384, sh: 623 };
+    const LEAF_BOUNDS = { sx: 580, sy: 659, sw: 219, sh: 316 };
+
+    // Portal tree center in 640x480 coordinate space
+    const TREE_VORTEX_POS = { x: 490, y: 110 };
+    // Father beacon center in 640x480 coordinate space
+    const FATHER_BEACON_POS = { x: 190, y: 310 };
+
+    const loop = (timestamp: number) => {
       const dt = Math.min((timestamp - lastTime) / 1000, 0.1);
       lastTime = timestamp;
 
-      const level = levelDataRef.current;
       const player = playerPosRef.current;
       const twin = twinPosRef.current;
+      const imgs = imagesRef.current;
+      const waveConfig = WAVES[currentWave];
 
-      // 1. Update Player position with boundary checks
+      // 1. Update Player position (bounded to cavern floor & swimming space)
       player.x += player.vx;
       player.y += player.vy;
-      player.x = Math.max(30, Math.min(610, player.x));
-      player.y = Math.max(30, Math.min(450, player.y));
+      player.x = Math.max(60, Math.min(580, player.x));
+      player.y = Math.max(120, Math.min(440, player.y));
 
-      // 2. Update Twin Brother position
+      // 2. Update Twin Brother Position
       if (isMergedRef.current) {
-        // Holding hands: Follow tightly next to player
-        const targetX = player.x + Math.cos(player.angle + Math.PI / 2) * 22;
-        const targetY = player.y + Math.sin(player.angle + Math.PI / 2) * 22;
-        twin.x += (targetX - twin.x) * 0.2;
-        twin.y += (targetY - twin.y) * 0.2;
+        // Holding hands: Locked beside player with glowing energy link
+        const targetX = player.x + 36;
+        const targetY = player.y;
+        twin.x += (targetX - twin.x) * 0.25;
+        twin.y += (targetY - twin.y) * 0.25;
       } else {
-        // Unmerged: Follow player with smooth spring damping
-        const dx = player.x - twin.x;
+        // Unmerged: Smoothly follows player with soft inertia
+        const dx = player.x - 45 - twin.x;
         const dy = player.y - twin.y;
         const dist = Math.hypot(dx, dy);
-        if (dist > 50) {
-          twin.x += dx * 0.04;
-          twin.y += dy * 0.04;
+        if (dist > 15) {
+          twin.x += dx * 0.06;
+          twin.y += dy * 0.06;
         }
       }
 
       // 3. Thermal Warmth Logic
-      // Check distance to Father
-      const distToFather = Math.hypot(player.x - level.fatherPos.x, player.y - level.fatherPos.y);
-      if (distToFather < 85) {
-        // Inside father's warm aura
-        thermalWarmthRef.current = Math.min(100, thermalWarmthRef.current + 35 * dt);
+      const distToFather = Math.hypot(player.x - FATHER_BEACON_POS.x, player.y - FATHER_BEACON_POS.y);
+      if (distToFather < 110) {
+        // Standing in Father's warm thermal aura: rapid recharge
+        thermalWarmthRef.current = Math.min(100, thermalWarmthRef.current + 45 * dt);
       } else if (isMergedRef.current) {
-        // Brothers holding hands generates body heat
-        thermalWarmthRef.current = Math.min(100, thermalWarmthRef.current + 10 * dt);
+        // Brothers holding hands generates familial warmth
+        thermalWarmthRef.current = Math.min(100, thermalWarmthRef.current + 12 * dt);
       } else {
-        // In the dark ocean: slowly losing warmth
-        thermalWarmthRef.current = Math.max(0, thermalWarmthRef.current - 3.5 * dt);
+        // Cold ocean water slowly cools the player
+        thermalWarmthRef.current = Math.max(0, thermalWarmthRef.current - 4 * dt);
       }
       setThermalWarmth(Math.round(thermalWarmthRef.current));
 
-      // 4. Raycast Light Beams
-      const beamSegments: BeamSegment[] = [];
+      // 4. Spawn Floating Autumn Leaves
+      if (
+        !waveCleared &&
+        timestamp - lastSpawnTimeRef.current > waveConfig.spawnInterval &&
+        leavesRef.current.length < 6
+      ) {
+        lastSpawnTimeRef.current = timestamp;
+        const randomColor = waveConfig.colors[Math.floor(Math.random() * waveConfig.colors.length)];
+        const startX = Math.random() * 380 + 160;
+        const startY = 40;
 
-      if (isEmittingBeamRef.current) {
-        const effectiveColor = isMergedRef.current ? "violet" : activeWavelengthRef.current;
-        let curX = player.x;
-        let curY = player.y;
-        let curAngle = player.angle;
-        let curColor = effectiveColor;
-        let bounces = 0;
-        const maxBounces = 3;
+        leavesRef.current.push({
+          id: Math.random(),
+          x: startX,
+          y: startY,
+          vx: (Math.random() - 0.5) * 15,
+          vy: Math.random() * 20 + 25 * waveConfig.leafSpeed,
+          angle: (Math.random() - 0.5) * 0.4,
+          va: (Math.random() - 0.5) * 1.2,
+          color: randomColor,
+          awakened: false,
+          absorbed: false,
+          absorbProgress: 0,
+          startX,
+          startY,
+          scale: 0.22,
+        });
+      }
 
-        while (bounces <= maxBounces) {
-          // Cast ray forward
-          let rayLength = 350;
-          let hitEntity: { type: "crystal" | "shrine" | "father"; entity: unknown; hitX: number; hitY: number } | null = null;
+      // 5. Update Leaves & Check Beam Collision
+      const beamColor = isMergedRef.current ? "violet" : activeWavelengthRef.current;
+      const isEmitting = isEmittingBeamRef.current;
 
-          // Check hit against Father (amplifier)
-          const fDist = Math.hypot(curX - level.fatherPos.x, curY - level.fatherPos.y);
-          if (bounces === 0 && fDist > 25) {
-            // Check line intersection with father's circle
-            const fx = level.fatherPos.x;
-            const fy = level.fatherPos.y;
-            const toFatherX = fx - curX;
-            const toFatherY = fy - curY;
-            const proj = toFatherX * Math.cos(curAngle) + toFatherY * Math.sin(curAngle);
-            if (proj > 0 && proj < rayLength) {
-              const perpDist = Math.abs(toFatherX * Math.sin(curAngle) - toFatherY * Math.cos(curAngle));
-              if (perpDist < 25) {
-                rayLength = proj;
-                hitEntity = { type: "father", entity: level.fatherPos, hitX: curX + Math.cos(curAngle) * proj, hitY: curY + Math.sin(curAngle) * proj };
-              }
-            }
-          }
+      // Calculate beam vector
+      const beamStartX = player.x;
+      const beamStartY = player.y - 15;
+      const beamAngle = player.angle;
+      const beamEndX = beamStartX + Math.cos(beamAngle) * 280;
+      const beamEndY = beamStartY + Math.sin(beamAngle) * 280;
 
-          // Check hit against Crystals
-          for (const crystal of level.crystals) {
-            const toCX = crystal.x - curX;
-            const toCY = crystal.y - curY;
-            const proj = toCX * Math.cos(curAngle) + toCY * Math.sin(curAngle);
-            if (proj > 10 && proj < rayLength) {
-              const perpDist = Math.abs(toCX * Math.sin(curAngle) - toCY * Math.cos(curAngle));
-              if (perpDist < crystal.radius) {
-                rayLength = proj;
-                hitEntity = { type: "crystal", entity: crystal, hitX: curX + Math.cos(curAngle) * proj, hitY: curY + Math.sin(curAngle) * proj };
-              }
-            }
-          }
+      for (let i = leavesRef.current.length - 1; i >= 0; i--) {
+        const leaf = leavesRef.current[i];
 
-          // Check hit against Shrines
-          for (const shrine of level.shrines) {
-            const toSX = shrine.x - curX;
-            const toSY = shrine.y - curY;
-            const proj = toSX * Math.cos(curAngle) + toSY * Math.sin(curAngle);
-            if (proj > 10 && proj < rayLength) {
-              const perpDist = Math.abs(toSX * Math.sin(curAngle) - toSY * Math.cos(curAngle));
-              if (perpDist < shrine.radius) {
-                rayLength = proj;
-                hitEntity = { type: "shrine", entity: shrine, hitX: curX + Math.cos(curAngle) * proj, hitY: curY + Math.sin(curAngle) * proj };
-              }
-            }
-          }
+        if (!leaf.awakened) {
+          // Drifting down on a gentle horizontal sine wave
+          leaf.y += leaf.vy * dt;
+          leaf.x += Math.sin(timestamp * 0.002 + leaf.id) * 35 * dt;
+          leaf.angle += leaf.va * dt;
 
-          const endX = curX + Math.cos(curAngle) * rayLength;
-          const endY = curY + Math.sin(curAngle) * rayLength;
+          // Check if beam intersects leaf
+          if (isEmitting) {
+            // Distance from point to line segment
+            const toLX = leaf.x - beamStartX;
+            const toLY = leaf.y - beamStartY;
+            const proj = toLX * Math.cos(beamAngle) + toLY * Math.sin(beamAngle);
 
-          beamSegments.push({
-            startX: curX,
-            startY: curY,
-            endX,
-            endY,
-            color: curColor,
-            intensity: 1 - bounces * 0.15,
-          });
+            if (proj > 0 && proj < 280) {
+              const perpDist = Math.abs(toLX * Math.sin(beamAngle) - toLY * Math.cos(beamAngle));
+              if (perpDist < 26) {
+                // Check color match
+                const match =
+                  leaf.color === beamColor ||
+                  (beamColor === "violet" && (leaf.color === "cyan" || leaf.color === "magenta"));
 
-          // Add beam impact particles
-          if (hitEntity && Math.random() < 0.6) {
-            particlesRef.current.push({
-              x: endX,
-              y: endY,
-              vx: (Math.random() - 0.5) * 60,
-              vy: (Math.random() - 0.5) * 60,
-              life: 0.3,
-              maxLife: 0.3,
-              color: curColor === "cyan" ? "#00f0ff" : curColor === "magenta" ? "#ff007f" : curColor === "violet" ? "#a855f7" : "#ffb703",
-              size: Math.random() * 3 + 1,
-            });
-          }
-
-          if (hitEntity) {
-            if (hitEntity.type === "shrine") {
-              const shrine = hitEntity.entity as Shrine;
-              if (shrine.requiredColor === curColor) {
-                shrine.charged = Math.min(100, shrine.charged + 40 * dt);
-                if (shrine.charged >= 100 && !shrine.awakened) {
-                  shrine.awakened = true;
+                if (match) {
+                  leaf.awakened = true;
                   ArcadeAudio.playShrineAwaken();
-                  setScore((prev) => prev + 250);
+                  setScore((prev) => prev + 200);
 
-                  // Check if all shrines awakened
-                  const allAwakened = level.shrines.every((s) => s.awakened || s === shrine);
-                  if (allAwakened) {
-                    setLevelCleared(true);
-                    ArcadeAudio.playVictory();
-                    confetti({
-                      particleCount: 80,
-                      spread: 70,
-                      origin: { y: 0.4 },
+                  // Burst particles
+                  for (let p = 0; p < 12; p++) {
+                    const ang = Math.random() * Math.PI * 2;
+                    const sp = Math.random() * 80 + 30;
+                    particlesRef.current.push({
+                      x: leaf.x,
+                      y: leaf.y,
+                      vx: Math.cos(ang) * sp,
+                      vy: Math.sin(ang) * sp,
+                      life: 0.5,
+                      maxLife: 0.5,
+                      color: leaf.color === "cyan" ? "#00f0ff" : leaf.color === "magenta" ? "#ff007f" : leaf.color === "amber" ? "#ffb703" : "#a855f7",
+                      size: Math.random() * 3 + 2,
                     });
                   }
                 }
               }
-              break; // Beam stops at shrine
-            } else if (hitEntity.type === "crystal") {
-              const crystal = hitEntity.entity as Crystal;
-              // Mirror reflection or Prism frequency shift
-              curX = endX;
-              curY = endY;
-              if (crystal.type === "mirror") {
-                // Reflect angle
-                curAngle = Math.PI - curAngle;
-              } else if (crystal.type === "prism") {
-                // Prism: Shifts color or combines
-                curColor = curColor === "cyan" ? "violet" : curColor === "magenta" ? "amber" : "cyan";
-                curAngle += Math.PI / 4;
-              }
-              bounces++;
-            } else if (hitEntity.type === "father") {
-              // Father amplifies beam distance and intensity
-              curX = endX;
-              curY = endY;
-              curColor = "violet";
-              bounces++;
             }
-          } else {
-            break;
+          }
+
+          // Despawn if fallen below bedrock
+          if (leaf.y > 450) {
+            leavesRef.current.splice(i, 1);
+            continue;
+          }
+        } else {
+          // AWAKENED LEAF: Flies straight towards the Living Portal Tree!
+          leaf.absorbProgress += dt * 1.5;
+          const targetX = TREE_VORTEX_POS.x;
+          const targetY = TREE_VORTEX_POS.y;
+
+          leaf.x += (targetX - leaf.x) * (dt * 4.5);
+          leaf.y += (targetY - leaf.y) * (dt * 4.5);
+          leaf.scale = Math.max(0.08, leaf.scale * (1 - dt * 0.8));
+          leaf.angle += dt * 6;
+
+          // Check if reached tree
+          const distToTree = Math.hypot(leaf.x - targetX, leaf.y - targetY);
+          if (distToTree < 25 || leaf.absorbProgress >= 1) {
+            leavesRef.current.splice(i, 1);
+            leavesAwakenedCountRef.current++;
+
+            // Increase portal resonance
+            const target = waveConfig.targetResonance;
+            const progress = Math.min(100, Math.round((leavesAwakenedCountRef.current / target) * 100));
+            portalResonanceRef.current = progress;
+            setPortalResonance(progress);
+
+            ArcadeAudio.playCrystalHit();
+
+            // Check wave victory
+            if (leavesAwakenedCountRef.current >= target && !waveCleared) {
+              setWaveCleared(true);
+              ArcadeAudio.playVictory();
+              confetti({
+                particleCount: 90,
+                spread: 80,
+                origin: { y: 0.35 },
+              });
+            }
           }
         }
       }
 
-      // 5. Update Particles
+      // 6. Update Particles
       for (let i = particlesRef.current.length - 1; i >= 0; i--) {
         const p = particlesRef.current[i];
         p.x += p.vx * dt;
@@ -358,177 +456,125 @@ export function ChromaticGame({ onReturnToHub }: ChromaticGameProps) {
         }
       }
 
-      // 6. RENDER CANVAS (Native 640x480 4:3)
+      // =====================================================================
+      // 7. RENDER ALL PHOTOSHOP LAYERS (Native 640x480 CRT Viewport)
+      // =====================================================================
       ctx.clearRect(0, 0, 640, 480);
 
-      // A. Ocean Deep Background
-      const bgGrad = ctx.createRadialGradient(320, 240, 40, 320, 240, 380);
-      bgGrad.addColorStop(0, "#08162f");
-      bgGrad.addColorStop(0.6, "#040b18");
-      bgGrad.addColorStop(1, "#020409");
-      ctx.fillStyle = bgGrad;
-      ctx.fillRect(0, 0, 640, 480);
-
-      // B. Draw Obstacles (Ice walls)
-      ctx.fillStyle = "#162842";
-      ctx.strokeStyle = "#254876";
-      ctx.lineWidth = 2;
-      for (const obs of level.obstacles) {
-        ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
-        ctx.strokeRect(obs.x, obs.y, obs.width, obs.height);
+      // Layer 1: Background Cosmos & Ocean (`background.png`)
+      if (imgs.bg) {
+        ctx.drawImage(imgs.bg, 0, 0, 640, 480);
+      } else {
+        ctx.fillStyle = "#050914";
+        ctx.fillRect(0, 0, 640, 480);
       }
 
-      // C. Draw Living Portal Tree at top
-      const treeAwakened = level.shrines.every((s) => s.awakened);
+      // Layer 2: Soil Bedrock (`soil.png`)
+      if (imgs.soil) {
+        ctx.drawImage(imgs.soil, 0, 0, 640, 480);
+      }
+
+      // Layer 3: The Living Portal Tree (`tree.png`)
+      if (imgs.tree) {
+        ctx.drawImage(imgs.tree, 0, 0, 640, 480);
+      }
+
+      // Dynamic Swirling Vortex Effect on Tree
       ctx.save();
-      ctx.translate(level.treePos.x, level.treePos.y);
-      const treeGlow = ctx.createRadialGradient(0, 0, 10, 0, 0, 60);
-      treeGlow.addColorStop(0, treeAwakened ? "rgba(255, 183, 3, 0.8)" : "rgba(0, 240, 255, 0.3)");
-      treeGlow.addColorStop(1, "transparent");
-      ctx.fillStyle = treeGlow;
+      ctx.translate(TREE_VORTEX_POS.x, TREE_VORTEX_POS.y);
+      const vortexPulse = Math.sin(timestamp * 0.005) * 5;
+      const vortexGlow = ctx.createRadialGradient(0, 0, 5, 0, 0, 45 + vortexPulse);
+      vortexGlow.addColorStop(0, "rgba(168, 85, 247, 0.85)");
+      vortexGlow.addColorStop(0.5, "rgba(0, 240, 255, 0.4)");
+      vortexGlow.addColorStop(1, "transparent");
+      ctx.fillStyle = vortexGlow;
       ctx.beginPath();
-      ctx.arc(0, 0, 60, 0, Math.PI * 2);
+      ctx.arc(0, 0, 45 + vortexPulse, 0, Math.PI * 2);
       ctx.fill();
-
-      // Tree trunk & crystal branches
-      ctx.strokeStyle = treeAwakened ? "#ffb703" : "#00f0ff";
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.moveTo(0, 20);
-      ctx.lineTo(0, -15);
-      ctx.lineTo(-25, -35);
-      ctx.moveTo(0, -15);
-      ctx.lineTo(25, -35);
-      ctx.stroke();
-
-      ctx.font = "bold 9px monospace";
-      ctx.fillStyle = treeAwakened ? "#ffb703" : "#80d0ff";
-      ctx.textAlign = "center";
-      ctx.fillText(treeAwakened ? "PORTAL ACTIVE" : "DORMANT PORTAL", 0, -45);
       ctx.restore();
 
-      // D. Draw Father (Warm Beacon Anchor)
+      // Layer 4: The Guiding Father (`father.png`)
+      if (imgs.father) {
+        ctx.drawImage(imgs.father, 0, 0, 640, 480);
+      }
+
+      // Father's Warm Thermal Aura (Pulsing Beacon)
       ctx.save();
-      ctx.translate(level.fatherPos.x, level.fatherPos.y);
-
-      // Father's Warm Thermal Aura
-      const auraPulse = Math.sin(timestamp * 0.003) * 6;
-      const fatherAura = ctx.createRadialGradient(0, 0, 15, 0, 0, 80 + auraPulse);
-      fatherAura.addColorStop(0, "rgba(255, 183, 3, 0.45)");
-      fatherAura.addColorStop(0.5, "rgba(255, 120, 0, 0.2)");
-      fatherAura.addColorStop(1, "transparent");
-      ctx.fillStyle = fatherAura;
+      ctx.translate(FATHER_BEACON_POS.x, FATHER_BEACON_POS.y);
+      const fPulse = Math.sin(timestamp * 0.003) * 8;
+      const fAura = ctx.createRadialGradient(0, 0, 15, 0, 0, 95 + fPulse);
+      fAura.addColorStop(0, "rgba(255, 183, 3, 0.4)");
+      fAura.addColorStop(0.6, "rgba(255, 120, 0, 0.15)");
+      fAura.addColorStop(1, "transparent");
+      ctx.fillStyle = fAura;
       ctx.beginPath();
-      ctx.arc(0, 0, 80 + auraPulse, 0, Math.PI * 2);
+      ctx.arc(0, 0, 95 + fPulse, 0, Math.PI * 2);
       ctx.fill();
 
-      // Father Body
-      ctx.fillStyle = "#ffb703";
-      ctx.beginPath();
-      ctx.arc(0, 0, 16, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = "#fff";
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
+      // Core anchor icon & label
       ctx.font = "bold 8px monospace";
-      ctx.fillStyle = "#ffde7d";
+      ctx.fillStyle = "#ffb703";
       ctx.textAlign = "center";
-      ctx.fillText("FATHER (THERMAL ANCHOR)", 0, 26);
+      ctx.fillText("FATHER'S THERMAL CORE", 0, 45);
       ctx.restore();
 
-      // E. Draw Crystals
-      for (const crystal of level.crystals) {
+      // Layer 5: Hydrothermal Mist / Smoke (`smoke.png` with screen blend mode)
+      if (imgs.smoke) {
         ctx.save();
-        ctx.translate(crystal.x, crystal.y);
-        ctx.fillStyle = crystal.type === "mirror" ? "#50e3c2" : "#a855f7";
-        ctx.strokeStyle = "#ffffff";
-        ctx.lineWidth = 2;
-
-        ctx.beginPath();
-        // Diamond shape
-        ctx.moveTo(0, -crystal.radius);
-        ctx.lineTo(crystal.radius, 0);
-        ctx.lineTo(0, crystal.radius);
-        ctx.lineTo(-crystal.radius, 0);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.font = "8px monospace";
-        ctx.fillStyle = "#fff";
-        ctx.textAlign = "center";
-        ctx.fillText(crystal.type.toUpperCase(), 0, crystal.radius + 10);
+        ctx.globalAlpha = 0.55;
+        ctx.globalCompositeOperation = "screen";
+        // Gentle drift
+        const smokeShift = Math.sin(timestamp * 0.0008) * 15;
+        ctx.drawImage(imgs.smoke, smokeShift, 0, 640, 480);
         ctx.restore();
       }
 
-      // F. Draw Frozen Leaf Shrines
-      for (const shrine of level.shrines) {
+      // Render Floating Autumn Leaves (`leaf.png`)
+      for (const leaf of leavesRef.current) {
         ctx.save();
-        ctx.translate(shrine.x, shrine.y);
+        ctx.translate(leaf.x, leaf.y);
+        ctx.rotate(leaf.angle);
 
-        const colorHex = shrine.requiredColor === "cyan" ? "#00f0ff" : shrine.requiredColor === "magenta" ? "#ff007f" : shrine.requiredColor === "amber" ? "#ffb703" : "#a855f7";
+        // Resonant frequency halo
+        const colorHex =
+          leaf.color === "cyan" ? "#00f0ff" : leaf.color === "magenta" ? "#ff007f" : leaf.color === "amber" ? "#ffb703" : "#a855f7";
 
-        // Aura
-        const sAura = ctx.createRadialGradient(0, 0, 5, 0, 0, shrine.radius * (shrine.awakened ? 2.2 : 1.4));
-        sAura.addColorStop(0, colorHex);
-        sAura.addColorStop(1, "transparent");
-        ctx.fillStyle = sAura;
+        const leafGlow = ctx.createRadialGradient(0, 0, 4, 0, 0, 24);
+        leafGlow.addColorStop(0, colorHex);
+        leafGlow.addColorStop(1, "transparent");
+        ctx.fillStyle = leafGlow;
         ctx.beginPath();
-        ctx.arc(0, 0, shrine.radius * (shrine.awakened ? 2.2 : 1.4), 0, Math.PI * 2);
+        ctx.arc(0, 0, 24, 0, Math.PI * 2);
         ctx.fill();
 
-        // Base ring
-        ctx.strokeStyle = colorHex;
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.arc(0, 0, shrine.radius, 0, Math.PI * 2);
-        ctx.stroke();
-
-        // Inner charge meter arc
-        if (shrine.charged > 0) {
-          ctx.strokeStyle = "#ffffff";
-          ctx.lineWidth = 4;
-          ctx.beginPath();
-          ctx.arc(0, 0, shrine.radius - 4, -Math.PI / 2, -Math.PI / 2 + (shrine.charged / 100) * Math.PI * 2);
-          ctx.stroke();
+        // Draw leaf sprite cropped from `leaf.png`
+        if (imgs.leaf) {
+          const dw = LEAF_BOUNDS.sw * leaf.scale;
+          const dh = LEAF_BOUNDS.sh * leaf.scale;
+          ctx.drawImage(
+            imgs.leaf,
+            LEAF_BOUNDS.sx,
+            LEAF_BOUNDS.sy,
+            LEAF_BOUNDS.sw,
+            LEAF_BOUNDS.sh,
+            -dw / 2,
+            -dh / 2,
+            dw,
+            dh
+          );
         }
 
-        ctx.font = "bold 8px monospace";
-        ctx.fillStyle = colorHex;
-        ctx.textAlign = "center";
-        ctx.fillText(shrine.name, 0, shrine.radius + 12);
-        ctx.fillText(shrine.awakened ? "AWAKENED" : `${Math.round(shrine.charged)}%`, 0, 3);
+        // Color frequency ring around leaf
+        ctx.strokeStyle = colorHex;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(0, 0, 16, 0, Math.PI * 2);
+        ctx.stroke();
+
         ctx.restore();
       }
 
-      // G. Draw Beam Segments
-      for (const b of beamSegments) {
-        ctx.save();
-        const hex = b.color === "cyan" ? "#00f0ff" : b.color === "magenta" ? "#ff007f" : b.color === "amber" ? "#ffb703" : "#a855f7";
-
-        // Outer glow
-        ctx.strokeStyle = hex;
-        ctx.lineWidth = 6 * b.intensity;
-        ctx.lineCap = "round";
-        ctx.shadowColor = hex;
-        ctx.shadowBlur = 14;
-        ctx.beginPath();
-        ctx.moveTo(b.startX, b.startY);
-        ctx.lineTo(b.endX, b.endY);
-        ctx.stroke();
-
-        // Core bright line
-        ctx.strokeStyle = "#ffffff";
-        ctx.lineWidth = 2 * b.intensity;
-        ctx.beginPath();
-        ctx.moveTo(b.startX, b.startY);
-        ctx.lineTo(b.endX, b.endY);
-        ctx.stroke();
-        ctx.restore();
-      }
-
-      // H. Draw Particles
+      // Render Particles
       for (const p of particlesRef.current) {
         ctx.save();
         ctx.fillStyle = p.color;
@@ -539,85 +585,132 @@ export function ChromaticGame({ onReturnToHub }: ChromaticGameProps) {
         ctx.restore();
       }
 
-      // I. Draw Twin Brother (Magenta)
-      ctx.save();
-      ctx.translate(twin.x, twin.y);
-      const twinGlow = ctx.createRadialGradient(0, 0, 4, 0, 0, 24);
-      twinGlow.addColorStop(0, "rgba(255, 0, 127, 0.7)");
-      twinGlow.addColorStop(1, "transparent");
-      ctx.fillStyle = twinGlow;
-      ctx.beginPath();
-      ctx.arc(0, 0, 24, 0, Math.PI * 2);
-      ctx.fill();
+      // Render Light Beam from Player
+      if (isEmitting) {
+        ctx.save();
+        const hex =
+          beamColor === "cyan" ? "#00f0ff" : beamColor === "magenta" ? "#ff007f" : beamColor === "amber" ? "#ffb703" : "#a855f7";
 
-      ctx.fillStyle = "#ff007f";
-      ctx.beginPath();
-      ctx.arc(0, 0, 9, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = "#ffffff";
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      ctx.font = "bold 8px monospace";
-      ctx.fillStyle = "#ff80bf";
-      ctx.textAlign = "center";
-      ctx.fillText("TWIN (MAGENTA)", 0, -14);
-      ctx.restore();
-
-      // J. Draw Player (Cyan)
-      ctx.save();
-      ctx.translate(player.x, player.y);
-      const playerGlow = ctx.createRadialGradient(0, 0, 4, 0, 0, 28);
-      playerGlow.addColorStop(0, "rgba(0, 240, 255, 0.8)");
-      playerGlow.addColorStop(1, "transparent");
-      ctx.fillStyle = playerGlow;
-      ctx.beginPath();
-      ctx.arc(0, 0, 28, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Direction indicator arrow
-      ctx.strokeStyle = "#ffffff";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.lineTo(Math.cos(player.angle) * 16, Math.sin(player.angle) * 16);
-      ctx.stroke();
-
-      ctx.fillStyle = activeWavelengthRef.current === "cyan" ? "#00f0ff" : activeWavelengthRef.current === "magenta" ? "#ff007f" : "#ffb703";
-      ctx.beginPath();
-      ctx.arc(0, 0, 10, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = "#ffffff";
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      ctx.font = "bold 8px monospace";
-      ctx.fillStyle = "#80f0ff";
-      ctx.textAlign = "center";
-      ctx.fillText("YOU (BROTHER 1)", 0, -15);
-      ctx.restore();
-
-      // Merged link line
-      if (isMergedRef.current) {
-        ctx.strokeStyle = "#a855f7";
-        ctx.lineWidth = 3;
+        // Beam Outer Glow
+        ctx.strokeStyle = hex;
+        ctx.lineWidth = 8;
+        ctx.lineCap = "round";
+        ctx.shadowColor = hex;
+        ctx.shadowBlur = 18;
         ctx.beginPath();
-        ctx.moveTo(player.x, player.y);
-        ctx.lineTo(twin.x, twin.y);
+        ctx.moveTo(beamStartX, beamStartY);
+        ctx.lineTo(beamEndX, beamEndY);
         ctx.stroke();
+
+        // Beam Core Bright White
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(beamStartX, beamStartY);
+        ctx.lineTo(beamEndX, beamEndY);
+        ctx.stroke();
+        ctx.restore();
       }
 
-      animationId = requestAnimationFrame(gameLoop);
+      // Render Twin Brother (Brother 2: `right-kid.png`)
+      if (imgs.rightKid) {
+        ctx.save();
+        ctx.translate(twin.x, twin.y);
+        const kidW = RIGHT_KID_BOUNDS.sw * 0.17;
+        const kidH = RIGHT_KID_BOUNDS.sh * 0.17;
+
+        // Magenta aura
+        const tAura = ctx.createRadialGradient(0, -kidH / 2, 6, 0, -kidH / 2, 32);
+        tAura.addColorStop(0, "rgba(255, 0, 127, 0.7)");
+        tAura.addColorStop(1, "transparent");
+        ctx.fillStyle = tAura;
+        ctx.beginPath();
+        ctx.arc(0, -kidH / 2, 32, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.drawImage(
+          imgs.rightKid,
+          RIGHT_KID_BOUNDS.sx,
+          RIGHT_KID_BOUNDS.sy,
+          RIGHT_KID_BOUNDS.sw,
+          RIGHT_KID_BOUNDS.sh,
+          -kidW / 2,
+          -kidH,
+          kidW,
+          kidH
+        );
+        ctx.restore();
+      }
+
+      // Render Player (Brother 1: `left-kid.png`)
+      if (imgs.leftKid) {
+        ctx.save();
+        ctx.translate(player.x, player.y);
+        const kidW = LEFT_KID_BOUNDS.sw * 0.17;
+        const kidH = LEFT_KID_BOUNDS.sh * 0.17;
+
+        // Active Wavelength Aura
+        const pColor =
+          activeWavelengthRef.current === "cyan" ? "#00f0ff" : activeWavelengthRef.current === "magenta" ? "#ff007f" : "#ffb703";
+
+        const pAura = ctx.createRadialGradient(0, -kidH / 2, 6, 0, -kidH / 2, 36);
+        pAura.addColorStop(0, pColor);
+        pAura.addColorStop(1, "transparent");
+        ctx.fillStyle = pAura;
+        ctx.beginPath();
+        ctx.arc(0, -kidH / 2, 36, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.drawImage(
+          imgs.leftKid,
+          LEFT_KID_BOUNDS.sx,
+          LEFT_KID_BOUNDS.sy,
+          LEFT_KID_BOUNDS.sw,
+          LEFT_KID_BOUNDS.sh,
+          -kidW / 2,
+          -kidH,
+          kidW,
+          kidH
+        );
+
+        // Aim Pointer
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(0, -kidH / 2);
+        ctx.lineTo(Math.cos(player.angle) * 22, -kidH / 2 + Math.sin(player.angle) * 22);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      // Resonance Arc when Brothers are Holding Hands
+      if (isMergedRef.current) {
+        ctx.save();
+        ctx.strokeStyle = "#a855f7";
+        ctx.lineWidth = 4;
+        ctx.shadowColor = "#e879f9";
+        ctx.shadowBlur = 14;
+        ctx.beginPath();
+        ctx.moveTo(player.x, player.y - 25);
+        ctx.lineTo(twin.x, twin.y - 25);
+        ctx.stroke();
+
+        ctx.font = "bold 8px monospace";
+        ctx.fillStyle = "#e879f9";
+        ctx.textAlign = "center";
+        ctx.fillText("TWIN HARMONIZED (VIOLET)", (player.x + twin.x) / 2, player.y - 40);
+        ctx.restore();
+      }
+
+      animId = requestAnimationFrame(loop);
     };
 
-    animationId = requestAnimationFrame(gameLoop);
+    animId = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(animId);
+  }, [currentWave, waveCleared]);
 
-    return () => {
-      cancelAnimationFrame(animationId);
-    };
-  }, []);
-
-  const activeLevel = LEVELS[currentLevelIndex];
+  const activeWaveConfig = WAVES[currentWave];
 
   return (
     <div className="w-full h-full flex flex-col justify-between select-none relative">
@@ -632,17 +725,19 @@ export function ChromaticGame({ onReturnToHub }: ChromaticGameProps) {
           </button>
           <div>
             <h1 className="text-sm font-bold font-mono text-cyan-400">
-              CHROMATIC SYMBIOSIS: {activeLevel.name}
+              CHROMATIC SYMBIOSIS
             </h1>
             <p className="text-[10px] font-mono text-neutral-400">
-              CHAMBER {currentLevelIndex + 1} OF {LEVELS.length} • {activeLevel.subtitle}
+              {activeWaveConfig.title} • {activeWaveConfig.subtitle}
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-4 text-xs font-mono">
+          {/* Thermal Warmth Gauge */}
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] text-neutral-400 font-bold">THERMAL:</span>
+            <Flame className="w-3.5 h-3.5 text-amber-400" />
+            <span className="text-[10px] text-neutral-400 font-bold">WARMTH:</span>
             <div className="w-20 h-2.5 bg-neutral-900 border border-neutral-700 rounded overflow-hidden">
               <div
                 className={`h-full transition-all duration-150 ${
@@ -654,74 +749,83 @@ export function ChromaticGame({ onReturnToHub }: ChromaticGameProps) {
             <span className="text-[10px] text-neutral-300">{thermalWarmth}%</span>
           </div>
 
+          {/* Portal Resonance Meter */}
+          <div className="flex items-center gap-1.5 bg-purple-950/40 border border-purple-500/50 px-2 py-0.5 rounded">
+            <Sparkles className="w-3 h-3 text-purple-300" />
+            <span className="text-[10px] text-purple-300 font-bold">PORTAL:</span>
+            <span className="text-purple-200 font-bold">{portalResonance}%</span>
+          </div>
+
+          {/* Score */}
           <div className="bg-neutral-900 border border-neutral-700 px-2 py-0.5 rounded text-cyan-300 font-bold">
             SCORE: {score.toString().padStart(5, "0")}
           </div>
         </div>
       </div>
 
-      {/* Canvas Viewport (640x480 aspect container) */}
-      <div className="relative flex-1 flex items-center justify-center bg-black/90 rounded border-2 border-neutral-800 overflow-hidden">
-        <canvas
-          ref={canvasRef}
-          width={640}
-          height={480}
-          className="w-full h-full object-contain"
-        />
+      {/* Main Canvas Viewport (640x480 native aspect) */}
+      <div className="relative flex-1 flex items-center justify-center bg-black rounded border-2 border-neutral-800 overflow-hidden">
+        {!assetsLoaded ? (
+          <div className="flex flex-col items-center justify-center text-center p-6 font-mono text-cyan-400">
+            <Sparkles className="w-8 h-8 text-cyan-400 animate-spin mb-3" />
+            <span className="text-sm font-bold tracking-widest uppercase">
+              LOADING CHROMATIC SYMBIOSIS LAYERS...
+            </span>
+          </div>
+        ) : (
+          <canvas ref={canvasRef} width={640} height={480} className="w-full h-full object-contain" />
+        )}
 
-        {/* Level Cleared Overlay */}
-        {levelCleared && (
-          <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center z-50 p-6 text-center animate-fade-in">
+        {/* Wave Cleared Celebration Modal */}
+        {waveCleared && (
+          <div className="absolute inset-0 bg-black/85 flex flex-col items-center justify-center z-50 p-6 text-center animate-fade-in">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/20 border-2 border-amber-400 rounded-full mb-3">
               <Trophy className="w-4 h-4 text-amber-300" />
               <span className="text-xs font-mono font-bold text-amber-300 uppercase">
-                CHAMBER HARMONIZED!
+                PORTAL VORTEX CHARGED!
               </span>
             </div>
             <h2 className="text-xl md:text-2xl font-bold font-mono text-white mb-2">
-              THE PORTAL TREE AWAKENS
+              THE LIVING PORTAL TREE AWAKENS
             </h2>
-            <p className="text-xs font-mono text-cyan-300 max-w-md mb-4">
-              All leaf shrines in this chamber have resonated. The ancient subterranean frequency is restored!
+            <p className="text-xs font-mono text-cyan-300 max-w-md mb-4 leading-relaxed">
+              The warm autumn leaves resonated with your light frequencies. The subterranean portal surges with cosmic energy!
             </p>
             <button
               onClick={() => {
-                if (currentLevelIndex < LEVELS.length - 1) {
-                  const next = currentLevelIndex + 1;
-                  setCurrentLevelIndex(next);
-                  loadLevel(next);
+                if (currentWave < WAVES.length - 1) {
+                  startWave(currentWave + 1);
                 } else {
                   setGameCompleted(true);
                 }
               }}
               className="flex items-center gap-2 px-4 py-2 bg-cyan-400 hover:bg-cyan-300 text-black font-mono font-bold text-xs rounded shadow-lg animate-bounce"
             >
-              <span>{currentLevelIndex < LEVELS.length - 1 ? "NEXT CHAMBER [A]" : "EXHIBITION VICTORY [A]"}</span>
+              <span>{currentWave < WAVES.length - 1 ? "NEXT WAVE [A]" : "EXHIBITION VICTORY [A]"}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         )}
 
-        {/* Game Completed Victory Overlay */}
+        {/* Exhibition Game Victory Modal */}
         {gameCompleted && (
-          <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center z-50 p-6 text-center">
-            <Sparkles className="w-10 h-10 text-amber-300 animate-spin mb-3" />
+          <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center z-50 p-6 text-center">
+            <Sparkles className="w-12 h-12 text-amber-300 animate-spin mb-3" />
             <h2 className="text-2xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-amber-300 to-magenta-400 mb-2">
-              PORTAL NEXUS FULLY RESTORED!
+              ALL WAVES CONVERGED!
             </h2>
-            <p className="text-xs font-mono text-neutral-300 max-w-md mb-4">
-              Maxime&apos;s alien civilization has completed the chromocommunication ritual. All 4 alien cultures are now connected through the dimensional gateway.
+            <p className="text-xs font-mono text-neutral-300 max-w-md mb-4 leading-relaxed">
+              Maxime&apos;s civilization has completed the chromocommunication ritual. The Living Portal Tree is permanently awakened, connecting Saturn&apos;s sub-ice abyss to the stars!
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => {
                   setGameCompleted(false);
-                  setCurrentLevelIndex(0);
-                  loadLevel(0);
+                  startWave(0);
                 }}
                 className="px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 border border-neutral-600 text-white font-mono text-xs rounded"
               >
-                PLAY AGAIN
+                REPLAY WAVES
               </button>
               <button
                 onClick={onReturnToHub}
@@ -734,7 +838,7 @@ export function ChromaticGame({ onReturnToHub }: ChromaticGameProps) {
         )}
       </div>
 
-      {/* Arcade Stick Bottom Status / Hotkeys */}
+      {/* Bottom Arcade Controls & Wavelength Indicator */}
       <div className="mt-2 pt-2 border-t-2 border-neutral-800 flex items-center justify-between text-[10px] font-mono text-neutral-400">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1">
@@ -743,19 +847,19 @@ export function ChromaticGame({ onReturnToHub }: ChromaticGameProps) {
           </div>
           <div className="flex items-center gap-1">
             <span className="text-cyan-400 font-bold">[B]</span>
-            <span>Cycle Color (Active: <span className="uppercase font-bold text-white">{activeWavelength}</span>)</span>
+            <span>Cycle Color (Active: <strong className="uppercase text-white">{activeWavelength}</strong>)</span>
           </div>
           <div className="flex items-center gap-1">
             <span className="text-cyan-400 font-bold">[X]</span>
-            <span>{isMerged ? "Twin Linked (Violet)" : "Call Twin"}</span>
+            <span>{isMerged ? "Twins Linked (Violet)" : "Call Twin"}</span>
           </div>
           <div className="flex items-center gap-1">
             <span className="text-cyan-400 font-bold">[Y]</span>
-            <span>Reset Chamber</span>
+            <span>Harmonic Pulse</span>
           </div>
         </div>
         <div className="text-neutral-500">
-          Hold [SEL+START] to return to Hub
+          Hold [SEL+START] 2s to Hub
         </div>
       </div>
     </div>
