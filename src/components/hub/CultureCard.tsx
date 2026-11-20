@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { Sparkles, Play, ShieldAlert, Cpu, Wind, Compass } from "lucide-react";
+import { Sparkles, Play, Compass, Cpu, Wind, Radio } from "lucide-react";
 
 export interface CultureInfo {
   id: string;
@@ -12,7 +12,7 @@ export interface CultureInfo {
   subtitle: string;
   route: string;
   themeColor: "cyan" | "emerald" | "violet" | "amber";
-  status: "READY TO PLAY" | "SHOWCASE PORTAL";
+  status: "READY TO PLAY" | "SHOWCASE PORTAL" | "COMING SOON";
   description: string;
   mechanics: string[];
   imageSrc?: string;
@@ -78,6 +78,8 @@ export function CultureCard({ culture, isSelected, onSelect, onLaunch }: Culture
     }
   };
 
+  const isPlayable = culture.status === "READY TO PLAY";
+
   return (
     <div
       onClick={() => {
@@ -105,7 +107,9 @@ export function CultureCard({ culture, isSelected, onSelect, onLaunch }: Culture
           </span>
         </div>
         <span
-          className={`text-[9px] font-mono px-2 py-0.5 rounded border uppercase font-bold tracking-wider ${colorMap.badge}`}
+          className={`text-[9px] font-mono px-2 py-0.5 rounded border uppercase font-bold tracking-wider ${
+            isPlayable ? colorMap.badge : "bg-neutral-900 border-neutral-700 text-neutral-400"
+          }`}
         >
           {culture.status}
         </span>
@@ -122,21 +126,22 @@ export function CultureCard({ culture, isSelected, onSelect, onLaunch }: Culture
       </div>
 
       {/* Visual Preview Box */}
-      <div className="relative w-full h-24 md:h-28 bg-black/60 rounded border-2 border-neutral-800 overflow-hidden mb-2 z-10 flex items-center justify-center">
+      <div className="relative w-full h-24 md:h-28 bg-black/80 rounded border-2 border-neutral-800 overflow-hidden mb-2 z-10 flex items-center justify-center">
         {culture.imageSrc ? (
           <Image
             src={culture.imageSrc}
             alt={culture.title}
             fill
-            className="object-cover opacity-75 hover:opacity-100 transition-opacity"
+            className="object-cover opacity-85 hover:opacity-100 transition-opacity"
           />
         ) : (
           <div className="flex flex-col items-center justify-center text-center p-2">
-            <div className="w-8 h-8 rounded-full border-2 border-dashed flex items-center justify-center mb-1 animate-spin" style={{ borderColor: colorMap.accent }}>
-              {getIcon()}
-            </div>
-            <span className="text-[9px] font-mono text-neutral-400 uppercase">
-              {culture.name}
+            <Radio className="w-6 h-6 text-neutral-600 mb-1.5 animate-pulse" />
+            <span className="text-[10px] font-mono text-neutral-400 uppercase font-bold tracking-wider">
+              AWAITING TRANSMISSION
+            </span>
+            <span className="text-[8px] font-mono text-neutral-600 mt-0.5">
+              Portal Chamber Primed
             </span>
           </div>
         )}
@@ -153,13 +158,15 @@ export function CultureCard({ culture, isSelected, onSelect, onLaunch }: Culture
       {/* Footer launch prompt */}
       <div className="mt-auto pt-2 border-t-2 border-neutral-800/80 flex items-center justify-between z-10">
         <div className="flex items-center gap-1 text-[10px] font-mono">
-          <span className="text-neutral-500 font-bold">TECH:</span>
-          <span className="text-neutral-400">{culture.mechanics[0]}</span>
+          <span className="text-neutral-500 font-bold">STATUS:</span>
+          <span className={isPlayable ? "text-cyan-300 font-bold" : "text-neutral-400"}>
+            {culture.mechanics[0]}
+          </span>
         </div>
         {isSelected ? (
           <div className="flex items-center gap-1 bg-white text-black font-mono font-bold text-[10px] px-2 py-0.5 rounded animate-pulse shadow-md">
             <Play className="w-3 h-3 fill-current" />
-            <span>PRESS [A]</span>
+            <span>{isPlayable ? "PRESS [A] PLAY" : "PRESS [A] VIEW"}</span>
           </div>
         ) : (
           <span className="text-[10px] font-mono text-neutral-500">SELECT</span>

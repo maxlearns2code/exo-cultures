@@ -8,7 +8,6 @@ import { CRTOverlay } from "@/components/arcade/CRTOverlay";
 import { ArcadeHUD, ArcadeControlsFooter } from "@/components/arcade/ArcadeHUD";
 import { useArcadeInput, ArcadeInputs } from "@/hooks/useArcadeInput";
 import { ArcadeAudio } from "@/utils/audio";
-import { Sparkles, Gamepad2 } from "lucide-react";
 
 const CULTURES: CultureInfo[] = [
   {
@@ -22,50 +21,47 @@ const CULTURES: CultureInfo[] = [
     status: "READY TO PLAY",
     description:
       "Deep in Saturn's ocean abyss, guide twin brothers projecting cyan & magenta light beams through optical ice crystals to awaken the Living Portal Tree.",
-    mechanics: ["Light Refraction", "Color Blending", "Thermal Beacon"],
+    mechanics: ["Playable (3 Chambers)", "Optical Refraction", "Thermal Survival"],
     imageSrc: "/assets/chromatic-symbiosis/ai-designs/ai-poster-01.png",
   },
   {
     id: "aisah",
-    name: "Myco-Collective",
+    name: "Alien Culture II",
     author: "Aisah",
-    title: "Bioluminescent Spore",
-    subtitle: "Subterranean Neural Root Civilization",
+    title: "Portal Chamber II",
+    subtitle: "Awaiting Alien Transmission",
     route: "/games/aisah",
     themeColor: "emerald",
-    status: "SHOWCASE PORTAL",
+    status: "COMING SOON",
     description:
-      "A collective alien organism communicating via luminous spore clouds, bio-electric pulses, and mycelial resonant networks.",
-    mechanics: ["Spore Diffusion", "Neural Nodes", "Bio-Electric Pulse"],
-    imageSrc: "/assets/chromatic-symbiosis/layers/tree.png",
+      "Dimensional receiving bay reserved for Aisah's alien culture. The portal chamber is primed and calibrated for incoming design assets.",
+    mechanics: ["Chamber Primed", "Signal Pending"],
   },
   {
     id: "martin",
-    name: "Chrono-Geometric",
+    name: "Alien Culture III",
     author: "Martin",
-    title: "Crystalline Lattice",
-    subtitle: "Polyhedral Frequency Architecture",
+    title: "Portal Chamber III",
+    subtitle: "Awaiting Alien Transmission",
     route: "/games/martin",
     themeColor: "violet",
-    status: "SHOWCASE PORTAL",
+    status: "COMING SOON",
     description:
-      "A civilization of sentient crystalline matrices that store cosmic knowledge through harmonic geometric refraction and chronal flux.",
-    mechanics: ["Lattice Harmonics", "Chronal Shift", "Prismatic Mirror"],
-    imageSrc: "/assets/chromatic-symbiosis/ai-designs/ai-world.png",
+      "Dimensional receiving bay reserved for Martin's alien culture. The portal chamber is primed and calibrated for incoming design assets.",
+    mechanics: ["Chamber Primed", "Signal Pending"],
   },
   {
     id: "mana",
-    name: "Aero-Drift",
+    name: "Alien Culture IV",
     author: "Mana",
-    title: "Atmospheric Nomads",
-    subtitle: "Gaseous Sky Gliders of the Stratosphere",
+    title: "Portal Chamber IV",
+    subtitle: "Awaiting Alien Transmission",
     route: "/games/mana",
     themeColor: "amber",
-    status: "SHOWCASE PORTAL",
+    status: "COMING SOON",
     description:
-      "Ethereal fluid nomads riding supersonic thermal jetstreams and sonic pressure waves across high-altitude planetary rings.",
-    mechanics: ["Thermal Currents", "Fluid Glide", "Sonic Barometrics"],
-    imageSrc: "/assets/chromatic-symbiosis/layers/leaf.png",
+      "Dimensional receiving bay reserved for Mana's alien culture. The portal chamber is primed and calibrated for incoming design assets.",
+    mechanics: ["Chamber Primed", "Signal Pending"],
   },
 ];
 
@@ -152,7 +148,7 @@ export default function ArcadeLauncherHub() {
     [isAttractMode, launchGame, registerActivity, selectedIndex]
   );
 
-  const { inputs, hasGamepad, exitHoldProgress } = useArcadeInput(handleInputs);
+  const { exitHoldProgress, hasGamepad } = useArcadeInput(handleInputs);
 
   // Idle check timer for Attract Mode
   useEffect(() => {

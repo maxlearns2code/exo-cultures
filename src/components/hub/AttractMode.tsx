@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { CultureInfo } from "./CultureCard";
-import { Sparkles, Gamepad2 } from "lucide-react";
+import { Sparkles, Gamepad2, Radio } from "lucide-react";
 
 interface AttractModeProps {
   cultures: CultureInfo[];
@@ -44,7 +44,7 @@ export function AttractMode({ cultures, onDismiss }: AttractModeProps) {
       </div>
 
       {/* Featured Culture Spotlight */}
-      <div className="w-full max-w-lg bg-neutral-950/80 border-2 border-cyan-500/60 rounded-xl p-5 shadow-[0_0_40px_rgba(0,240,255,0.25)] flex flex-col items-center text-center">
+      <div className="w-full max-w-lg bg-neutral-950/80 border-2 border-neutral-700 rounded-xl p-5 shadow-[0_0_40px_rgba(0,240,255,0.2)] flex flex-col items-center text-center">
         <div className="w-full flex items-center justify-between border-b-2 border-neutral-800 pb-2 mb-3">
           <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-widest">
             CIVILIZATION {currentIndex + 1} OF {cultures.length}
@@ -54,7 +54,7 @@ export function AttractMode({ cultures, onDismiss }: AttractModeProps) {
           </span>
         </div>
 
-        <div className="relative w-full h-40 bg-black/80 rounded-lg border-2 border-neutral-800 overflow-hidden mb-3">
+        <div className="relative w-full h-40 bg-black/80 rounded-lg border-2 border-neutral-800 overflow-hidden mb-3 flex items-center justify-center">
           {activeCulture.imageSrc ? (
             <Image
               src={activeCulture.imageSrc}
@@ -63,13 +63,17 @@ export function AttractMode({ cultures, onDismiss }: AttractModeProps) {
               className="object-cover transition-transform duration-1000 scale-105"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-neutral-900 to-black">
-              <span className="text-sm font-mono text-cyan-400 font-bold uppercase">
-                {activeCulture.title}
+            <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-neutral-900 to-black p-4">
+              <Radio className="w-8 h-8 text-neutral-500 mb-2 animate-pulse" />
+              <span className="text-xs font-mono text-neutral-300 font-bold uppercase tracking-wider">
+                PORTAL DORMANT
+              </span>
+              <span className="text-[10px] font-mono text-neutral-500 mt-1">
+                Awaiting incoming culture transmission from {activeCulture.author}
               </span>
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
         </div>
 
         <h2 className="text-lg font-bold font-mono text-white mb-1">
