@@ -1,0 +1,26 @@
+# ==============================================================================
+# EXO-CULTURES: Recalbox RGB Dual Video & Audio Configuration for config.txt
+# Raspberry Pi 400 -> 40-pin GPIO Ribbon -> Recalbox RGB Dual -> 14" CRT TV (SCART)
+# ==============================================================================
+
+# 1. Enable DPI video bus (disables HDMI output)
+enable_dpi_lcd=1
+display_default_lcd=1
+dpi_group=2
+dpi_mode=87
+
+# 2. Recalbox RGB Dual Overlay
+dtoverlay=recalboxrgbdual
+# Fallback if recalboxrgbdual.dtbo is not installed on standard Raspberry Pi OS:
+# dtoverlay=vga666
+# dtoverlay=hifiberry-dac
+
+# 3. Audio DAC Configuration (TI PCM5102A on Recalbox RGB Dual)
+dtparam=i2s=on
+dtparam=audio=on
+
+# 4. Target Resolution: 640x480 Interlaced (480i @ 60Hz 15kHz) - OPTIMAL FOR WEB TEXT
+dpi_timings=640 0 16 96 48 480 1 10 2 33 0 0 0 60 0 12500000 1
+
+# Disable digital overscan (hardware safe zone handled in CSS)
+disable_overscan=1
