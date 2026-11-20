@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Monitor, Volume2, VolumeX, Gamepad2 } from "lucide-react";
+import { Volume2, VolumeX, Gamepad2 } from "lucide-react";
 import { ArcadeAudio } from "@/utils/audio";
 
 interface CRTOverlayProps {
@@ -11,18 +11,12 @@ interface CRTOverlayProps {
 }
 
 export function CRTOverlay({ exitHoldProgress = 0, hasGamepad = false, children }: CRTOverlayProps) {
-  const [crtEnabled, setCrtEnabled] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
 
   const handleToggleSound = (e: React.MouseEvent) => {
     e.stopPropagation();
     const muted = ArcadeAudio.toggleMute();
     setIsMuted(muted);
-  };
-
-  const handleToggleCRT = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setCrtEnabled(!crtEnabled);
   };
 
   return (
@@ -33,14 +27,6 @@ export function CRTOverlay({ exitHoldProgress = 0, hasGamepad = false, children 
         <div className="crt-safe-zone">
           {children}
         </div>
-
-        {/* Scanlines & Tube Vignette overlays */}
-        {crtEnabled && (
-          <>
-            <div className="crt-scanlines" />
-            <div className="crt-vignette" />
-          </>
-        )}
 
         {/* Universal Exit Progress Indicator (SELECT + START held) */}
         {exitHoldProgress > 0 && (
@@ -59,7 +45,7 @@ export function CRTOverlay({ exitHoldProgress = 0, hasGamepad = false, children 
           </div>
         )}
 
-        {/* Top-Right Quick Calibration / Toggle Controls (Mouse/Admin accessible) */}
+        {/* Top-Right Quick Calibration / Toggle Controls */}
         <div className="absolute top-2 right-3 z-[150] flex items-center gap-2 text-[10px] text-neutral-400">
           {hasGamepad && (
             <div className="flex items-center gap-1 bg-cyan-950/70 border border-cyan-500/40 text-cyan-300 px-2 py-0.5 rounded">
@@ -74,16 +60,6 @@ export function CRTOverlay({ exitHoldProgress = 0, hasGamepad = false, children 
             title="Toggle Sound"
           >
             {isMuted ? <VolumeX className="w-3.5 h-3.5 text-red-400" /> : <Volume2 className="w-3.5 h-3.5 text-cyan-400" />}
-          </button>
-          <button
-            onClick={handleToggleCRT}
-            aria-label="Toggle CRT Scanline Simulation"
-            className={`hover:text-cyan-300 bg-black/60 border p-1 rounded transition-colors ${
-              crtEnabled ? "border-cyan-400 text-cyan-300" : "border-neutral-700 text-neutral-500"
-            }`}
-            title="Toggle CRT Scanlines & Tube Filter"
-          >
-            <Monitor className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
