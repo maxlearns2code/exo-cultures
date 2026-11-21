@@ -5,7 +5,8 @@ import confetti from "canvas-confetti";
 import NextImage from "next/image";
 import { useArcadeInput, ArcadeInputs } from "@/hooks/useArcadeInput";
 import { ArcadeAudio } from "@/utils/audio";
-import { Sparkles, Trophy, ArrowRight, Heart, Star, Play, ArrowLeft, Gamepad2, Info } from "lucide-react";
+import { Sparkles, Trophy, ArrowRight, Heart, Star, Play, ArrowLeft, Gamepad2, Info, BookOpen } from "lucide-react";
+import { LetterOfIntentModal } from "./LetterOfIntentModal";
 
 export type WavelengthColor = "cyan" | "magenta" | "amber" | "violet";
 
@@ -72,6 +73,7 @@ export function ChromaticGame({ onReturnToHub }: ChromaticGameProps) {
 
   // Exhibition Experience Screen ("intro") vs Active Game ("playing")
   const [gameState, setGameState] = useState<"intro" | "playing">("intro");
+  const [showBrief1Modal, setShowBrief1Modal] = useState<boolean>(false);
 
   // Mario Game State
   const [world, setWorld] = useState("1-1");
@@ -268,8 +270,22 @@ export function ChromaticGame({ onReturnToHub }: ChromaticGameProps) {
       const prev = prevInputsRef.current;
       prevInputsRef.current = inputs;
 
-      // In Intro Screen: Press [A] or START to start the game
+      // In Intro Screen: Press [A] or START to start the game, or [Y] to view Poster & Letter
       if (gameState === "intro") {
+        if (showBrief1Modal) {
+          if ((inputs.action2 && (!prev || !prev.action2)) || (inputs.select && (!prev || !prev.select))) {
+            setShowBrief1Modal(false);
+            ArcadeAudio.playCancel();
+          }
+          return;
+        }
+
+        if (inputs.action4 && (!prev || !prev.action4)) {
+          setShowBrief1Modal(true);
+          ArcadeAudio.playSelect();
+          return;
+        }
+
         if ((inputs.action1 && (!prev || !prev.action1)) || (inputs.start && (!prev || !prev.start))) {
           startGameplay();
         }
@@ -354,7 +370,7 @@ export function ChromaticGame({ onReturnToHub }: ChromaticGameProps) {
         setActiveWavelength(nextCol);
       }
     },
-    [gameOver, gameState, initLevel, stageCleared, startGameplay]
+    [gameOver, gameState, initLevel, showBrief1Modal, stageCleared, startGameplay]
   );
 
   const { exitHoldProgress, hasGamepad } = useArcadeInput(handleInputs, onReturnToHub);
@@ -804,6 +820,9 @@ export function ChromaticGame({ onReturnToHub }: ChromaticGameProps) {
 
   return (
     <div className="w-full h-full flex flex-col justify-between select-none relative font-mono">
+      {/* Brief 1 Poster & Letter of Intent Modal */}
+      <LetterOfIntentModal isOpen={showBrief1Modal} onClose={() => setShowBrief1Modal(false)} />
+
       {/* =================================================================== */}
       {/* EXHIBITION BRIEFING / TITLE SCREEN (First Page for Game)           */}
       {/* =================================================================== */}
@@ -863,16 +882,27 @@ export function ChromaticGame({ onReturnToHub }: ChromaticGameProps) {
               </div>
             </div>
 
-            {/* PROMINENT CALL TO ACTION BUTTON */}
-            <button
-              onClick={startGameplay}
-              className="w-full max-w-sm flex items-center justify-center gap-2 py-3 px-6 bg-gradient-to-r from-cyan-400 via-amber-300 to-cyan-400 hover:brightness-110 text-black font-bold text-sm tracking-wider uppercase rounded-lg shadow-[0_0_25px_rgba(0,240,255,0.6)] transition-all animate-bounce cursor-pointer"
-            >
-              <Play className="w-4 h-4 fill-current" />
-              <span>START PLAYING [A]</span>
-            </button>
-            <span className="text-[10px] text-neutral-500 mt-2">
-              Press [A] Button on 8BitDo Stick, Spacebar, or Click to Start
+            {/* ACTION BUTTONS */}
+            <div className="w-full max-w-sm flex flex-col gap-2.5">
+              <button
+                onClick={startGameplay}
+                className="w-full flex items-center justify-center gap-2 py-3 px-6 bg-gradient-to-r from-cyan-400 via-amber-300 to-cyan-400 hover:brightness-110 text-black font-bold text-sm tracking-wider uppercase rounded-lg shadow-[0_0_25px_rgba(0,240,255,0.6)] transition-all animate-bounce cursor-pointer"
+              >
+                <Play className="w-4 h-4 fill-current" />
+                <span>START PLAYING [A]</span>
+              </button>
+
+              <button
+                onClick={() => setShowBrief1Modal(true)}
+                className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-neutral-900 hover:bg-neutral-800 text-cyan-300 border-2 border-cyan-500/50 hover:border-cyan-400 font-bold text-xs uppercase tracking-wider rounded transition-colors cursor-pointer"
+              >
+                <BookOpen className="w-3.5 h-3.5" />
+                <span>VIEW BRIEF 1: POSTER & LETTER OF INTENT [Y]</span>
+              </button>
+            </div>
+
+            <span className="text-[10px] text-neutral-500 mt-1">
+              Press [A] to Play • Press [Y] for Poster & Letter of Intent
             </span>
           </div>
 

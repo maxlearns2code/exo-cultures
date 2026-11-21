@@ -5,9 +5,10 @@ import { useRouter } from "next/navigation";
 import { CultureCard, CultureInfo } from "@/components/hub/CultureCard";
 import { AttractMode } from "@/components/hub/AttractMode";
 import { CRTOverlay } from "@/components/arcade/CRTOverlay";
+import { ExpoDossierModal } from "@/components/hub/ExpoDossierModal";
 import { useArcadeInput, ArcadeInputs } from "@/hooks/useArcadeInput";
 import { ArcadeAudio } from "@/utils/audio";
-import { Sparkles, Gamepad2, Play, Users, Tv, Compass, Info, ArrowLeft } from "lucide-react";
+import { Sparkles, Gamepad2, Play, Users, Tv, Compass, Info, ArrowLeft, BookOpen } from "lucide-react";
 
 const CULTURES: CultureInfo[] = [
   {
@@ -74,6 +75,7 @@ export default function ArcadeLauncherHub() {
   const [viewMode, setViewMode] = useState<"welcome" | "hub">("welcome");
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [isAttractMode, setIsAttractMode] = useState<boolean>(false);
+  const [isDossierOpen, setIsDossierOpen] = useState<boolean>(false);
   const lastInteractionRef = useRef<number>(Date.now());
   const prevInputsRef = useRef<ArcadeInputs | null>(null);
 
@@ -122,7 +124,26 @@ export default function ArcadeLauncherHub() {
         registerActivity();
       }
 
+      // If Dossier Modal is open: [B] or Start/Select closes it
+      if (isDossierOpen) {
+        if (
+          (currentInputs.action2 && (!prev || !prev.action2)) ||
+          (currentInputs.select && (!prev || !prev.select))
+        ) {
+          setIsDossierOpen(false);
+          ArcadeAudio.playCancel();
+        }
+        return;
+      }
+
       if (isAttractMode) return;
+
+      // Action 4 [Y Button] opens the Expo Dossier from anywhere
+      if (currentInputs.action4 && (!prev || !prev.action4)) {
+        ArcadeAudio.playSelect();
+        setIsDossierOpen(true);
+        return;
+      }
 
       // In Welcome Screen: Pressing [A] or START opens the Arcade Hub
       if (viewMode === "welcome") {
@@ -163,7 +184,7 @@ export default function ArcadeLauncherHub() {
         setIsAttractMode(true);
       }
     },
-    [enterHub, isAttractMode, launchGame, registerActivity, selectedIndex, viewMode]
+    [enterHub, isAttractMode, isDossierOpen, launchGame, registerActivity, selectedIndex, viewMode]
   );
 
   const { exitHoldProgress, hasGamepad } = useArcadeInput(handleInputs);
@@ -171,15 +192,18 @@ export default function ArcadeLauncherHub() {
   useEffect(() => {
     const interval = setInterval(() => {
       const idleTime = Date.now() - lastInteractionRef.current;
-      if (idleTime >= IDLE_ATTRACT_TIMEOUT_MS && !isAttractMode) {
+      if (idleTime >= IDLE_ATTRACT_TIMEOUT_MS && !isAttractMode && !isDossierOpen) {
         setIsAttractMode(true);
       }
     }, 3000);
     return () => clearInterval(interval);
-  }, [isAttractMode]);
+  }, [isAttractMode, isDossierOpen]);
 
   return (
     <CRTOverlay exitHoldProgress={exitHoldProgress} hasGamepad={hasGamepad}>
+      {/* Dossier Modal Overlay */}
+      <ExpoDossierModal isOpen={isDossierOpen} onClose={() => setIsDossierOpen(false)} />
+
       {/* Attract Mode Screensaver Overlay */}
       {isAttractMode && (
         <AttractMode
@@ -201,19 +225,19 @@ export default function ArcadeLauncherHub() {
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-white text-black border-2 border-white mb-2">
               <Sparkles className="w-3.5 h-3.5 text-black animate-spin" />
               <span className="text-[10px] font-bold uppercase tracking-widest">
-                EXHIBITION ARCADE CABINET • GALLERY SHOWCASE
+                INTERGALACTIC WORLDS EXPO • WEEK 51, 2026 • HYPER ISLAND
               </span>
             </div>
             <h1 className="text-3xl md:text-4xl font-bold tracking-[0.25em] text-white uppercase drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]">
               EXO-CULTURES
             </h1>
             <p className="text-xs text-neutral-300 tracking-wider mt-1">
-              4 SPECULATIVE ALIEN CIVILIZATIONS • 14&quot; CRT INSTALLATION
+              GROUP PAVILION: 4 SPECULATIVE ALIEN CIVILIZATIONS • 14&quot; CRT INSTALLATION
             </p>
           </div>
 
           {/* Exhibition Statement Card (Negative Contrast Block) */}
-          <div className="w-full max-w-lg mx-auto bg-black border-2 border-white p-6 shadow-[8px_8px_0px_#ffffff] flex flex-col items-center text-center my-auto">
+          <div className="w-full max-w-lg mx-auto bg-black border-2 border-white p-5 md:p-6 shadow-[8px_8px_0px_#ffffff] flex flex-col items-center text-center my-auto">
             <div className="w-full flex items-center justify-between border-b-2 border-white/20 pb-2 mb-3 text-[11px]">
               <div className="flex items-center gap-1.5 text-white font-bold uppercase tracking-wider">
                 <Users className="w-4 h-4 text-white" />
@@ -224,42 +248,53 @@ export default function ArcadeLauncherHub() {
               </span>
             </div>
 
-            <p className="text-xs md:text-sm text-neutral-200 leading-relaxed mb-5">
-              Welcome to our interactive exhibition experience. Powered by a <strong>Raspberry Pi 400</strong>, custom <strong>8BitDo arcade sticks</strong>, and authentic <strong>15kHz analog RGB CRT output</strong>, this installation lets visitors step into four extraordinary extraterrestrial worlds.
+            <p className="text-xs md:text-sm text-neutral-200 leading-relaxed mb-4">
+              Welcome to our exhibition pavilion for the <strong>Intergalactic Worlds Expo</strong>. Due to limited space, four neighbouring worlds have joined in a unified hybrid installation. Centered on an authentic <strong>14&quot; analog RGB CRT arcade cabinet</strong> powered by a <strong>Raspberry Pi 400</strong> and <strong>8BitDo arcade sticks</strong>, visitors can step directly into four speculative alien realms.
             </p>
 
             {/* Hardware & Spec Pills */}
-            <div className="flex flex-wrap justify-center gap-2 mb-6">
-              <span className="flex items-center gap-1.5 text-[10px] px-3 py-1 bg-black border-2 border-white text-white font-bold uppercase">
+            <div className="flex flex-wrap justify-center gap-2 mb-5">
+              <span className="flex items-center gap-1.5 text-[10px] px-2.5 py-1 bg-black border-2 border-white text-white font-bold uppercase">
                 <Tv className="w-3 h-3 text-white" />
                 14&quot; CRT TV (4:3)
               </span>
-              <span className="flex items-center gap-1.5 text-[10px] px-3 py-1 bg-black border-2 border-white text-white font-bold uppercase">
+              <span className="flex items-center gap-1.5 text-[10px] px-2.5 py-1 bg-black border-2 border-white text-white font-bold uppercase">
                 <Gamepad2 className="w-3 h-3 text-white" />
                 8BitDo Arcade Stick
               </span>
-              <span className="flex items-center gap-1.5 text-[10px] px-3 py-1 bg-black border-2 border-white text-white font-bold uppercase">
+              <span className="flex items-center gap-1.5 text-[10px] px-2.5 py-1 bg-black border-2 border-white text-white font-bold uppercase">
                 <Compass className="w-3 h-3 text-white" />
                 Locked 60 FPS
               </span>
             </div>
 
-            {/* PROMINENT NEGATIVE CALL TO ACTION BUTTON */}
-            <button
-              onClick={enterHub}
-              className="w-full max-w-sm flex items-center justify-center gap-3 py-3.5 px-6 bg-white hover:bg-black text-black hover:text-white border-2 border-white font-bold text-sm tracking-[0.15em] uppercase shadow-[5px_5px_0px_#888888] transition-all cursor-pointer active:translate-x-1 active:translate-y-1"
-            >
-              <Play className="w-4 h-4 fill-current" />
-              <span>ENTER THE ARCADE CABINET</span>
-            </button>
+            {/* ACTION BUTTONS (Negative Black & White) */}
+            <div className="w-full max-w-sm flex flex-col gap-2.5">
+              <button
+                onClick={enterHub}
+                className="w-full flex items-center justify-center gap-3 py-3 px-6 bg-white hover:bg-black text-black hover:text-white border-2 border-white font-bold text-xs md:text-sm tracking-[0.15em] uppercase shadow-[5px_5px_0px_#888888] transition-all cursor-pointer active:translate-x-1 active:translate-y-1"
+              >
+                <Play className="w-4 h-4 fill-current" />
+                <span>ENTER THE ARCADE CABINET [A]</span>
+              </button>
+
+              <button
+                onClick={() => setIsDossierOpen(true)}
+                className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-black hover:bg-neutral-900 text-white border-2 border-white/60 hover:border-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
+              >
+                <BookOpen className="w-3.5 h-3.5" />
+                <span>EXPO DOSSIER & PRESENTATION NOTES [Y]</span>
+              </button>
+            </div>
+
             <span className="text-[10px] text-neutral-400 mt-2 font-mono">
-              Press [A] Button, Spacebar, or Click to Start
+              Press [A] to Start • Press [Y] for Dossier
             </span>
           </div>
 
           {/* Exhibition Footer */}
           <div className="text-[10px] text-neutral-400 border-t-2 border-white/20 pt-2 flex items-center justify-between">
-            <span>EXHIBITION INSTALLATION BUILD</span>
+            <span>HYPER ISLAND CAMPUS • WEEK 51, 2026</span>
             <span>NEXT.JS APP ROUTER • VERCEL</span>
           </div>
         </div>
@@ -273,7 +308,7 @@ export default function ArcadeLauncherHub() {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setViewMode("welcome")}
-                className="flex items-center gap-1.5 px-2.5 py-1 bg-white text-black font-bold text-xs border-2 border-white transition-colors"
+                className="flex items-center gap-1.5 px-2.5 py-1 bg-white text-black font-bold text-xs border-2 border-white transition-colors cursor-pointer"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>[B] INTRO</span>
@@ -290,10 +325,17 @@ export default function ArcadeLauncherHub() {
 
             <div className="flex items-center gap-2">
               <button
-                onClick={() => setIsAttractMode(true)}
-                className="text-[10px] text-white border-2 border-white px-2 py-0.5 font-bold hover:bg-white hover:text-black transition-colors"
+                onClick={() => setIsDossierOpen(true)}
+                className="text-[10px] text-white border-2 border-white px-2 py-0.5 font-bold hover:bg-white hover:text-black transition-colors cursor-pointer flex items-center gap-1"
               >
-                [X] PREVIEW REEL
+                <BookOpen className="w-3 h-3" />
+                <span>[Y] DOSSIER</span>
+              </button>
+              <button
+                onClick={() => setIsAttractMode(true)}
+                className="text-[10px] text-white border-2 border-white px-2 py-0.5 font-bold hover:bg-white hover:text-black transition-colors cursor-pointer"
+              >
+                [X] PREVIEW
               </button>
               <div className="hidden sm:flex items-center gap-1 text-[10px] text-white border-2 border-white px-2 py-0.5 font-bold">
                 <span className="w-1.5 h-1.5 bg-white inline-block animate-ping" />
@@ -331,13 +373,16 @@ export default function ArcadeLauncherHub() {
           <footer className="w-full mt-auto pt-2 border-t-2 border-white text-[10px] text-neutral-300 flex flex-wrap items-center justify-between select-none">
             <div className="flex items-center gap-2">
               <span className="text-white font-bold">JOYSTICK:</span>
-              <span>Move / Aim</span>
+              <span>Move / Select</span>
               <span className="text-neutral-600">|</span>
               <span className="text-white font-bold">[A]</span>
-              <span>Confirm / Launch</span>
+              <span>Launch World</span>
               <span className="text-neutral-600">|</span>
               <span className="text-white font-bold">[B]</span>
               <span>Exhibition Intro</span>
+              <span className="text-neutral-600">|</span>
+              <span className="text-white font-bold">[Y]</span>
+              <span>Dossier</span>
             </div>
             <div className="text-neutral-400">
               <span className="text-white font-bold">[SEL+START]</span> Hold 2s Hub
