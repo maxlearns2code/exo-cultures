@@ -310,6 +310,7 @@ export default function ArcadeLauncherHub() {
       fxMode={fxMode}
       onToggleFX={handleToggleFX}
       activeFXType={activeFXType}
+      theme={viewMode === "welcome" ? "black" : "white"}
     >
       {/* Dossier Modal Overlay */}
       <ExpoDossierModal isOpen={isDossierOpen} onClose={() => setIsDossierOpen(false)} />
@@ -405,24 +406,24 @@ export default function ArcadeLauncherHub() {
         </div>
       ) : (
         /* =================================================================== */
-        /* 2. ARCADE CABINET 4-CULTURES SELECTION HUB (MONOCHROME B&W)        */
+        /* 2. ARCADE CABINET 4-CULTURES SELECTION HUB (STARK WHITE NEGATIVE)  */
         /* =================================================================== */
-        <div className="flex-1 flex flex-col justify-between font-mono bg-black text-white">
+        <div className="flex-1 flex flex-col justify-between font-mono bg-white text-black select-none">
           {/* Header */}
-          <header className="w-full flex items-center justify-between border-b-2 border-white pb-2 mb-3 select-none">
+          <header className="w-full flex items-center justify-between border-b-2 border-black pb-2 mb-3 select-none">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setViewMode("welcome")}
-                className="flex items-center gap-1.5 px-2.5 py-1 bg-white text-black font-bold text-xs border-2 border-white transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 px-2.5 py-1 bg-black hover:bg-neutral-800 text-white font-bold text-xs border-2 border-black transition-colors cursor-pointer shadow-[2px_2px_0px_#888888]"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>[B] INTRO</span>
               </button>
               <div>
-                <h1 className="text-sm md:text-base font-bold tracking-wider text-white uppercase">
+                <h1 className="text-sm md:text-base font-bold tracking-wider text-black uppercase">
                   EXO-CULTURES EXHIBITION
                 </h1>
-                <p className="text-[10px] text-neutral-400 tracking-widest">
+                <p className="text-[10px] text-neutral-600 tracking-widest">
                   4 ALIEN CIVILIZATIONS • SELECT YOUR WORLD
                 </p>
               </div>
@@ -431,19 +432,19 @@ export default function ArcadeLauncherHub() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsDossierOpen(true)}
-                className="text-[10px] text-white border-2 border-white px-2 py-0.5 font-bold hover:bg-white hover:text-black transition-colors cursor-pointer flex items-center gap-1"
+                className="text-[10px] text-black border-2 border-black px-2 py-0.5 font-bold hover:bg-black hover:text-white transition-colors cursor-pointer flex items-center gap-1"
               >
                 <BookOpen className="w-3 h-3" />
                 <span>[Y] PROCESS</span>
               </button>
               <button
                 onClick={() => setIsAttractMode(true)}
-                className="text-[10px] text-white border-2 border-white px-2 py-0.5 font-bold hover:bg-white hover:text-black transition-colors cursor-pointer"
+                className="text-[10px] text-black border-2 border-black px-2 py-0.5 font-bold hover:bg-black hover:text-white transition-colors cursor-pointer"
               >
                 [X] PREVIEW
               </button>
-              <div className="hidden sm:flex items-center gap-1 text-[10px] text-white border-2 border-white px-2 py-0.5 font-bold">
-                <span className="w-1.5 h-1.5 bg-white inline-block animate-ping" />
+              <div className="hidden sm:flex items-center gap-1 text-[10px] text-black border-2 border-black px-2 py-0.5 font-bold">
+                <span className="w-1.5 h-1.5 bg-black inline-block animate-ping" />
                 <span>FREE PLAY</span>
               </div>
             </div>
@@ -452,10 +453,10 @@ export default function ArcadeLauncherHub() {
           {/* Subtitle Bar */}
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-white bg-neutral-900 border border-white px-1.5 py-0.5">
+              <span className="text-xs font-bold text-white bg-black border border-black px-1.5 py-0.5">
                 [0{selectedIndex + 1}/04]
               </span>
-              <span className="text-xs text-neutral-200 uppercase tracking-wider font-bold">
+              <span className="text-xs text-black uppercase tracking-wider font-bold">
                 {CULTURES[selectedIndex].name} — {CULTURES[selectedIndex].title}
               </span>
             </div>
@@ -470,27 +471,28 @@ export default function ArcadeLauncherHub() {
                 isSelected={index === selectedIndex}
                 onSelect={() => setSelectedIndex(index)}
                 onLaunch={() => launchGame(index)}
+                inverted
               />
             ))}
           </div>
 
           {/* Footer Controls */}
-          <footer className="w-full mt-auto pt-2 border-t-2 border-white text-[10px] text-neutral-300 flex flex-wrap items-center justify-between select-none">
+          <footer className="w-full mt-auto pt-2 border-t-2 border-black text-[10px] text-neutral-700 flex flex-wrap items-center justify-between select-none">
             <div className="flex items-center gap-2">
-              <span className="text-white font-bold">JOYSTICK:</span>
+              <span className="text-black font-bold">JOYSTICK:</span>
               <span>Move / Select</span>
-              <span className="text-neutral-600">|</span>
-              <span className="text-white font-bold">[A]</span>
+              <span className="text-neutral-400">|</span>
+              <span className="text-black font-bold">[A]</span>
               <span>Launch World</span>
-              <span className="text-neutral-600">|</span>
-              <span className="text-white font-bold">[B]</span>
+              <span className="text-neutral-400">|</span>
+              <span className="text-black font-bold">[B]</span>
               <span>Exhibition Intro</span>
-              <span className="text-neutral-600">|</span>
-              <span className="text-white font-bold">[Y]</span>
+              <span className="text-neutral-400">|</span>
+              <span className="text-black font-bold">[Y]</span>
               <span>Process</span>
             </div>
-            <div className="text-neutral-400">
-              <span className="text-white font-bold">[SEL+START]</span> Hold 2s Hub
+            <div className="text-neutral-700">
+              <span className="text-black font-bold">[SEL+START]</span> Hold 2s Hub
             </div>
           </footer>
         </div>
