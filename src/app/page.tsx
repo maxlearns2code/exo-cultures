@@ -66,7 +66,7 @@ const CULTURES: CultureInfo[] = [
   },
 ];
 
-const IDLE_ATTRACT_TIMEOUT_MS = 90000;
+const IDLE_RETURN_TO_WELCOME_MS = 60000;
 
 export default function ArcadeLauncherHub() {
   const router = useRouter();
@@ -189,15 +189,21 @@ export default function ArcadeLauncherHub() {
 
   const { exitHoldProgress, hasGamepad } = useArcadeInput(handleInputs);
 
+  // Idle timeout: The initial exhibition page NEVER changes until interacted with.
+  // If someone leaves while in the selection hub or dossier, it returns to the initial exhibition screen.
   useEffect(() => {
+    if (viewMode === "welcome" && !isDossierOpen && !isAttractMode) return;
+
     const interval = setInterval(() => {
       const idleTime = Date.now() - lastInteractionRef.current;
-      if (idleTime >= IDLE_ATTRACT_TIMEOUT_MS && !isAttractMode && !isDossierOpen) {
-        setIsAttractMode(true);
+      if (idleTime >= IDLE_RETURN_TO_WELCOME_MS) {
+        setViewMode("welcome");
+        setIsDossierOpen(false);
+        setIsAttractMode(false);
       }
-    }, 3000);
+    }, 2000);
     return () => clearInterval(interval);
-  }, [isAttractMode, isDossierOpen]);
+  }, [viewMode, isDossierOpen, isAttractMode]);
 
   return (
     <CRTOverlay exitHoldProgress={exitHoldProgress} hasGamepad={hasGamepad}>
