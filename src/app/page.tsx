@@ -6,6 +6,9 @@ import { CultureCard, CultureInfo, ALIEN_CULTURE_METADATA } from "@/components/h
 import { AttractMode } from "@/components/hub/AttractMode";
 import { CRTOverlay, AttractionFXMode, AlienHubDesign } from "@/components/arcade/CRTOverlay";
 import { ExpoDossierModal } from "@/components/hub/ExpoDossierModal";
+import { TranslatorHubView } from "@/components/hub/views/TranslatorHubView";
+import { GatewayHubView } from "@/components/hub/views/GatewayHubView";
+import { SpecimenHubView } from "@/components/hub/views/SpecimenHubView";
 import { useArcadeInput, ArcadeInputs } from "@/hooks/useArcadeInput";
 import { ArcadeAudio } from "@/utils/audio";
 import { Gamepad2, Play, Tv, Info, ArrowLeft, BookOpen } from "lucide-react";
@@ -430,158 +433,48 @@ export default function ArcadeLauncherHub() {
         </div>
       ) : (
         /* =================================================================== */
-        /* 2. ARCADE CABINET 4-CULTURES SELECTION HUB (STARK WHITE NEGATIVE)  */
+        /* 2. ARCADE CABINET 4-CULTURES SELECTION HUB (3 UNIQUE DESIGNS)      */
         /* =================================================================== */
-        <div className="flex-1 flex flex-col justify-between font-mono bg-white text-black select-none">
-          {/* Header with Alien Hub Design Theming */}
-          <header className="w-full flex items-center justify-between border-b-2 border-black pb-2 mb-3 select-none">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setViewMode("welcome")}
-                className="flex items-center gap-1.5 px-2.5 py-1 bg-black hover:bg-neutral-800 text-white font-bold text-xs border-2 border-black transition-colors cursor-pointer shadow-[2px_2px_0px_#888888]"
-              >
-                <ArrowLeft className="w-3.5 h-3.5" />
-                <span>[B] INTRO</span>
-              </button>
-              <div>
-                <h1 className="text-sm md:text-base font-bold tracking-wider text-black uppercase">
-                  {hubDesign === "translator"
-                    ? "UNIVERSAL TRANSLATOR MATRIX"
-                    : hubDesign === "gateway"
-                    ? "INTERGALACTIC PORTAL MATRIX"
-                    : "EXTRATERRESTRIAL ARTIFACT SCANNER"}
-                </h1>
-                <p className="text-[10px] text-neutral-600 tracking-widest">
-                  {hubDesign === "translator"
-                    ? "4 SPECULATIVE CULTURES // HYPER ISLAND 2026"
-                    : hubDesign === "gateway"
-                    ? "EARTH GATEWAY 04 // 15kHz ANALOG RGB"
-                    : "CONTAINMENT FACILITY // LAB OBSERVATION DECK"}
-                </p>
-              </div>
-            </div>
+        <>
+          {hubDesign === "translator" && (
+            <TranslatorHubView
+              cultures={CULTURES}
+              selectedIndex={selectedIndex}
+              onSelect={setSelectedIndex}
+              onLaunch={launchGame}
+              onOpenDossier={() => setIsDossierOpen(true)}
+              onOpenAttract={() => setIsAttractMode(true)}
+              onReturnToIntro={() => setViewMode("welcome")}
+              onToggleDesign={handleToggleHubDesign}
+            />
+          )}
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleToggleHubDesign}
-                className="text-[10px] text-black border-2 border-black px-2 py-0.5 font-bold hover:bg-black hover:text-white transition-colors cursor-pointer bg-neutral-100"
-                title="Switch Alien Hub Design (Click or press T)"
-              >
-                [UI: {hubDesign.toUpperCase()}]
-              </button>
-              <button
-                onClick={() => setIsDossierOpen(true)}
-                className="text-[10px] text-black border-2 border-black px-2 py-0.5 font-bold hover:bg-black hover:text-white transition-colors cursor-pointer flex items-center gap-1"
-              >
-                <BookOpen className="w-3 h-3" />
-                <span>[Y] PROCESS</span>
-              </button>
-              <button
-                onClick={() => setIsAttractMode(true)}
-                className="text-[10px] text-black border-2 border-black px-2 py-0.5 font-bold hover:bg-black hover:text-white transition-colors cursor-pointer"
-              >
-                [X] PREVIEW
-              </button>
-            </div>
-          </header>
+          {hubDesign === "gateway" && (
+            <GatewayHubView
+              cultures={CULTURES}
+              selectedIndex={selectedIndex}
+              onSelect={setSelectedIndex}
+              onLaunch={launchGame}
+              onOpenDossier={() => setIsDossierOpen(true)}
+              onOpenAttract={() => setIsAttractMode(true)}
+              onReturnToIntro={() => setViewMode("welcome")}
+              onToggleDesign={handleToggleHubDesign}
+            />
+          )}
 
-          {/* Subtitle Bar with dynamic Culture theme colors and Alien Design Adaptations */}
-          {(() => {
-            const current = CULTURES[selectedIndex];
-            const alien =
-              ALIEN_CULTURE_METADATA[current.id] ||
-              ALIEN_CULTURE_METADATA["chromatic-symbiosis"];
-            const badgeClasses: Record<string, string> = {
-              cyan: "bg-cyan-600 text-white border-cyan-700",
-              emerald: "bg-emerald-600 text-white border-emerald-700",
-              violet: "bg-violet-600 text-white border-violet-700",
-              amber: "bg-amber-500 text-black border-amber-600 font-bold",
-            };
-            const textClasses: Record<string, string> = {
-              cyan: "text-cyan-900",
-              emerald: "text-emerald-900",
-              violet: "text-violet-900",
-              amber: "text-amber-950",
-            };
-
-            return (
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`text-xs font-bold border px-1.5 py-0.5 shadow-sm font-mono ${
-                      badgeClasses[current.themeColor] || "bg-black text-white border-black"
-                    }`}
-                  >
-                    {hubDesign === "translator"
-                      ? `[0${selectedIndex + 1}/04] ${alien.alienGlyphs}`
-                      : hubDesign === "gateway"
-                      ? `[SECTOR 0${selectedIndex + 1}]`
-                      : `[${alien.specimenCode}]`}
-                  </span>
-                  <span
-                    className={`text-xs uppercase tracking-wider font-bold ${
-                      textClasses[current.themeColor] || "text-black"
-                    }`}
-                  >
-                    {hubDesign === "translator"
-                      ? `➔ ${current.name} — ${current.title}`
-                      : hubDesign === "gateway"
-                      ? `${alien.sectorId} // ${alien.planetCoords}`
-                      : `${current.title} — ${alien.sampleType}`}
-                  </span>
-                </div>
-                <div className="text-[10px] text-neutral-500 uppercase tracking-wider hidden sm:block">
-                  {hubDesign === "translator"
-                    ? `CURATED BY ${current.author} • ${alien.fragmentCode}`
-                    : hubDesign === "gateway"
-                    ? `BEAM: ${alien.beamLock} • 60 FPS`
-                    : `CONTAINMENT: NOMINAL // ${alien.hazardClass}`}
-                </div>
-              </div>
-            );
-          })()}
-
-          {/* 2x2 Grid of 4 Alien Civilizations */}
-          <div className="grid grid-cols-2 gap-3 flex-1 min-h-0">
-            {CULTURES.map((culture, index) => (
-              <CultureCard
-                key={culture.id}
-                culture={culture}
-                isSelected={index === selectedIndex}
-                onSelect={() => setSelectedIndex(index)}
-                onLaunch={() => launchGame(index)}
-                inverted
-                hubDesign={hubDesign}
-              />
-            ))}
-          </div>
-
-          {/* Footer Controls */}
-          <footer className="w-full mt-auto pt-2 border-t-2 border-black text-[10px] text-neutral-700 flex flex-wrap items-center justify-between select-none">
-            <div className="flex items-center gap-2">
-              <span className="text-black font-bold">JOYSTICK:</span>
-              <span>Move / Select</span>
-              <span className="text-neutral-400">|</span>
-              <span className="text-black font-bold">[A]</span>
-              <span>
-                {hubDesign === "gateway"
-                  ? "Engage Portal"
-                  : hubDesign === "specimen"
-                  ? "Analyze Specimen"
-                  : "Enter Fragment"}
-              </span>
-              <span className="text-neutral-400">|</span>
-              <span className="text-black font-bold">[B]</span>
-              <span>Exhibition Intro</span>
-              <span className="text-neutral-400">|</span>
-              <span className="text-black font-bold">[Y]</span>
-              <span>Process</span>
-            </div>
-            <div className="text-neutral-700">
-              <span className="text-black font-bold">[SEL+START]</span> Hold 2s Hub
-            </div>
-          </footer>
-        </div>
+          {hubDesign === "specimen" && (
+            <SpecimenHubView
+              cultures={CULTURES}
+              selectedIndex={selectedIndex}
+              onSelect={setSelectedIndex}
+              onLaunch={launchGame}
+              onOpenDossier={() => setIsDossierOpen(true)}
+              onOpenAttract={() => setIsAttractMode(true)}
+              onReturnToIntro={() => setViewMode("welcome")}
+              onToggleDesign={handleToggleHubDesign}
+            />
+          )}
+        </>
       )}
     </CRTOverlay>
   );
