@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Volume2, VolumeX, Gamepad2, Zap } from "lucide-react";
+import { Volume2, VolumeX, Gamepad2 } from "lucide-react";
 import { ArcadeAudio } from "@/utils/audio";
 
 export type AttractionFXMode = "dual" | "flash" | "glitch" | "off";
@@ -76,10 +76,9 @@ export function CRTOverlay({
             <button
               onClick={onToggleFX}
               aria-label="Toggle Attraction Mode"
-              className="hover:bg-white hover:text-black text-white bg-black border border-neutral-700 hover:border-white px-2 py-0.5 rounded font-mono text-[9px] font-bold uppercase transition-colors flex items-center gap-1 cursor-pointer"
+              className="hover:bg-white hover:text-black text-white bg-black border border-neutral-700 hover:border-white px-2 py-0.5 rounded font-mono text-[9px] font-bold uppercase transition-colors cursor-pointer"
               title={`Attraction FX Mode: ${fxMode.toUpperCase()} (Click to switch / test)`}
             >
-              <Zap className={`w-3 h-3 ${fxMode !== "off" ? "text-white fill-current" : "text-neutral-500"}`} />
               <span>FX: {fxMode}</span>
             </button>
           )}

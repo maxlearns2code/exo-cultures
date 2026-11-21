@@ -8,7 +8,7 @@ import { CRTOverlay, AttractionFXMode } from "@/components/arcade/CRTOverlay";
 import { ExpoDossierModal } from "@/components/hub/ExpoDossierModal";
 import { useArcadeInput, ArcadeInputs } from "@/hooks/useArcadeInput";
 import { ArcadeAudio } from "@/utils/audio";
-import { Sparkles, Gamepad2, Play, Users, Tv, Compass, Info, ArrowLeft, BookOpen, Zap } from "lucide-react";
+import { Sparkles, Gamepad2, Play, Users, Tv, Compass, Info, ArrowLeft, BookOpen } from "lucide-react";
 
 const CULTURES: CultureInfo[] = [
   {
