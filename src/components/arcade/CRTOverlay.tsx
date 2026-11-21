@@ -5,6 +5,7 @@ import { Volume2, VolumeX, Gamepad2 } from "lucide-react";
 import { ArcadeAudio } from "@/utils/audio";
 
 export type AttractionFXMode = "dual" | "flash" | "glitch" | "off";
+export type AlienHubDesign = "translator" | "gateway" | "specimen";
 
 interface CRTOverlayProps {
   exitHoldProgress?: number;
@@ -13,6 +14,8 @@ interface CRTOverlayProps {
   onToggleFX?: () => void;
   activeFXType?: "flash" | "glitch" | null;
   theme?: "black" | "white";
+  hubDesign?: AlienHubDesign;
+  onToggleHubDesign?: () => void;
   children: React.ReactNode;
 }
 
@@ -23,6 +26,8 @@ export function CRTOverlay({
   onToggleFX,
   activeFXType = null,
   theme = "black",
+  hubDesign,
+  onToggleHubDesign,
   children,
 }: CRTOverlayProps) {
   const [isMuted, setIsMuted] = useState(false);
@@ -93,6 +98,22 @@ export function CRTOverlay({
               <Gamepad2 className={`w-3 h-3 ${isWhite ? "text-black" : "text-white"}`} />
               <span>CONTROLLER READY</span>
             </div>
+          )}
+
+          {/* Alien Hub Design Mode Switcher Button (Translator / Gateway / Specimen) */}
+          {onToggleHubDesign && hubDesign && (
+            <button
+              onClick={onToggleHubDesign}
+              aria-label="Switch Alien Hub Design"
+              className={`px-2 py-0.5 rounded font-mono text-[9px] font-bold uppercase transition-colors cursor-pointer border shadow-sm ${
+                isWhite
+                  ? "bg-white text-black border-neutral-400 hover:border-black hover:bg-neutral-100"
+                  : "bg-black text-white border-neutral-700 hover:border-white hover:bg-white hover:text-black"
+              }`}
+              title={`Alien Hub Design: ${hubDesign.toUpperCase()} (Click to toggle Translator / Gateway / Specimen)`}
+            >
+              <span>UI: {hubDesign}</span>
+            </button>
           )}
 
           {/* Attraction Eye-Catcher FX Mode Switcher Button */}

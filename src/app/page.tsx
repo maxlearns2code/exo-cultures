@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { CultureCard, CultureInfo } from "@/components/hub/CultureCard";
+import { CultureCard, CultureInfo, ALIEN_CULTURE_METADATA } from "@/components/hub/CultureCard";
 import { AttractMode } from "@/components/hub/AttractMode";
-import { CRTOverlay, AttractionFXMode } from "@/components/arcade/CRTOverlay";
+import { CRTOverlay, AttractionFXMode, AlienHubDesign } from "@/components/arcade/CRTOverlay";
 import { ExpoDossierModal } from "@/components/hub/ExpoDossierModal";
 import { useArcadeInput, ArcadeInputs } from "@/hooks/useArcadeInput";
 import { ArcadeAudio } from "@/utils/audio";
@@ -83,8 +83,30 @@ export default function ArcadeLauncherHub() {
   const [activeFXType, setActiveFXType] = useState<"flash" | "glitch" | null>(null);
   const [displayTitle, setDisplayTitle] = useState<string>("EXO-CULTURES");
 
+  // Alien Hub Design Modes ("translator" | "gateway" | "specimen")
+  const [hubDesign, setHubDesign] = useState<AlienHubDesign>("translator");
+
   const lastInteractionRef = useRef<number>(Date.now());
   const prevInputsRef = useRef<ArcadeInputs | null>(null);
+
+  const handleToggleHubDesign = useCallback(() => {
+    ArcadeAudio.playAlienGlitch();
+    setHubDesign((prev) => {
+      const designs: AlienHubDesign[] = ["translator", "gateway", "specimen"];
+      return designs[(designs.indexOf(prev) + 1) % designs.length];
+    });
+  }, []);
+
+  // Keyboard shortcut [T] or [U] toggles between the 3 alien designs
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "t" || e.key === "T" || e.key === "u" || e.key === "U") {
+        handleToggleHubDesign();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleToggleHubDesign]);
 
   const enterHub = useCallback(() => {
     ArcadeAudio.playSelect();
@@ -311,6 +333,8 @@ export default function ArcadeLauncherHub() {
       onToggleFX={handleToggleFX}
       activeFXType={activeFXType}
       theme={viewMode === "welcome" ? "black" : "white"}
+      hubDesign={hubDesign}
+      onToggleHubDesign={handleToggleHubDesign}
     >
       {/* Dossier Modal Overlay */}
       <ExpoDossierModal isOpen={isDossierOpen} onClose={() => setIsDossierOpen(false)} />
@@ -409,7 +433,7 @@ export default function ArcadeLauncherHub() {
         /* 2. ARCADE CABINET 4-CULTURES SELECTION HUB (STARK WHITE NEGATIVE)  */
         /* =================================================================== */
         <div className="flex-1 flex flex-col justify-between font-mono bg-white text-black select-none">
-          {/* Header */}
+          {/* Header with Alien Hub Design Theming */}
           <header className="w-full flex items-center justify-between border-b-2 border-black pb-2 mb-3 select-none">
             <div className="flex items-center gap-3">
               <button
@@ -421,15 +445,30 @@ export default function ArcadeLauncherHub() {
               </button>
               <div>
                 <h1 className="text-sm md:text-base font-bold tracking-wider text-black uppercase">
-                  EXO-CULTURES EXHIBITION
+                  {hubDesign === "translator"
+                    ? "UNIVERSAL TRANSLATOR MATRIX"
+                    : hubDesign === "gateway"
+                    ? "INTERGALACTIC PORTAL MATRIX"
+                    : "EXTRATERRESTRIAL ARTIFACT SCANNER"}
                 </h1>
                 <p className="text-[10px] text-neutral-600 tracking-widest">
-                  4 ALIEN CIVILIZATIONS • SELECT YOUR WORLD
+                  {hubDesign === "translator"
+                    ? "4 SPECULATIVE CULTURES // HYPER ISLAND 2026"
+                    : hubDesign === "gateway"
+                    ? "EARTH GATEWAY 04 // 15kHz ANALOG RGB"
+                    : "CONTAINMENT FACILITY // LAB OBSERVATION DECK"}
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-2">
+              <button
+                onClick={handleToggleHubDesign}
+                className="text-[10px] text-black border-2 border-black px-2 py-0.5 font-bold hover:bg-black hover:text-white transition-colors cursor-pointer bg-neutral-100"
+                title="Switch Alien Hub Design (Click or press T)"
+              >
+                [UI: {hubDesign.toUpperCase()}]
+              </button>
               <button
                 onClick={() => setIsDossierOpen(true)}
                 className="text-[10px] text-black border-2 border-black px-2 py-0.5 font-bold hover:bg-black hover:text-white transition-colors cursor-pointer flex items-center gap-1"
@@ -443,16 +482,15 @@ export default function ArcadeLauncherHub() {
               >
                 [X] PREVIEW
               </button>
-              <div className="hidden sm:flex items-center gap-1 text-[10px] text-black border-2 border-black px-2 py-0.5 font-bold">
-                <span className="w-1.5 h-1.5 bg-black inline-block animate-ping" />
-                <span>FREE PLAY</span>
-              </div>
             </div>
           </header>
 
-          {/* Subtitle Bar with dynamic Culture theme colors */}
+          {/* Subtitle Bar with dynamic Culture theme colors and Alien Design Adaptations */}
           {(() => {
             const current = CULTURES[selectedIndex];
+            const alien =
+              ALIEN_CULTURE_METADATA[current.id] ||
+              ALIEN_CULTURE_METADATA["chromatic-symbiosis"];
             const badgeClasses: Record<string, string> = {
               cyan: "bg-cyan-600 text-white border-cyan-700",
               emerald: "bg-emerald-600 text-white border-emerald-700",
@@ -470,22 +508,34 @@ export default function ArcadeLauncherHub() {
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                   <span
-                    className={`text-xs font-bold border px-1.5 py-0.5 shadow-sm ${
+                    className={`text-xs font-bold border px-1.5 py-0.5 shadow-sm font-mono ${
                       badgeClasses[current.themeColor] || "bg-black text-white border-black"
                     }`}
                   >
-                    [0{selectedIndex + 1}/04]
+                    {hubDesign === "translator"
+                      ? `[0${selectedIndex + 1}/04] ${alien.alienGlyphs}`
+                      : hubDesign === "gateway"
+                      ? `[SECTOR 0${selectedIndex + 1}]`
+                      : `[${alien.specimenCode}]`}
                   </span>
                   <span
                     className={`text-xs uppercase tracking-wider font-bold ${
                       textClasses[current.themeColor] || "text-black"
                     }`}
                   >
-                    {current.name} — {current.title}
+                    {hubDesign === "translator"
+                      ? `➔ ${current.name} — ${current.title}`
+                      : hubDesign === "gateway"
+                      ? `${alien.sectorId} // ${alien.planetCoords}`
+                      : `${current.title} — ${alien.sampleType}`}
                   </span>
                 </div>
                 <div className="text-[10px] text-neutral-500 uppercase tracking-wider hidden sm:block">
-                  CURATED BY {current.author}
+                  {hubDesign === "translator"
+                    ? `CURATED BY ${current.author} • ${alien.fragmentCode}`
+                    : hubDesign === "gateway"
+                    ? `BEAM: ${alien.beamLock} • 60 FPS`
+                    : `CONTAINMENT: NOMINAL // ${alien.hazardClass}`}
                 </div>
               </div>
             );
@@ -501,6 +551,7 @@ export default function ArcadeLauncherHub() {
                 onSelect={() => setSelectedIndex(index)}
                 onLaunch={() => launchGame(index)}
                 inverted
+                hubDesign={hubDesign}
               />
             ))}
           </div>
@@ -512,7 +563,13 @@ export default function ArcadeLauncherHub() {
               <span>Move / Select</span>
               <span className="text-neutral-400">|</span>
               <span className="text-black font-bold">[A]</span>
-              <span>Launch World</span>
+              <span>
+                {hubDesign === "gateway"
+                  ? "Engage Portal"
+                  : hubDesign === "specimen"
+                  ? "Analyze Specimen"
+                  : "Enter Fragment"}
+              </span>
               <span className="text-neutral-400">|</span>
               <span className="text-black font-bold">[B]</span>
               <span>Exhibition Intro</span>
