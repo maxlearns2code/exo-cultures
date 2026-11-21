@@ -10,6 +10,32 @@ interface AttractModeProps {
   onDismiss: () => void;
 }
 
+const COLOR_SPOTLIGHT: Record<
+  string,
+  { border: string; author: string; badge: string }
+> = {
+  cyan: {
+    border: "border-cyan-400 shadow-[6px_6px_0px_#06b6d4]",
+    author: "text-cyan-400",
+    badge: "border-cyan-400 text-cyan-300",
+  },
+  emerald: {
+    border: "border-emerald-400 shadow-[6px_6px_0px_#10b981]",
+    author: "text-emerald-400",
+    badge: "border-emerald-400 text-emerald-300",
+  },
+  violet: {
+    border: "border-violet-400 shadow-[6px_6px_0px_#8b5cf6]",
+    author: "text-violet-400",
+    badge: "border-violet-400 text-violet-300",
+  },
+  amber: {
+    border: "border-amber-400 shadow-[6px_6px_0px_#f59e0b]",
+    author: "text-amber-400",
+    badge: "border-amber-400 text-amber-300",
+  },
+};
+
 export function AttractMode({ cultures, onDismiss }: AttractModeProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -21,6 +47,11 @@ export function AttractMode({ cultures, onDismiss }: AttractModeProps) {
   }, [cultures.length]);
 
   const activeCulture = cultures[currentIndex];
+  const spotlight = COLOR_SPOTLIGHT[activeCulture.themeColor] || {
+    border: "border-white shadow-[6px_6px_0px_#ffffff]",
+    author: "text-neutral-300",
+    badge: "border-white text-white",
+  };
 
   return (
     <div
@@ -42,13 +73,13 @@ export function AttractMode({ cultures, onDismiss }: AttractModeProps) {
         </p>
       </div>
 
-      {/* Featured Culture Spotlight (Negative contrast card) */}
-      <div className="w-full max-w-lg bg-black border-2 border-white p-5 shadow-[6px_6px_0px_#ffffff] flex flex-col items-center text-center">
+      {/* Featured Culture Spotlight with Alien World Theme Color */}
+      <div className={`w-full max-w-lg bg-black border-2 p-5 transition-all duration-300 flex flex-col items-center text-center ${spotlight.border}`}>
         <div className="w-full flex items-center justify-between border-b-2 border-white/20 pb-2 mb-3">
           <span className="text-xs font-bold text-white uppercase tracking-widest">
             CIVILIZATION {currentIndex + 1} OF {cultures.length}
           </span>
-          <span className="text-xs font-bold text-neutral-300 uppercase">
+          <span className={`text-xs font-bold uppercase tracking-wider ${spotlight.author}`}>
             CREATOR: {activeCulture.author}
           </span>
         </div>
@@ -59,7 +90,7 @@ export function AttractMode({ cultures, onDismiss }: AttractModeProps) {
               src={activeCulture.imageSrc}
               alt={activeCulture.title}
               fill
-              className="object-cover grayscale contrast-150 transition-transform duration-1000 scale-105"
+              className="object-cover transition-transform duration-1000 scale-105"
             />
           ) : (
             <div className="w-full h-full flex flex-col items-center justify-center bg-black p-4">
@@ -89,7 +120,7 @@ export function AttractMode({ cultures, onDismiss }: AttractModeProps) {
           {activeCulture.mechanics.map((mech, idx) => (
             <span
               key={idx}
-              className="text-[10px] px-2 py-0.5 bg-black border border-white text-white font-bold"
+              className={`text-[10px] px-2 py-0.5 bg-black border font-bold ${spotlight.badge}`}
             >
               • {mech}
             </span>

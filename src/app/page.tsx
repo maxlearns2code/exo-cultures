@@ -450,17 +450,46 @@ export default function ArcadeLauncherHub() {
             </div>
           </header>
 
-          {/* Subtitle Bar */}
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-white bg-black border border-black px-1.5 py-0.5">
-                [0{selectedIndex + 1}/04]
-              </span>
-              <span className="text-xs text-black uppercase tracking-wider font-bold">
-                {CULTURES[selectedIndex].name} — {CULTURES[selectedIndex].title}
-              </span>
-            </div>
-          </div>
+          {/* Subtitle Bar with dynamic Culture theme colors */}
+          {(() => {
+            const current = CULTURES[selectedIndex];
+            const badgeClasses: Record<string, string> = {
+              cyan: "bg-cyan-600 text-white border-cyan-700",
+              emerald: "bg-emerald-600 text-white border-emerald-700",
+              violet: "bg-violet-600 text-white border-violet-700",
+              amber: "bg-amber-500 text-black border-amber-600 font-bold",
+            };
+            const textClasses: Record<string, string> = {
+              cyan: "text-cyan-900",
+              emerald: "text-emerald-900",
+              violet: "text-violet-900",
+              amber: "text-amber-950",
+            };
+
+            return (
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`text-xs font-bold border px-1.5 py-0.5 shadow-sm ${
+                      badgeClasses[current.themeColor] || "bg-black text-white border-black"
+                    }`}
+                  >
+                    [0{selectedIndex + 1}/04]
+                  </span>
+                  <span
+                    className={`text-xs uppercase tracking-wider font-bold ${
+                      textClasses[current.themeColor] || "text-black"
+                    }`}
+                  >
+                    {current.name} — {current.title}
+                  </span>
+                </div>
+                <div className="text-[10px] text-neutral-500 uppercase tracking-wider hidden sm:block">
+                  CURATED BY {current.author}
+                </div>
+              </div>
+            );
+          })()}
 
           {/* 2x2 Grid of 4 Alien Civilizations */}
           <div className="grid grid-cols-2 gap-3 flex-1 min-h-0">
