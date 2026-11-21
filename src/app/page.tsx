@@ -8,7 +8,7 @@ import { CRTOverlay, AttractionFXMode } from "@/components/arcade/CRTOverlay";
 import { ExpoDossierModal } from "@/components/hub/ExpoDossierModal";
 import { useArcadeInput, ArcadeInputs } from "@/hooks/useArcadeInput";
 import { ArcadeAudio } from "@/utils/audio";
-import { Gamepad2, Play, Users, Tv, Compass, Info, ArrowLeft, BookOpen } from "lucide-react";
+import { Gamepad2, Play, Tv, Info, ArrowLeft, BookOpen } from "lucide-react";
 
 const CULTURES: CultureInfo[] = [
   {
@@ -348,10 +348,9 @@ export default function ArcadeLauncherHub() {
           {/* Exhibition Statement Card (Negative Contrast Block) */}
           <div className="w-full max-w-lg mx-auto bg-black border-2 border-white p-5 md:p-6 shadow-[8px_8px_0px_#ffffff] flex flex-col items-center text-center my-auto">
             <div className="w-full flex items-center justify-between border-b-2 border-white/20 pb-2 mb-3 text-[11px]">
-              <div className="flex items-center gap-1.5 text-white font-bold uppercase tracking-wider">
-                <Users className="w-4 h-4 text-white" />
-                <span>TEAM CREATORS</span>
-              </div>
+              <span className="text-white font-bold uppercase tracking-wider">
+                TEAM CREATORS
+              </span>
               <span className="text-white font-bold tracking-wide">
                 Maxime • Aisah • Martin • Mana
               </span>
@@ -366,12 +365,10 @@ export default function ArcadeLauncherHub() {
               <span className="flex items-center text-[10px] px-2.5 py-1 bg-black border-2 border-white text-white font-bold uppercase">
                 4 Speculative Worlds
               </span>
-              <span className="flex items-center gap-1.5 text-[10px] px-2.5 py-1 bg-black border-2 border-white text-white font-bold uppercase">
-                <Users className="w-3 h-3 text-white" />
+              <span className="flex items-center text-[10px] px-2.5 py-1 bg-black border-2 border-white text-white font-bold uppercase">
                 Joint Group Pavilion
               </span>
-              <span className="flex items-center gap-1.5 text-[10px] px-2.5 py-1 bg-black border-2 border-white text-white font-bold uppercase">
-                <Compass className="w-3 h-3 text-white" />
+              <span className="flex items-center text-[10px] px-2.5 py-1 bg-black border-2 border-white text-white font-bold uppercase">
                 Interactive Fragments
               </span>
             </div>

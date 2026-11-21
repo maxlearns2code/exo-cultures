@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import NextImage from "next/image";
-import { X, BookOpen, Rocket, Tv, Cpu, Users, Palette, CheckCircle2, Radio, Terminal } from "lucide-react";
+import { X, BookOpen, Rocket, Tv, Cpu, Palette, CheckCircle2, Radio, Terminal } from "lucide-react";
 
 interface ExpoDossierModalProps {
   isOpen: boolean;

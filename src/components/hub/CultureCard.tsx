@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { Layers, Play, Compass, Cpu, Wind, Radio } from "lucide-react";
+import { Layers, Play, Cpu, Wind, Radio } from "lucide-react";
 
 export interface CultureInfo {
   id: string;
@@ -31,7 +31,7 @@ export function CultureCard({ culture, isSelected, onSelect, onLaunch }: Culture
       case "cyan":
         return <Layers className="w-4 h-4 text-white" />;
       case "emerald":
-        return <Compass className="w-4 h-4 text-white" />;
+        return <Radio className="w-4 h-4 text-white" />;
       case "violet":
         return <Cpu className="w-4 h-4 text-white" />;
       case "amber":
