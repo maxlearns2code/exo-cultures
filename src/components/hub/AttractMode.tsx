@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { CultureInfo } from "./CultureCard";
-import { Sparkles, Gamepad2, Radio } from "lucide-react";
+import { Gamepad2, Radio } from "lucide-react";
 
 interface AttractModeProps {
   cultures: CultureInfo[];
@@ -29,8 +29,7 @@ export function AttractMode({ cultures, onDismiss }: AttractModeProps) {
     >
       {/* Top Arcade Marquee */}
       <div className="flex flex-col items-center text-center mt-2">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-white text-black border-2 border-white mb-2">
-          <Sparkles className="w-3.5 h-3.5 text-black animate-spin" />
+        <div className="inline-flex items-center px-3 py-1 bg-white text-black border-2 border-white mb-2">
           <span className="text-[10px] font-bold uppercase tracking-widest">
             ATTRACT MODE • EXHIBITION PREVIEW
           </span>

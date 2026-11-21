@@ -4,7 +4,7 @@ import React from "react";
 import { CRTOverlay } from "@/components/arcade/CRTOverlay";
 import { ArcadeHUD, ArcadeControlsFooter } from "@/components/arcade/ArcadeHUD";
 import { useArcadeInput } from "@/hooks/useArcadeInput";
-import { Radio, ArrowLeft, Terminal, Sparkles } from "lucide-react";
+import { Radio, ArrowLeft, Terminal } from "lucide-react";
 
 interface EmptyPortalViewProps {
   author: string;

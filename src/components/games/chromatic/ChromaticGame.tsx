@@ -5,7 +5,7 @@ import confetti from "canvas-confetti";
 import NextImage from "next/image";
 import { useArcadeInput, ArcadeInputs } from "@/hooks/useArcadeInput";
 import { ArcadeAudio } from "@/utils/audio";
-import { Sparkles, Trophy, ArrowRight, Heart, Star, Play, ArrowLeft, Gamepad2, Info, BookOpen } from "lucide-react";
+import { Trophy, ArrowRight, Heart, Star, Play, ArrowLeft, Gamepad2, Info, BookOpen, Layers } from "lucide-react";
 import { LetterOfIntentModal } from "./LetterOfIntentModal";
 
 export type WavelengthColor = "cyan" | "magenta" | "amber" | "violet";
@@ -838,7 +838,7 @@ export function ChromaticGame({ onReturnToHub }: ChromaticGameProps) {
               <span>[ESC] HUB</span>
             </button>
             <div className="flex items-center gap-1.5 text-xs text-cyan-400 font-bold uppercase tracking-wider">
-              <Sparkles className="w-4 h-4" />
+              <Layers className="w-4 h-4" />
               <span>EXHIBITION INSTALLATION BRIEFING</span>
             </div>
             <div className="text-[10px] text-neutral-400">MAXIME DEWYNTER</div>
@@ -965,7 +965,7 @@ export function ChromaticGame({ onReturnToHub }: ChromaticGameProps) {
 
             {!assetsLoaded && (
               <div className="absolute inset-0 bg-black/85 flex flex-col items-center justify-center text-center p-6 text-cyan-400 z-30">
-                <Sparkles className="w-8 h-8 text-cyan-400 animate-spin mb-3" />
+                <Layers className="w-8 h-8 text-cyan-400 animate-pulse mb-3" />
                 <span className="text-sm font-bold tracking-widest uppercase">
                   LOADING SUB-ICE PLATFORMER ASSETS...
                 </span>

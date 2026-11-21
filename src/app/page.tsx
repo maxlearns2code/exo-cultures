@@ -8,7 +8,7 @@ import { CRTOverlay, AttractionFXMode } from "@/components/arcade/CRTOverlay";
 import { ExpoDossierModal } from "@/components/hub/ExpoDossierModal";
 import { useArcadeInput, ArcadeInputs } from "@/hooks/useArcadeInput";
 import { ArcadeAudio } from "@/utils/audio";
-import { Sparkles, Gamepad2, Play, Users, Tv, Compass, Info, ArrowLeft, BookOpen } from "lucide-react";
+import { Gamepad2, Play, Users, Tv, Compass, Info, ArrowLeft, BookOpen } from "lucide-react";
 
 const CULTURES: CultureInfo[] = [
   {
@@ -332,8 +332,7 @@ export default function ArcadeLauncherHub() {
         <div className="flex-1 flex flex-col justify-between p-4 md:p-6 text-center select-none font-mono bg-black text-white relative">
           {/* Header Marquee */}
           <div className="flex flex-col items-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white text-black border-2 border-white mb-2">
-              <Sparkles className="w-3.5 h-3.5 text-black animate-spin" />
+            <div className="inline-flex items-center px-3 py-1 bg-white text-black border-2 border-white mb-2">
               <span className="text-[10px] font-bold uppercase tracking-widest">
                 INTERGALACTIC WORLDS EXPO • WEEK 51, 2026 • HYPER ISLAND
               </span>
@@ -364,8 +363,7 @@ export default function ArcadeLauncherHub() {
 
             {/* Concept & Experience Pills */}
             <div className="flex flex-wrap justify-center gap-2 mb-5">
-              <span className="flex items-center gap-1.5 text-[10px] px-2.5 py-1 bg-black border-2 border-white text-white font-bold uppercase">
-                <Sparkles className="w-3 h-3 text-white" />
+              <span className="flex items-center text-[10px] px-2.5 py-1 bg-black border-2 border-white text-white font-bold uppercase">
                 4 Speculative Worlds
               </span>
               <span className="flex items-center gap-1.5 text-[10px] px-2.5 py-1 bg-black border-2 border-white text-white font-bold uppercase">

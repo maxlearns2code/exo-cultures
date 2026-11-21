@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import NextImage from "next/image";
-import { X, BookOpen, Rocket, Tv, Cpu, Users, Palette, CheckCircle2, Sparkles, Terminal } from "lucide-react";
+import { X, BookOpen, Rocket, Tv, Cpu, Users, Palette, CheckCircle2, Radio, Terminal } from "lucide-react";
 
 interface ExpoDossierModalProps {
   isOpen: boolean;
@@ -130,7 +130,7 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-4 bg-neutral-950 border border-white/30 space-y-2">
                   <h4 className="font-bold text-white text-xs uppercase flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-white" />
+                    <Radio className="w-3.5 h-3.5 text-white" />
                     Full-Scale Cryo-Immersion Pod
                   </h4>
                   <p className="text-xs text-neutral-300">

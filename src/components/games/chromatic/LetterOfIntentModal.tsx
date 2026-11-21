@@ -2,7 +2,7 @@
 
 import React from "react";
 import NextImage from "next/image";
-import { X, FileText, CheckCircle2, Sparkles, Layers, ShieldCheck } from "lucide-react";
+import { X, FileText, CheckCircle2, Layers, ShieldCheck } from "lucide-react";
 
 interface LetterOfIntentModalProps {
   isOpen: boolean;

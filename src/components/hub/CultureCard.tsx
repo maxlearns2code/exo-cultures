@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { Sparkles, Play, Compass, Cpu, Wind, Radio } from "lucide-react";
+import { Layers, Play, Compass, Cpu, Wind, Radio } from "lucide-react";
 
 export interface CultureInfo {
   id: string;
@@ -29,7 +29,7 @@ export function CultureCard({ culture, isSelected, onSelect, onLaunch }: Culture
   const getIcon = () => {
     switch (culture.themeColor) {
       case "cyan":
-        return <Sparkles className="w-4 h-4 text-white" />;
+        return <Layers className="w-4 h-4 text-white" />;
       case "emerald":
         return <Compass className="w-4 h-4 text-white" />;
       case "violet":
