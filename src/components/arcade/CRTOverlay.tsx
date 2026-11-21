@@ -1,16 +1,28 @@
 "use client";
 
 import React, { useState } from "react";
-import { Volume2, VolumeX, Gamepad2 } from "lucide-react";
+import { Volume2, VolumeX, Gamepad2, Zap } from "lucide-react";
 import { ArcadeAudio } from "@/utils/audio";
+
+export type AttractionFXMode = "dual" | "flash" | "glitch" | "off";
 
 interface CRTOverlayProps {
   exitHoldProgress?: number;
   hasGamepad?: boolean;
+  fxMode?: AttractionFXMode;
+  onToggleFX?: () => void;
+  activeFXType?: "flash" | "glitch" | null;
   children: React.ReactNode;
 }
 
-export function CRTOverlay({ exitHoldProgress = 0, hasGamepad = false, children }: CRTOverlayProps) {
+export function CRTOverlay({
+  exitHoldProgress = 0,
+  hasGamepad = false,
+  fxMode,
+  onToggleFX,
+  activeFXType = null,
+  children,
+}: CRTOverlayProps) {
   const [isMuted, setIsMuted] = useState(false);
 
   const handleToggleSound = (e: React.MouseEvent) => {
@@ -21,12 +33,17 @@ export function CRTOverlay({ exitHoldProgress = 0, hasGamepad = false, children 
 
   return (
     <div className="crt-viewport bg-black">
-      {/* 4:3 Aspect Ratio Display Box (Pure Black #000000) */}
-      <div className="crt-aspect-box bg-black">
+      {/* 4:3 Aspect Ratio Display Box (Pure Black #000000) with dynamic FX classes */}
+      <div
+        className={`crt-aspect-box bg-black relative ${
+          activeFXType === "flash" ? "fx-phosphor-flash" : ""
+        } ${activeFXType === "glitch" ? "fx-cryo-glitch" : ""}`}
+      >
+        {/* Cryo Scanline Sweep Beam when glitching */}
+        {activeFXType === "glitch" && <div className="fx-scanline-bar" />}
+
         {/* Main Content inside 6% CRT Safe-Zone */}
-        <div className="crt-safe-zone bg-black">
-          {children}
-        </div>
+        <div className="crt-safe-zone bg-black">{children}</div>
 
         {/* Universal Exit Progress Indicator (SELECT + START held) */}
         {exitHoldProgress > 0 && (
@@ -45,18 +62,33 @@ export function CRTOverlay({ exitHoldProgress = 0, hasGamepad = false, children 
           </div>
         )}
 
-        {/* Top-Right Quick Calibration / Sound Button (Monochrome White/Black) */}
+        {/* Top-Right Quick Calibration: Sound + Attraction FX Button (Monochrome White/Black) */}
         <div className="absolute top-2 right-3 z-[150] flex items-center gap-2 text-[10px] text-white">
           {hasGamepad && (
-            <div className="flex items-center gap-1 bg-black border border-white text-white px-2 py-0.5 font-mono">
+            <div className="hidden sm:flex items-center gap-1 bg-black border border-white text-white px-2 py-0.5 font-mono">
               <Gamepad2 className="w-3 h-3 text-white" />
               <span>CONTROLLER READY</span>
             </div>
           )}
+
+          {/* Attraction Eye-Catcher FX Mode Switcher Button */}
+          {onToggleFX && fxMode && (
+            <button
+              onClick={onToggleFX}
+              aria-label="Toggle Attraction Mode"
+              className="hover:bg-white hover:text-black text-white bg-black border border-neutral-700 hover:border-white px-2 py-0.5 rounded font-mono text-[9px] font-bold uppercase transition-colors flex items-center gap-1 cursor-pointer"
+              title={`Attraction FX Mode: ${fxMode.toUpperCase()} (Click to switch / test)`}
+            >
+              <Zap className={`w-3 h-3 ${fxMode !== "off" ? "text-white fill-current" : "text-neutral-500"}`} />
+              <span>FX: {fxMode}</span>
+            </button>
+          )}
+
+          {/* Sound Toggle Button */}
           <button
             onClick={handleToggleSound}
             aria-label="Toggle Sound"
-            className="hover:bg-white hover:text-black text-white bg-black border border-neutral-700 hover:border-white p-1 rounded transition-colors"
+            className="hover:bg-white hover:text-black text-white bg-black border border-neutral-700 hover:border-white p-1 rounded transition-colors cursor-pointer"
             title="Toggle Sound"
           >
             {isMuted ? <VolumeX className="w-3.5 h-3.5 text-neutral-500" /> : <Volume2 className="w-3.5 h-3.5 text-white" />}

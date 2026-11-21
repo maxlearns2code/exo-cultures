@@ -4,11 +4,11 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { CultureCard, CultureInfo } from "@/components/hub/CultureCard";
 import { AttractMode } from "@/components/hub/AttractMode";
-import { CRTOverlay } from "@/components/arcade/CRTOverlay";
+import { CRTOverlay, AttractionFXMode } from "@/components/arcade/CRTOverlay";
 import { ExpoDossierModal } from "@/components/hub/ExpoDossierModal";
 import { useArcadeInput, ArcadeInputs } from "@/hooks/useArcadeInput";
 import { ArcadeAudio } from "@/utils/audio";
-import { Sparkles, Gamepad2, Play, Users, Tv, Compass, Info, ArrowLeft, BookOpen } from "lucide-react";
+import { Sparkles, Gamepad2, Play, Users, Tv, Compass, Info, ArrowLeft, BookOpen, Zap } from "lucide-react";
 
 const CULTURES: CultureInfo[] = [
   {
@@ -67,6 +67,7 @@ const CULTURES: CultureInfo[] = [
 ];
 
 const IDLE_RETURN_TO_WELCOME_MS = 60000;
+const ALIEN_GLYPHS = ["⍙", "⟒", "⌰", "☊", "⍜", "⋔", "⎎", "⏁", "⊑", "⌇", "▲", "◈", "⬡", "☵", "☲", "0x45", "0x58", "0x4F"];
 
 export default function ArcadeLauncherHub() {
   const router = useRouter();
@@ -76,6 +77,12 @@ export default function ArcadeLauncherHub() {
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [isAttractMode, setIsAttractMode] = useState<boolean>(false);
   const [isDossierOpen, setIsDossierOpen] = useState<boolean>(false);
+
+  // Attraction Eye-Catcher FX Mode ("dual" | "flash" | "glitch" | "off")
+  const [fxMode, setFxMode] = useState<AttractionFXMode>("dual");
+  const [activeFXType, setActiveFXType] = useState<"flash" | "glitch" | null>(null);
+  const [displayTitle, setDisplayTitle] = useState<string>("EXO-CULTURES");
+
   const lastInteractionRef = useRef<number>(Date.now());
   const prevInputsRef = useRef<ArcadeInputs | null>(null);
 
@@ -102,6 +109,76 @@ export default function ArcadeLauncherHub() {
       ArcadeAudio.playSelect();
     }
   }, [isAttractMode]);
+
+  // Trigger Eye-Catcher Animation: Phosphor Flash, Cryo-Glitch, or Dual Combo
+  const triggerFX = useCallback((mode: AttractionFXMode) => {
+    if (mode === "off") return;
+
+    if (mode === "flash") {
+      ArcadeAudio.playPhosphorFlash();
+      setActiveFXType("flash");
+      setTimeout(() => setActiveFXType(null), 380);
+      return;
+    }
+
+    if (mode === "glitch") {
+      ArcadeAudio.playAlienGlitch();
+      setActiveFXType("glitch");
+
+      let count = 0;
+      const interval = setInterval(() => {
+        count++;
+        const scrambled = "EXO-CULTURES"
+          .split("")
+          .map((char) => (char === "-" ? "-" : ALIEN_GLYPHS[Math.floor(Math.random() * ALIEN_GLYPHS.length)]))
+          .join("");
+        setDisplayTitle(scrambled);
+
+        if (count >= 10) {
+          clearInterval(interval);
+          setDisplayTitle("EXO-CULTURES");
+          setActiveFXType(null);
+        }
+      }, 75);
+      return;
+    }
+
+    if (mode === "dual") {
+      // First run cryo-glitch and text scramble, then burst with phosphor strobe flash!
+      ArcadeAudio.playAlienGlitch();
+      setActiveFXType("glitch");
+
+      let count = 0;
+      const interval = setInterval(() => {
+        count++;
+        const scrambled = "EXO-CULTURES"
+          .split("")
+          .map((char) => (char === "-" ? "-" : ALIEN_GLYPHS[Math.floor(Math.random() * ALIEN_GLYPHS.length)]))
+          .join("");
+        setDisplayTitle(scrambled);
+
+        if (count >= 8) {
+          clearInterval(interval);
+          setDisplayTitle("EXO-CULTURES");
+          ArcadeAudio.playPhosphorFlash();
+          setActiveFXType("flash");
+          setTimeout(() => setActiveFXType(null), 380);
+        }
+      }, 75);
+    }
+  }, []);
+
+  // Top-Right Button: Switch between Flash, Glitch, Dual, and Off modes
+  const handleToggleFX = useCallback(() => {
+    ArcadeAudio.playSelect();
+    setFxMode((prev) => {
+      const modes: AttractionFXMode[] = ["dual", "flash", "glitch", "off"];
+      const nextMode = modes[(modes.indexOf(prev) + 1) % modes.length];
+      // Trigger instant live preview of the new mode
+      setTimeout(() => triggerFX(nextMode), 60);
+      return nextMode;
+    });
+  }, [triggerFX]);
 
   const handleInputs = useCallback(
     (currentInputs: ArcadeInputs) => {
@@ -145,10 +222,15 @@ export default function ArcadeLauncherHub() {
         return;
       }
 
-      // In Welcome Screen: Pressing [A] or START opens the Arcade Hub
+      // In Welcome Screen:
       if (viewMode === "welcome") {
+        // [A] Button or START opens the Arcade Hub
         if ((currentInputs.action1 && (!prev || !prev.action1)) || (currentInputs.start && (!prev || !prev.start))) {
           enterHub();
+        }
+        // [X] Button manually tests the active eye-catcher FX
+        if (currentInputs.action3 && (!prev || !prev.action3)) {
+          triggerFX(fxMode);
         }
         return;
       }
@@ -184,13 +266,29 @@ export default function ArcadeLauncherHub() {
         setIsAttractMode(true);
       }
     },
-    [enterHub, isAttractMode, isDossierOpen, launchGame, registerActivity, selectedIndex, viewMode]
+    [enterHub, fxMode, isAttractMode, isDossierOpen, launchGame, registerActivity, selectedIndex, triggerFX, viewMode]
   );
 
   const { exitHoldProgress, hasGamepad } = useArcadeInput(handleInputs);
 
-  // Idle timeout: The initial exhibition page NEVER changes until interacted with.
-  // If someone leaves while in the selection hub or dossier, it returns to the initial exhibition screen.
+  // Periodic Eye-Catcher on Welcome Screen: Attracts visitors from across the exhibition room!
+  useEffect(() => {
+    if (viewMode !== "welcome" || isDossierOpen || fxMode === "off") return;
+
+    const interval = setInterval(() => {
+      const idleTime = Date.now() - lastInteractionRef.current;
+      // Trigger flash/glitch pulse every 18 seconds of idle stillness
+      if (idleTime >= 18000) {
+        triggerFX(fxMode);
+        // Refresh idle timer so it pulses periodically without accumulating
+        lastInteractionRef.current = Date.now();
+      }
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [fxMode, isDossierOpen, triggerFX, viewMode]);
+
+  // Idle timeout: When away from the initial screen, return after 60s of inactivity
   useEffect(() => {
     if (viewMode === "welcome" && !isDossierOpen && !isAttractMode) return;
 
@@ -206,7 +304,13 @@ export default function ArcadeLauncherHub() {
   }, [viewMode, isDossierOpen, isAttractMode]);
 
   return (
-    <CRTOverlay exitHoldProgress={exitHoldProgress} hasGamepad={hasGamepad}>
+    <CRTOverlay
+      exitHoldProgress={exitHoldProgress}
+      hasGamepad={hasGamepad}
+      fxMode={fxMode}
+      onToggleFX={handleToggleFX}
+      activeFXType={activeFXType}
+    >
       {/* Dossier Modal Overlay */}
       <ExpoDossierModal isOpen={isDossierOpen} onClose={() => setIsDossierOpen(false)} />
 
@@ -235,7 +339,7 @@ export default function ArcadeLauncherHub() {
               </span>
             </div>
             <h1 className="text-3xl md:text-4xl font-bold tracking-[0.25em] text-white uppercase drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]">
-              EXO-CULTURES
+              {displayTitle}
             </h1>
             <p className="text-xs text-neutral-300 tracking-wider mt-1">
               GROUP PAVILION: 4 SPECULATIVE ALIEN CIVILIZATIONS
@@ -294,7 +398,7 @@ export default function ArcadeLauncherHub() {
             </div>
 
             <span className="text-[10px] text-neutral-400 mt-2 font-mono">
-              Press [A] to Enter • Press [Y] for Process & Dossier
+              Press [A] to Enter • Press [Y] for Process • Press [X] to Test FX
             </span>
           </div>
 
@@ -388,7 +492,7 @@ export default function ArcadeLauncherHub() {
               <span>Exhibition Intro</span>
               <span className="text-neutral-600">|</span>
               <span className="text-white font-bold">[Y]</span>
-              <span>Dossier</span>
+              <span>Process</span>
             </div>
             <div className="text-neutral-400">
               <span className="text-white font-bold">[SEL+START]</span> Hold 2s Hub

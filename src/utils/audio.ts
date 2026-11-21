@@ -219,4 +219,50 @@ export const ArcadeAudio = {
     osc.start();
     osc.stop(ctx.currentTime + 0.4);
   },
+
+  playPhosphorFlash() {
+    if (isMutedState) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    // Dual pulse capacitor discharge snap
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sawtooth";
+    osc.frequency.setValueAtTime(140, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(1800, ctx.currentTime + 0.05);
+    osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.18);
+
+    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.18);
+  },
+
+  playAlienGlitch() {
+    if (isMutedState) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    // Fast frequency-modulated carrier sweep
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "square";
+    osc.frequency.setValueAtTime(700, ctx.currentTime);
+    osc.frequency.setValueAtTime(1350, ctx.currentTime + 0.04);
+    osc.frequency.setValueAtTime(320, ctx.currentTime + 0.09);
+    osc.frequency.setValueAtTime(950, ctx.currentTime + 0.14);
+    osc.frequency.exponentialRampToValueAtTime(110, ctx.currentTime + 0.22);
+
+    gain.gain.setValueAtTime(0.09, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.22);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.22);
+  },
 };

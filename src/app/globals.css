@@ -90,3 +90,92 @@ body.arcade-cursor-hidden * {
 .exit-progress-bar {
   animation: exitPulse 0.5s infinite;
 }
+
+/* ========================================================================== */
+/* ATTRACTION MODES: PHOSPHOR INVERSION FLASH & CRYO-GLITCH                   */
+/* ========================================================================== */
+
+@keyframes phosphorStrobeInvert {
+  0% {
+    filter: invert(0) brightness(1);
+  }
+  15% {
+    filter: invert(1) brightness(2) contrast(1.6);
+  }
+  30% {
+    filter: invert(0) brightness(1);
+  }
+  50% {
+    filter: invert(1) brightness(2.2) contrast(1.8);
+  }
+  70% {
+    filter: invert(0) brightness(1);
+  }
+  85% {
+    filter: invert(1) brightness(1.6);
+  }
+  100% {
+    filter: invert(0) brightness(1);
+  }
+}
+
+.fx-phosphor-flash {
+  animation: phosphorStrobeInvert 0.38s ease-out forwards;
+}
+
+@keyframes cryoGlitchJitter {
+  0% {
+    transform: translate(0, 0);
+  }
+  15% {
+    transform: translate(-3px, 1.5px) skewX(-1.5deg);
+  }
+  30% {
+    transform: translate(3px, -1.5px) skewX(1.5deg);
+  }
+  45% {
+    transform: translate(-2px, -1px);
+  }
+  60% {
+    transform: translate(3px, 1px) skewX(-1deg);
+  }
+  80% {
+    transform: translate(-1.5px, 2px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+.fx-cryo-glitch {
+  animation: cryoGlitchJitter 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+}
+
+@keyframes scanlineSweepBar {
+  0% {
+    top: -5%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.9;
+  }
+  85% {
+    opacity: 0.9;
+  }
+  100% {
+    top: 105%;
+    opacity: 0;
+  }
+}
+
+.fx-scanline-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: #ffffff;
+  box-shadow: 0 0 16px #ffffff, 0 0 32px #ffffff;
+  animation: scanlineSweepBar 0.8s linear forwards;
+  pointer-events: none;
+  z-index: 220;
+}
