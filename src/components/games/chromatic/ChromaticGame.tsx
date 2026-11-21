@@ -908,8 +908,8 @@ export function ChromaticGame({ onReturnToHub }: ChromaticGameProps) {
 
           {/* Footer */}
           <div className="border-t-2 border-neutral-800 pt-2 text-[10px] text-neutral-500 flex items-center justify-between">
-            <span>RASPBERRY PI 400 + RECALBOX RGB DUAL</span>
-            <span>14&quot; CRT 640×480 @ 60FPS</span>
+            <span>SUB-ICE EXPEDITION • ENCELADUS OCEAN</span>
+            <span>INTERGALACTIC WORLDS EXPO</span>
           </div>
         </div>
       ) : (

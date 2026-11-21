@@ -39,7 +39,7 @@ export function AttractMode({ cultures, onDismiss }: AttractModeProps) {
           EXO-CULTURES
         </h1>
         <p className="text-xs text-neutral-400 tracking-wider">
-          4 UNIQUE ALIEN CIVILIZATIONS • 8BITDO ARCADE HUB
+          4 UNIQUE ALIEN CIVILIZATIONS • INTERACTIVE EXHIBITION TERMINAL
         </p>
       </div>
 
@@ -107,7 +107,7 @@ export function AttractMode({ cultures, onDismiss }: AttractModeProps) {
           </span>
         </div>
         <span className="text-[10px] text-neutral-500">
-          8BitDo Arcade Stick Joystick + [A] Button to Choose
+          Use Joystick + [A] Button or Spacebar to Choose
         </span>
       </div>
     </div>

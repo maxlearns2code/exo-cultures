@@ -50,7 +50,7 @@ export function CRTOverlay({ exitHoldProgress = 0, hasGamepad = false, children 
           {hasGamepad && (
             <div className="flex items-center gap-1 bg-black border border-white text-white px-2 py-0.5 font-mono">
               <Gamepad2 className="w-3 h-3 text-white" />
-              <span>8BitDo READY</span>
+              <span>CONTROLLER READY</span>
             </div>
           )}
           <button

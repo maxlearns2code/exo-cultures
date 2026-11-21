@@ -232,7 +232,7 @@ export default function ArcadeLauncherHub() {
               EXO-CULTURES
             </h1>
             <p className="text-xs text-neutral-300 tracking-wider mt-1">
-              GROUP PAVILION: 4 SPECULATIVE ALIEN CIVILIZATIONS • 14&quot; CRT INSTALLATION
+              GROUP PAVILION: 4 SPECULATIVE ALIEN CIVILIZATIONS
             </p>
           </div>
 
@@ -248,23 +248,23 @@ export default function ArcadeLauncherHub() {
               </span>
             </div>
 
-            <p className="text-xs md:text-sm text-neutral-200 leading-relaxed mb-4">
-              Welcome to our exhibition pavilion for the <strong>Intergalactic Worlds Expo</strong>. Due to limited space, four neighbouring worlds have joined in a unified hybrid installation. Centered on an authentic <strong>14&quot; analog RGB CRT arcade cabinet</strong> powered by a <strong>Raspberry Pi 400</strong> and <strong>8BitDo arcade sticks</strong>, visitors can step directly into four speculative alien realms.
+            <p className="text-xs md:text-sm text-neutral-200 leading-relaxed mb-5">
+              Welcome to the Earth pavilion of the <strong>Intergalactic Worlds Expo</strong>. Due to limited space, four neighbouring extraterrestrial civilizations have joined together to present their cultural fragments in a shared interactive installation. Step forward, choose an alien world, and explore their living environments, sensory languages, and dimensional gateways.
             </p>
 
-            {/* Hardware & Spec Pills */}
+            {/* Concept & Experience Pills */}
             <div className="flex flex-wrap justify-center gap-2 mb-5">
               <span className="flex items-center gap-1.5 text-[10px] px-2.5 py-1 bg-black border-2 border-white text-white font-bold uppercase">
-                <Tv className="w-3 h-3 text-white" />
-                14&quot; CRT TV (4:3)
+                <Sparkles className="w-3 h-3 text-white" />
+                4 Speculative Worlds
               </span>
               <span className="flex items-center gap-1.5 text-[10px] px-2.5 py-1 bg-black border-2 border-white text-white font-bold uppercase">
-                <Gamepad2 className="w-3 h-3 text-white" />
-                8BitDo Arcade Stick
+                <Users className="w-3 h-3 text-white" />
+                Joint Group Pavilion
               </span>
               <span className="flex items-center gap-1.5 text-[10px] px-2.5 py-1 bg-black border-2 border-white text-white font-bold uppercase">
                 <Compass className="w-3 h-3 text-white" />
-                Locked 60 FPS
+                Interactive Fragments
               </span>
             </div>
 
@@ -275,7 +275,7 @@ export default function ArcadeLauncherHub() {
                 className="w-full flex items-center justify-center gap-3 py-3 px-6 bg-white hover:bg-black text-black hover:text-white border-2 border-white font-bold text-xs md:text-sm tracking-[0.15em] uppercase shadow-[5px_5px_0px_#888888] transition-all cursor-pointer active:translate-x-1 active:translate-y-1"
               >
                 <Play className="w-4 h-4 fill-current" />
-                <span>ENTER THE ARCADE CABINET [A]</span>
+                <span>ENTER THE EXHIBITION [A]</span>
               </button>
 
               <button
@@ -283,19 +283,19 @@ export default function ArcadeLauncherHub() {
                 className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-black hover:bg-neutral-900 text-white border-2 border-white/60 hover:border-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
               >
                 <BookOpen className="w-3.5 h-3.5" />
-                <span>EXPO DOSSIER & PRESENTATION NOTES [Y]</span>
+                <span>OUR PROCESS & EXPO DOSSIER [Y]</span>
               </button>
             </div>
 
             <span className="text-[10px] text-neutral-400 mt-2 font-mono">
-              Press [A] to Start • Press [Y] for Dossier
+              Press [A] to Enter • Press [Y] for Process & Dossier
             </span>
           </div>
 
           {/* Exhibition Footer */}
           <div className="text-[10px] text-neutral-400 border-t-2 border-white/20 pt-2 flex items-center justify-between">
             <span>HYPER ISLAND CAMPUS • WEEK 51, 2026</span>
-            <span>NEXT.JS APP ROUTER • VERCEL</span>
+            <span>EXHIBITION PAVILION</span>
           </div>
         </div>
       ) : (
@@ -315,7 +315,7 @@ export default function ArcadeLauncherHub() {
               </button>
               <div>
                 <h1 className="text-sm md:text-base font-bold tracking-wider text-white uppercase">
-                  EXO-CULTURES ARCADE
+                  EXO-CULTURES EXHIBITION
                 </h1>
                 <p className="text-[10px] text-neutral-400 tracking-widest">
                   4 ALIEN CIVILIZATIONS • SELECT YOUR WORLD
@@ -329,7 +329,7 @@ export default function ArcadeLauncherHub() {
                 className="text-[10px] text-white border-2 border-white px-2 py-0.5 font-bold hover:bg-white hover:text-black transition-colors cursor-pointer flex items-center gap-1"
               >
                 <BookOpen className="w-3 h-3" />
-                <span>[Y] DOSSIER</span>
+                <span>[Y] PROCESS</span>
               </button>
               <button
                 onClick={() => setIsAttractMode(true)}

@@ -53,7 +53,7 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
             { id: "expo", label: "01. THE EXPO BRIEF" },
             { id: "unlimited", label: "02. UNLIMITED CONCEPT" },
             { id: "prototype", label: "03. OUR PROTOTYPE" },
-            { id: "tech", label: "04. TECH & PROCESS" },
+            { id: "tech", label: "04. OUR PROCESS & HARDWARE" },
             { id: "scenography", label: "05. SCENOGRAPHY" },
             { id: "brief1", label: "06. BRIEF 1: POSTER & LETTER" },
             { id: "team", label: "07. TEAM ROLES" },
@@ -225,15 +225,15 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
             </div>
           )}
 
-          {/* TAB 4: TECH & PROCESS */}
+          {/* TAB 4: OUR PROCESS & HARDWARE */}
           {activeTab === "tech" && (
             <div className="space-y-4">
               <div className="border-l-4 border-white pl-3">
                 <h3 className="text-base font-bold text-white uppercase tracking-wider">
-                  Question 3: How Did We Make It & Why Choose These Technologies?
+                  Our Process: Hardware Choices & Technical Architecture
                 </h3>
                 <p className="text-xs text-neutral-400">
-                  Engineering Rationale, Challenges, AI Reflection & Learnings
+                  Why We Chose 15kHz CRT, Raspberry Pi 400, 8BitDo & Next.js
                 </p>
               </div>
 
