@@ -20,25 +20,25 @@ const BRUTALIST_ACCENTS = {
   cyan: {
     color: "#0891b2",
     badge: "bg-cyan-600 text-white border-cyan-800",
-    button: "bg-black hover:bg-neutral-800 text-white border-2 border-black shadow-[4px_4px_0px_#0891b2]",
+    button: "bg-black hover:bg-neutral-800 text-white border-2 border-black shadow-[3px_3px_0px_#0891b2]",
     tag: "text-cyan-800",
   },
   emerald: {
     color: "#059669",
     badge: "bg-emerald-600 text-white border-emerald-800",
-    button: "bg-black hover:bg-neutral-800 text-white border-2 border-black shadow-[4px_4px_0px_#059669]",
+    button: "bg-black hover:bg-neutral-800 text-white border-2 border-black shadow-[3px_3px_0px_#059669]",
     tag: "text-emerald-800",
   },
   violet: {
     color: "#7c3aed",
     badge: "bg-purple-600 text-white border-purple-800",
-    button: "bg-black hover:bg-neutral-800 text-white border-2 border-black shadow-[4px_4px_0px_#7c3aed]",
+    button: "bg-black hover:bg-neutral-800 text-white border-2 border-black shadow-[3px_3px_0px_#7c3aed]",
     tag: "text-purple-800",
   },
   amber: {
     color: "#d97706",
     badge: "bg-amber-500 text-black border-amber-700 font-bold",
-    button: "bg-black hover:bg-neutral-800 text-white border-2 border-black shadow-[4px_4px_0px_#d97706]",
+    button: "bg-black hover:bg-neutral-800 text-white border-2 border-black shadow-[3px_3px_0px_#d97706]",
     tag: "text-amber-800",
   },
 };
@@ -91,7 +91,7 @@ export function GatewayHubView({
               </span>
             </h1>
             <p className="text-[10px] text-neutral-600 tracking-widest font-semibold uppercase">
-              PAVILION 04 • 4 TOWERING ARCHITECTURAL MONOLITHS • HYPER ISLAND WEEK 51
+              PAVILION 04 • 4 SQUARE GALLERY EXHIBITS • HYPER ISLAND WEEK 51
             </p>
           </div>
         </div>
@@ -120,59 +120,53 @@ export function GatewayHubView({
         </div>
       </header>
 
-      {/* 2. THE 4 TOWERING VERTICAL MONOLITHS (Brutalist Architectural Pillars) */}
-      <div className="grid grid-cols-4 gap-3 flex-1 min-h-0 select-none mb-2">
-        {cultures.map((culture, index) => {
-          const isSel = index === selectedIndex;
-          const cardAlien = ALIEN_CULTURE_METADATA[culture.id] || ALIEN_CULTURE_METADATA["chromatic-symbiosis"];
-          const cardAccent = BRUTALIST_ACCENTS[culture.themeColor];
-          const isPlayable = culture.status === "READY TO PLAY";
+      {/* 2. THE 4 SQUARE GALLERY CARDS (SQUARED & CENTERED ON EXHIBITION WALL) */}
+      <div className="flex-1 min-h-0 flex flex-col items-center justify-center select-none py-2 my-auto">
+        <div className="grid grid-cols-4 gap-3.5 w-full max-w-[940px] items-center justify-center">
+          {cultures.map((culture, index) => {
+            const isSel = index === selectedIndex;
+            const cardAlien = ALIEN_CULTURE_METADATA[culture.id] || ALIEN_CULTURE_METADATA["chromatic-symbiosis"];
+            const cardAccent = BRUTALIST_ACCENTS[culture.themeColor];
+            const isPlayable = culture.status === "READY TO PLAY";
 
-          return (
-            <div
-              key={culture.id}
-              onClick={() => {
-                onSelect(index);
-                if (isSel) onLaunch(index);
-              }}
-              className={`relative flex flex-col justify-between transition-all duration-200 cursor-pointer overflow-hidden ${
-                isSel
-                  ? `border-4 border-black bg-white text-black shadow-[10px_10px_0px_#000000] scale-[1.02] z-30`
-                  : "border-2 border-neutral-400 bg-neutral-100 text-neutral-800 opacity-80 hover:opacity-100 hover:border-black shadow-[3px_3px_0px_#cccccc]"
-              }`}
-            >
-              {/* Monolith Top Cap */}
+            return (
               <div
-                className={`p-2 border-b-2 border-black flex items-center justify-between z-10 ${
-                  isSel ? "bg-black text-white" : "bg-neutral-200 text-black"
+                key={culture.id}
+                onClick={() => {
+                  onSelect(index);
+                  if (isSel) onLaunch(index);
+                }}
+                className={`relative aspect-square w-full flex flex-col justify-between transition-all duration-200 cursor-pointer overflow-hidden ${
+                  isSel
+                    ? `border-4 border-black bg-white text-black shadow-[8px_8px_0px_#000000] scale-[1.03] z-30`
+                    : "border-2 border-neutral-400 bg-neutral-100 text-neutral-800 opacity-80 hover:opacity-100 hover:border-black shadow-[3px_3px_0px_#cccccc]"
                 }`}
               >
-                <div className="flex items-center gap-1.5 min-w-0">
-                  <span className={isSel ? "text-white" : "text-black"}>
-                    {getIcon(culture.themeColor)}
-                  </span>
-                  <span className="text-[10px] font-bold font-mono uppercase tracking-wider truncate">
-                    {cardAlien.sectorId.split(":")[0]}
+                {/* Top Cap Strip */}
+                <div
+                  className={`p-1.5 px-2 border-b-2 border-black flex items-center justify-between z-10 shrink-0 ${
+                    isSel ? "bg-black text-white" : "bg-neutral-200 text-black"
+                  }`}
+                >
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <span className={isSel ? "text-white" : "text-black"}>
+                      {getIcon(culture.themeColor)}
+                    </span>
+                    <span className="text-[10px] font-bold font-mono uppercase tracking-wider truncate">
+                      {cardAlien.sectorId.split(":")[0]}
+                    </span>
+                  </div>
+                  <span
+                    className={`text-[8px] font-mono px-1.5 py-0.2 border uppercase font-bold tracking-widest ${
+                      isSel ? "bg-white text-black border-white" : "bg-black text-white border-black"
+                    }`}
+                  >
+                    {isSel ? "ACTIVE" : "STANDBY"}
                   </span>
                 </div>
-                <span
-                  className={`text-[8px] font-mono px-1.5 py-0.2 border uppercase font-bold tracking-widest ${
-                    isSel ? "bg-white text-black border-white" : "bg-black text-white border-black"
-                  }`}
-                >
-                  {isSel ? "ACTIVE" : "STANDBY"}
-                </span>
-              </div>
 
-              {/* Monolith Center: Squared and Centered Gallery Picture */}
-              <div className="flex-1 min-h-0 flex flex-col items-center justify-center p-2 relative">
-                <div
-                  className={`relative w-[92%] aspect-square max-w-[170px] max-h-[170px] border-2 border-black overflow-hidden bg-black flex items-center justify-center transition-all duration-300 ${
-                    isSel
-                      ? "shadow-[5px_5px_0px_#000000] scale-105"
-                      : "shadow-[2px_2px_0px_#888888]"
-                  }`}
-                >
+                {/* Center: Square Artwork Area (Fills the center of the square card) */}
+                <div className="relative flex-1 w-full min-h-0 overflow-hidden bg-black flex items-center justify-center border-y-2 border-black">
                   {culture.imageSrc ? (
                     <Image
                       src={culture.imageSrc}
@@ -184,14 +178,14 @@ export function GatewayHubView({
                     />
                   ) : (
                     <div className="flex flex-col items-center justify-center text-center p-2">
-                      <Radio className={`w-8 h-8 text-neutral-400 mb-1.5 ${isSel ? "animate-pulse" : ""}`} />
+                      <Radio className={`w-8 h-8 text-neutral-400 mb-1 ${isSel ? "animate-pulse" : ""}`} />
                       <span className="text-[9px] font-mono text-neutral-300 font-bold uppercase">
                         SIGNAL PENDING
                       </span>
                     </div>
                   )}
 
-                  {/* Stargate Crosshair when Selected */}
+                  {/* Stargate Target Crosshair when Selected */}
                   {isSel && (
                     <div className="absolute top-1.5 right-1.5 text-white z-10 pointer-events-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
                       <Crosshair className="w-4 h-4 animate-spin" style={{ animationDuration: "12s" }} />
@@ -207,44 +201,46 @@ export function GatewayHubView({
                     ))}
                   </div>
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
-                </div>
-
-                {/* Bottom Dimension Telemetry Badge */}
-                <div className="mt-1.5 w-[92%] max-w-[170px] bg-black text-white border border-black px-1.5 py-0.5 flex items-center justify-between text-[8px] font-mono">
-                  <span className="font-bold text-white truncate">{cardAlien.planetCoords.split("•")[0]}</span>
-                  <span className="text-neutral-300 hidden sm:inline text-[7px]">{cardAlien.beamLock}</span>
-                </div>
-              </div>
-
-              {/* Monolith Base Plinth */}
-              <div className="p-2 border-t-2 border-black bg-white z-10 flex flex-col justify-between gap-1">
-                <div className="min-w-0">
-                  <h3 className="text-xs font-bold font-mono tracking-wide text-black uppercase truncate">
-                    {culture.title}
-                  </h3>
-                  <p className="text-[9px] font-mono text-neutral-600 truncate">
-                    Curator: {culture.author}
-                  </p>
-                </div>
-
-                {isSel ? (
-                  <button
-                    onClick={() => onLaunch(index)}
-                    className={`w-full mt-1 py-1 px-2 font-mono font-bold text-[9px] uppercase tracking-wider flex items-center justify-center gap-1 transition-all ${cardAccent.button}`}
-                  >
-                    <Play className="w-3 h-3 fill-current" />
-                    <span>{isPlayable ? "ENTER [A]" : "VIEW [A]"}</span>
-                  </button>
-                ) : (
-                  <div className="text-[9px] font-mono text-neutral-500 text-center font-bold py-0.5">
-                    SELECT PORTAL →
+                  {/* Telemetry Strip on Bottom of Image */}
+                  <div className="absolute bottom-1 left-1.5 right-1.5 z-10 pointer-events-none bg-black/90 text-white border border-white/40 px-1.5 py-0.5 flex items-center justify-between text-[8px] font-mono">
+                    <span className="font-bold text-white truncate">{cardAlien.planetCoords.split("•")[0]}</span>
+                    <span className="text-neutral-300 hidden sm:inline text-[7px]">{cardAlien.beamLock}</span>
                   </div>
-                )}
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none" />
+                </div>
+
+                {/* Bottom Plinth */}
+                <div className="p-1.5 px-2 bg-white z-10 flex items-center justify-between gap-1 shrink-0">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-[10px] md:text-[11px] font-bold font-mono tracking-wide text-black uppercase truncate">
+                      {culture.title}
+                    </h3>
+                    <p className="text-[8px] font-mono text-neutral-600 truncate">
+                      {culture.author}
+                    </p>
+                  </div>
+
+                  <div className="shrink-0">
+                    {isSel ? (
+                      <button
+                        onClick={() => onLaunch(index)}
+                        className={`py-1 px-2 font-mono font-bold text-[8px] uppercase tracking-wider flex items-center justify-center gap-1 transition-all ${cardAccent.button}`}
+                      >
+                        <Play className="w-2.5 h-2.5 fill-current" />
+                        <span>{isPlayable ? "ENTER [A]" : "VIEW [A]"}</span>
+                      </button>
+                    ) : (
+                      <span className="text-[8px] font-mono text-neutral-500 font-bold">
+                        SELECT →
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
       {/* 3. SOLID BLACK BRUTALIST STATUS BAR */}
@@ -267,7 +263,7 @@ export function GatewayHubView({
       <footer className="w-full pt-1 border-t-4 border-black text-[10px] text-neutral-800 flex items-center justify-between select-none">
         <div className="flex items-center gap-2">
           <span className="text-black font-bold">JOYSTICK:</span>
-          <span>Left / Right Pillar</span>
+          <span>Left / Right Exhibit</span>
           <span className="text-neutral-400">|</span>
           <span className="text-black font-bold">[A]</span>
           <span>Enter Portal</span>
@@ -276,7 +272,7 @@ export function GatewayHubView({
           <span>Switch Recalbox Theme</span>
         </div>
         <div className="text-black font-bold">
-          PILLAR 0{selectedIndex + 1} OF 04
+          EXHIBIT 0{selectedIndex + 1} OF 04
         </div>
       </footer>
     </div>
