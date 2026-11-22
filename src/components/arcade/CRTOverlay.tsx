@@ -40,6 +40,19 @@ export function CRTOverlay({
 
   const isWhite = theme === "white";
 
+  const getThemeButtonText = (design?: AlienHubDesign) => {
+    switch (design) {
+      case "translator":
+        return "THEME: ARCADE";
+      case "gateway":
+        return "THEME: GALLERY";
+      case "specimen":
+        return "THEME: PHOSPHOR";
+      default:
+        return "THEME: ARCADE";
+    }
+  };
+
   return (
     <div className="crt-viewport bg-black">
       {/* 4:3 Aspect Ratio Display Box (Inverts to Pure White when theme === "white") */}
@@ -100,19 +113,19 @@ export function CRTOverlay({
             </div>
           )}
 
-          {/* Alien Hub Design Mode Switcher Button (Translator / Gateway / Specimen) */}
+          {/* Recalbox Theme Mode Switcher Button (Arcade / Gallery / Phosphor) */}
           {onToggleHubDesign && hubDesign && (
             <button
               onClick={onToggleHubDesign}
-              aria-label="Switch Alien Hub Design"
+              aria-label="Switch Recalbox Theme"
               className={`px-2 py-0.5 rounded font-mono text-[9px] font-bold uppercase transition-colors cursor-pointer border shadow-sm ${
                 isWhite
                   ? "bg-white text-black border-neutral-400 hover:border-black hover:bg-neutral-100"
                   : "bg-black text-white border-neutral-700 hover:border-white hover:bg-white hover:text-black"
               }`}
-              title={`Alien Hub Design: ${hubDesign.toUpperCase()} (Click to toggle Translator / Gateway / Specimen)`}
+              title={`Recalbox Emulator Theme: ${getThemeButtonText(hubDesign)} (Click to switch)`}
             >
-              <span>UI: {hubDesign}</span>
+              <span>{getThemeButtonText(hubDesign)}</span>
             </button>
           )}
 

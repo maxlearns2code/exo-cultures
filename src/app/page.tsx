@@ -335,7 +335,7 @@ export default function ArcadeLauncherHub() {
       fxMode={fxMode}
       onToggleFX={handleToggleFX}
       activeFXType={activeFXType}
-      theme={viewMode === "welcome" ? "black" : "white"}
+      theme={viewMode === "welcome" ? "black" : hubDesign === "gateway" ? "white" : "black"}
       hubDesign={hubDesign}
       onToggleHubDesign={handleToggleHubDesign}
     >
