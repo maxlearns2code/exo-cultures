@@ -164,49 +164,57 @@ export function GatewayHubView({
                 </span>
               </div>
 
-              {/* Monolith Center Portal Aperture */}
-              <div className="relative flex-1 min-h-[160px] m-1.5 border-2 border-black overflow-hidden bg-black flex flex-col items-center justify-center">
-                {culture.imageSrc ? (
-                  <Image
-                    src={culture.imageSrc}
-                    alt={culture.title}
-                    fill
-                    className={`object-cover transition-all duration-300 ${
-                      isSel ? "opacity-100 scale-105" : "opacity-45 grayscale"
-                    }`}
-                  />
-                ) : (
-                  <div className="flex flex-col items-center justify-center text-center p-2">
-                    <Radio className={`w-8 h-8 text-neutral-400 mb-1.5 ${isSel ? "animate-pulse" : ""}`} />
-                    <span className="text-[9px] font-mono text-neutral-300 font-bold uppercase">
-                      SIGNAL PENDING
-                    </span>
-                  </div>
-                )}
+              {/* Monolith Center: Squared and Centered Gallery Picture */}
+              <div className="flex-1 min-h-0 flex flex-col items-center justify-center p-2 relative">
+                <div
+                  className={`relative w-[92%] aspect-square max-w-[170px] max-h-[170px] border-2 border-black overflow-hidden bg-black flex items-center justify-center transition-all duration-300 ${
+                    isSel
+                      ? "shadow-[5px_5px_0px_#000000] scale-105"
+                      : "shadow-[2px_2px_0px_#888888]"
+                  }`}
+                >
+                  {culture.imageSrc ? (
+                    <Image
+                      src={culture.imageSrc}
+                      alt={culture.title}
+                      fill
+                      className={`object-cover transition-all duration-300 ${
+                        isSel ? "opacity-100 scale-105" : "opacity-45 grayscale"
+                      }`}
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center text-center p-2">
+                      <Radio className={`w-8 h-8 text-neutral-400 mb-1.5 ${isSel ? "animate-pulse" : ""}`} />
+                      <span className="text-[9px] font-mono text-neutral-300 font-bold uppercase">
+                        SIGNAL PENDING
+                      </span>
+                    </div>
+                  )}
 
-                {/* Stargate Crosshair when Selected */}
-                {isSel && (
-                  <div className="absolute top-2 right-2 text-white z-10 pointer-events-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
-                    <Crosshair className="w-5 h-5 animate-spin" style={{ animationDuration: "12s" }} />
-                  </div>
-                )}
+                  {/* Stargate Crosshair when Selected */}
+                  {isSel && (
+                    <div className="absolute top-1.5 right-1.5 text-white z-10 pointer-events-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+                      <Crosshair className="w-4 h-4 animate-spin" style={{ animationDuration: "12s" }} />
+                    </div>
+                  )}
 
-                {/* Vertical Native Alien Glyphs Stamp */}
-                <div className="absolute top-2 left-2 z-10 flex flex-col gap-1 text-[11px] font-bold tracking-widest text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none font-mono">
-                  {cardAlien.alienGlyphs.split("").slice(0, 5).map((glyph, i) => (
-                    <span key={i} className="animate-pulse" style={{ animationDelay: `${i * 120}ms` }}>
-                      {glyph}
-                    </span>
-                  ))}
+                  {/* Vertical Native Alien Glyphs Stamp */}
+                  <div className="absolute top-1.5 left-1.5 z-10 flex flex-col gap-0.5 text-[10px] font-bold tracking-widest text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none font-mono">
+                    {cardAlien.alienGlyphs.split("").slice(0, 4).map((glyph, i) => (
+                      <span key={i} className="animate-pulse" style={{ animationDelay: `${i * 120}ms` }}>
+                        {glyph}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
                 </div>
 
                 {/* Bottom Dimension Telemetry Badge */}
-                <div className="absolute bottom-1.5 left-1.5 right-1.5 z-10 pointer-events-none bg-black text-white border border-white/40 px-1.5 py-0.5 flex items-center justify-between text-[8px] font-mono">
-                  <span className="font-bold text-white">{cardAlien.planetCoords.split("•")[0]}</span>
-                  <span className="text-neutral-300 hidden sm:inline">{cardAlien.beamLock}</span>
+                <div className="mt-1.5 w-[92%] max-w-[170px] bg-black text-white border border-black px-1.5 py-0.5 flex items-center justify-between text-[8px] font-mono">
+                  <span className="font-bold text-white truncate">{cardAlien.planetCoords.split("•")[0]}</span>
+                  <span className="text-neutral-300 hidden sm:inline text-[7px]">{cardAlien.beamLock}</span>
                 </div>
-
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/30 pointer-events-none" />
               </div>
 
               {/* Monolith Base Plinth */}
