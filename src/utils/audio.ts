@@ -265,4 +265,41 @@ export const ArcadeAudio = {
     osc.start();
     osc.stop(ctx.currentTime + 0.22);
   },
+
+  playPowerup() {
+    if (isMutedState) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    [330, 392, 523, 659, 784].forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.04);
+      gain.gain.setValueAtTime(0.09, ctx.currentTime + idx * 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2 + idx * 0.04);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + idx * 0.04);
+      osc.stop(ctx.currentTime + 0.25 + idx * 0.04);
+    });
+  },
+
+  playEnemyDefeat() {
+    if (isMutedState) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sawtooth";
+    osc.frequency.setValueAtTime(450, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(90, ctx.currentTime + 0.14);
+    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.15);
+  },
 };

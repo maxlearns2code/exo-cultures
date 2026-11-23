@@ -2,17 +2,22 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { EmptyPortalView } from "@/components/arcade/EmptyPortalView";
+import { CRTOverlay } from "@/components/arcade/CRTOverlay";
+import { MartinGame } from "@/components/games/martin/MartinGame";
+import { useArcadeInput } from "@/hooks/useArcadeInput";
 
 export default function MartinCulturePage() {
   const router = useRouter();
 
+  const handleReturnToHub = () => {
+    router.push("/");
+  };
+
+  const { exitHoldProgress, hasGamepad } = useArcadeInput(undefined, handleReturnToHub);
+
   return (
-    <EmptyPortalView
-      author="Martin"
-      themeColor="violet"
-      route="/games/martin"
-      onReturnToHub={() => router.push("/")}
-    />
+    <CRTOverlay exitHoldProgress={exitHoldProgress} hasGamepad={hasGamepad}>
+      <MartinGame onReturnToHub={handleReturnToHub} />
+    </CRTOverlay>
   );
 }

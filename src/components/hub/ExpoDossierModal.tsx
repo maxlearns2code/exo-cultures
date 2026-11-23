@@ -406,14 +406,14 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
                   </p>
                 </div>
 
-                <div className="p-3 bg-neutral-950 border border-white/30">
+                <div className="p-3 bg-neutral-950 border-2 border-white">
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-bold text-white uppercase">Martin</span>
-                    <span className="px-1.5 py-0.5 bg-neutral-800 text-neutral-300 text-[9px] font-bold">WORLD CREATOR</span>
+                    <span className="px-1.5 py-0.5 bg-violet-600 text-white text-[9px] font-bold">GAME AUTHOR</span>
                   </div>
-                  <p className="text-neutral-400 mb-1">World: <strong>Alien Culture III</strong></p>
+                  <p className="text-neutral-400 mb-1">World: <strong>Echoes in the Dark</strong></p>
                   <p className="text-neutral-300 text-[11px]">
-                    Portal chamber primed and calibrated for incoming design assets, speculative artifacts, and individual exhibition deliverable.
+                    Created the 3D LiDAR echolocation WebGL simulator with raycasted point-cloud terrain mapping, floral beacon charging, bloom defense, and mate summoning.
                   </p>
                 </div>
 

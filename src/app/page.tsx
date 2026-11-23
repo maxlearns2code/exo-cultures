@@ -43,16 +43,17 @@ const CULTURES: CultureInfo[] = [
   },
   {
     id: "martin",
-    name: "Alien Culture III",
+    name: "Echoes in the Dark",
     author: "Martin",
-    title: "Portal Chamber III",
-    subtitle: "Awaiting Alien Transmission",
+    title: "Echoes in the Dark",
+    subtitle: "3D Photonic LiDAR & Floral Resonance",
     route: "/games/martin",
     themeColor: "violet",
-    status: "COMING SOON",
+    status: "READY TO PLAY",
     description:
-      "Dimensional receiving bay reserved for Martin's alien culture. The portal chamber is primed and calibrated for incoming design assets.",
-    mechanics: ["Chamber Primed", "Signal Pending"],
+      "Navigate an extraterrestrial subterranean abyss using 3D photonic LiDAR echolocation. Charge floral beacons to bloom resonant flowers, defend them from viral spores, and summon your distant mate across the dark.",
+    mechanics: ["3D LiDAR Echolocation", "Bloom Defense", "Photonic Scan"],
+    imageSrc: "/assets/martin/echoes-in-the-dark.svg",
   },
   {
     id: "mana",
