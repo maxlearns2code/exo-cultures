@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import { CultureInfo, ALIEN_CULTURE_METADATA } from "@/types";
 import { ControlsHintBar } from "@/components/molecules/ControlsHintBar";
 import { ArcadeButton } from "@/components/atoms/Button";
@@ -93,7 +92,10 @@ export function SpecimenTemplate({
             </div>
           </div>
 
-          <div className="relative flex-1 min-h-[190px] rounded border border-emerald-500/60 overflow-hidden bg-black flex items-center justify-center">
+          <div className="relative flex-1 min-h-[190px] rounded border border-emerald-500/60 overflow-hidden bg-black flex flex-col items-center justify-center p-3 select-none">
+            {/* Phosphor matrix grid */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#064e3b_1px,transparent_1px),linear-gradient(to_bottom,#064e3b_1px,transparent_1px)] bg-[size:14px_14px] opacity-40 pointer-events-none" />
+
             <div className="absolute left-1.5 top-2 bottom-2 z-20 flex flex-col justify-between text-[7px] font-mono text-emerald-600 select-none pointer-events-none">
               <span>100%</span>
               <span>75%</span>
@@ -102,19 +104,29 @@ export function SpecimenTemplate({
               <span>0%</span>
             </div>
 
-            <Image
-              src={culture.imageSrc || "/assets/martin/echoes-in-the-dark.svg"}
-              alt={culture.title}
-              fill
-              priority
-              className="object-cover"
-            />
+            {/* Central Bio-Radar Schematic */}
+            <div className="relative z-10 flex flex-col items-center text-center">
+              <svg className="w-24 h-24 text-emerald-400/50 mb-1 drop-shadow-[0_0_6px_#10b981]" viewBox="0 0 100 100" fill="none">
+                <circle cx="50" cy="50" r="42" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
+                <circle cx="50" cy="50" r="28" stroke="currentColor" strokeWidth="1.2" />
+                <circle cx="50" cy="50" r="14" stroke="currentColor" strokeWidth="0.8" strokeDasharray="2 2" />
+                <line x1="50" y1="2" x2="50" y2="98" stroke="currentColor" strokeWidth="0.8" />
+                <line x1="2" y1="50" x2="98" y2="50" stroke="currentColor" strokeWidth="0.8" />
+                <circle cx="50" cy="50" r="3" fill="#10b981" className="animate-pulse" />
+              </svg>
+              <span className="text-xs font-bold tracking-widest text-emerald-300 uppercase drop-shadow-[0_0_6px_#22c55e]">
+                BIOLUMINESCENT CHAMBER
+              </span>
+              <span className="text-[8px] text-emerald-500 font-mono mt-0.5">
+                RAYCAST MATRIX: 220,000 NODES
+              </span>
+            </div>
 
             <div className="absolute top-2 right-2 text-emerald-400 z-10 pointer-events-none font-mono text-xs font-bold">
               [+]
             </div>
 
-            <div className="absolute bottom-2 left-4 right-2 z-10 bg-black/80 text-emerald-300 border border-emerald-500/50 p-1 flex items-center justify-between text-[8px]">
+            <div className="absolute bottom-2 left-4 right-2 z-10 bg-black/90 text-emerald-300 border border-emerald-500/50 p-1 flex items-center justify-between text-[8px]">
               <span>SAMPLE: {alien.sampleType}</span>
               <span className="text-amber-400 font-bold">{alien.beamLock}</span>
             </div>

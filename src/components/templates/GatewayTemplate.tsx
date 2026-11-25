@@ -109,7 +109,6 @@ export function GatewayTemplate({
           <div className="md:col-span-4 flex flex-col items-center">
             <ExhibitCard
               title={culture.title}
-              imageSrc={culture.imageSrc}
               alienGlyphs={alien.alienGlyphs}
               planetCoords={alien.planetCoords}
               beamLock={alien.beamLock}

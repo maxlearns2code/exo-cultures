@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import NextImage from "next/image";
 
 interface ExpoDossierModalProps {
   isOpen: boolean;
@@ -330,16 +329,23 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="md:col-span-1 flex flex-col items-center">
-                  <div className="relative w-full aspect-square border-2 border-white overflow-hidden shadow-[6px_6px_0px_#ffffff] mb-2 bg-black">
-                    <NextImage
-                      src="/assets/martin/echoes-in-the-dark.svg"
-                      alt="Exo-Cultures Poster"
-                      fill
-                      className="object-cover"
-                    />
+                  <div className="relative w-full aspect-square border-2 border-white overflow-hidden shadow-[6px_6px_0px_#ffffff] mb-2 bg-black p-3 font-mono flex flex-col justify-between select-none">
+                    <div className="flex justify-between items-start border-b border-white/40 pb-1">
+                      <span className="text-[8px] font-bold text-neutral-400">EXO-CULTURES 2026</span>
+                      <span className="text-[8px] bg-white text-black px-1 font-bold">SCHEMATIC</span>
+                    </div>
+                    <div className="text-center py-2 space-y-1">
+                      <div className="text-[11px] font-black tracking-widest text-white uppercase">ECHOES IN THE DARK</div>
+                      <div className="text-[7px] text-neutral-400">3D LIDAR • RAYCASTING ENGINE</div>
+                      <div className="text-[9px] text-white/80 tracking-widest pt-1 font-bold">☲ 0x45 ⋔ ⎎ ▲</div>
+                    </div>
+                    <div className="border-t border-white/40 pt-1 text-[7px] text-neutral-400 flex justify-between">
+                      <span>RIGEL-VII SUB-ABYSS</span>
+                      <span>4 CREATORS • 1 WORLD</span>
+                    </div>
                   </div>
                   <span className="text-[10px] text-neutral-400 uppercase font-bold text-center">
-                    Official Collaborative Poster
+                    Typographic Exhibition Diagram
                   </span>
                 </div>
 

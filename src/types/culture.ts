@@ -40,7 +40,6 @@ export const COLLABORATIVE_GAME: CultureInfo = {
   description:
     "A unified collaborative game combining the sub-ice abyssal bioluminescence, photonic LiDAR echolocation, floral acoustic resonance, and atmospheric exosphere drift of four creators. Navigate the pitch-black subterranean void, charge floral beacons to bloom resonant flowers, defend against viral spores, and summon your distant counterpart.",
   mechanics: ["3D LiDAR Echolocation", "Bloom Defense", "Photonic Scan", "Floral Resonance"],
-  imageSrc: "/assets/martin/echoes-in-the-dark.svg",
 };
 
 export const ALIEN_CULTURE_METADATA: Record<string, CultureAlienData> = {

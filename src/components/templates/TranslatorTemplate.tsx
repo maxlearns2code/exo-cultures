@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import { CultureInfo, ALIEN_CULTURE_METADATA } from "@/types";
 import { ControlsHintBar } from "@/components/molecules/ControlsHintBar";
 import { ArcadeButton } from "@/components/atoms/Button";
@@ -77,15 +76,31 @@ export function TranslatorTemplate({
 
       {/* 2. CYBER-CHAMFERED HERO SPOTLIGHT VIEWPORT */}
       <div className="w-full flex-1 min-h-0 bg-[#090b1a]/90 border-2 border-purple-400 shadow-[0_0_25px_rgba(192,132,252,0.4),inset_0_0_15px_rgba(192,132,252,0.15)] p-3 flex flex-col md:flex-row gap-4 overflow-hidden relative mb-2.5 z-10">
-        {/* Left Side: Glowing Holographic Artwork */}
-        <div className="relative w-full md:w-5/12 h-48 md:h-full border border-purple-500/50 overflow-hidden bg-black flex items-center justify-center">
-          <Image
-            src={culture.imageSrc || "/assets/martin/echoes-in-the-dark.svg"}
-            alt={culture.title}
-            fill
-            priority
-            className="object-cover"
-          />
+        {/* Left Side: Holographic Telemetry Viewport (Typographic Wireframe) */}
+        <div className="relative w-full md:w-5/12 h-48 md:h-full border border-purple-500/50 overflow-hidden bg-black flex flex-col items-center justify-center p-3 select-none">
+          {/* Cybernetic grid */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#3b0764_1px,transparent_1px),linear-gradient(to_bottom,#3b0764_1px,transparent_1px)] bg-[size:16px_16px] opacity-50 pointer-events-none" />
+
+          {/* Central Hologram Target Wireframe */}
+          <div className="relative z-10 flex flex-col items-center text-center">
+            <svg className="w-24 h-24 text-purple-400/60 mb-2 drop-shadow-[0_0_8px_#c084fc]" viewBox="0 0 100 100" fill="none">
+              <circle cx="50" cy="50" r="42" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" />
+              <circle cx="50" cy="50" r="28" stroke="currentColor" strokeWidth="1.5" />
+              <circle cx="50" cy="50" r="12" stroke="currentColor" strokeWidth="1" strokeDasharray="2 2" />
+              <line x1="50" y1="4" x2="50" y2="96" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
+              <line x1="4" y1="50" x2="96" y2="50" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
+              <circle cx="50" cy="50" r="3" fill="#00f0ff" className="animate-pulse" />
+            </svg>
+            <span className="text-xs font-black tracking-widest text-cyan-300 uppercase drop-shadow-[0_0_8px_#00f0ff]">
+              LiDAR RADAR BUFFER
+            </span>
+            <span className="text-[9px] text-purple-300 font-bold tracking-wider mt-0.5">
+              SECTOR 01: SUBTERRANEAN VOID
+            </span>
+            <span className="text-[8px] text-neutral-400 mt-1 font-mono">
+              AZ: 312° • ELEV: +14° • 0 LUX
+            </span>
+          </div>
 
           <div className="absolute top-2 right-2 text-white z-10 pointer-events-none drop-shadow-[0_0_8px_#c084fc] font-mono text-xs font-bold">
             [+]

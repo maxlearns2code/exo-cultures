@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 
 interface AttractModeProps {
   onDismiss: () => void;
@@ -39,15 +38,26 @@ export function AttractMode({ onDismiss }: AttractModeProps) {
           </span>
         </div>
 
-        {/* Artwork Display */}
-        <div className="relative w-44 h-44 sm:w-52 sm:h-52 bg-black border-2 border-purple-400 overflow-hidden mb-3 shadow-[0_0_20px_rgba(168,85,247,0.4)]">
-          <Image
-            src="/assets/martin/echoes-in-the-dark.svg"
-            alt="Echoes in the Dark"
-            fill
-            className="object-cover scale-105"
-            priority
-          />
+        {/* Typographic Wireframe Radar Display */}
+        <div className="relative w-44 h-44 sm:w-52 sm:h-52 bg-black border-2 border-purple-400 overflow-hidden mb-3 shadow-[0_0_20px_rgba(168,85,247,0.4)] flex flex-col items-center justify-center p-3 select-none">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#3b0764_1px,transparent_1px),linear-gradient(to_bottom,#3b0764_1px,transparent_1px)] bg-[size:14px_14px] opacity-40 pointer-events-none" />
+          <svg className="w-24 h-24 text-purple-400/60 mb-2 drop-shadow-[0_0_10px_#c084fc]" viewBox="0 0 100 100" fill="none">
+            <circle cx="50" cy="50" r="42" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" />
+            <circle cx="50" cy="50" r="28" stroke="currentColor" strokeWidth="1.5" />
+            <circle cx="50" cy="50" r="14" stroke="currentColor" strokeWidth="1" strokeDasharray="2 2" />
+            <line x1="50" y1="4" x2="50" y2="96" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
+            <line x1="4" y1="50" x2="96" y2="50" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
+            <circle cx="50" cy="50" r="3" fill="#c084fc" className="animate-pulse" />
+          </svg>
+          <span className="text-xs font-bold text-white tracking-widest uppercase">
+            3D LiDAR POINT CLOUD
+          </span>
+          <span className="text-[9px] text-purple-300 font-bold tracking-wider mt-0.5">
+            220,000 SCAN REFLECTIONS
+          </span>
+          <span className="text-[8px] text-neutral-400 font-mono mt-1">
+            SECTOR 01 • RIGEL-VII
+          </span>
         </div>
 
         <h3 className="text-sm md:text-base font-bold text-white uppercase tracking-wider mb-1">

@@ -1,14 +1,12 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import { AlienGlyphs } from "@/components/atoms/AlienGlyphs";
 import { CrosshairReticle } from "@/components/atoms/CrosshairReticle";
 import { ArcadeButton } from "@/components/atoms/Button";
 
 interface ExhibitCardProps {
   title: string;
-  imageSrc?: string;
   alienGlyphs?: string;
   planetCoords?: string;
   beamLock?: string;
@@ -18,7 +16,6 @@ interface ExhibitCardProps {
 
 export function ExhibitCard({
   title,
-  imageSrc = "/assets/martin/echoes-in-the-dark.svg",
   alienGlyphs = "☲0x45⋔⎎▲",
   planetCoords = "05h 14m • RIGEL-VII",
   beamLock = "15kHz RGB LOCKED",
@@ -38,15 +35,29 @@ export function ExhibitCard({
         <span className="bg-white text-black px-1.5 py-0.2 uppercase font-bold">ONLINE</span>
       </div>
 
-      {/* Artwork Area */}
-      <div className="relative flex-1 w-full min-h-[190px] bg-black">
-        <Image
-          src={imageSrc}
-          alt={title}
-          fill
-          priority
-          className="object-cover group-hover:scale-105 transition-transform duration-300"
-        />
+      {/* Visual Telemetry Radar Area (Pure Typographic & Wireframe) */}
+      <div className="relative flex-1 w-full min-h-[190px] bg-black flex flex-col items-center justify-center p-3 overflow-hidden">
+        {/* Subtle grid background */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#222_1px,transparent_1px),linear-gradient(to_bottom,#222_1px,transparent_1px)] bg-[size:16px_16px] opacity-60 pointer-events-none" />
+
+        {/* Central Radar Wireframe */}
+        <div className="relative z-10 flex flex-col items-center text-center">
+          <svg className="w-24 h-24 text-white/30 mb-1" viewBox="0 0 100 100" fill="none">
+            <circle cx="50" cy="50" r="44" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
+            <circle cx="50" cy="50" r="30" stroke="currentColor" strokeWidth="1" />
+            <circle cx="50" cy="50" r="14" stroke="currentColor" strokeWidth="1" strokeDasharray="2 2" />
+            <line x1="50" y1="2" x2="50" y2="98" stroke="currentColor" strokeWidth="0.75" />
+            <line x1="2" y1="50" x2="98" y2="50" stroke="currentColor" strokeWidth="0.75" />
+            <circle cx="50" cy="50" r="3" fill="white" className="animate-ping" style={{ transformOrigin: "center" }} />
+            <circle cx="50" cy="50" r="2.5" fill="white" />
+          </svg>
+          <span className="text-[10px] font-black tracking-widest text-white uppercase">
+            3D LiDAR POINT CLOUD
+          </span>
+          <span className="text-[8px] text-neutral-400 font-bold tracking-wider mt-0.5">
+            220,000 SCAN REFLECTIONS
+          </span>
+        </div>
 
         {/* Crosshair Overlay */}
         <div className="absolute top-1.5 right-1.5 text-white z-10 pointer-events-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
