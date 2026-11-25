@@ -41,7 +41,7 @@ export function Game({ onReturnToHub, theme = "translator" }: GameProps) {
   const [gameOver, setGameOver] = useState<"win" | "lose" | null>(null);
   const [mappedPoints, setMappedPoints] = useState<number>(0);
   const [lureProgress, setLureProgress] = useState<number>(0);
-  const [systemMessage, setSystemMessage] = useState<string>("Click anywhere inside the viewport to engage LiDAR scanner");
+  const [systemMessage, setSystemMessage] = useState<string>("Click anywhere on screen to look around & scan");
   const [promptVisible, setPromptVisible] = useState<boolean>(false);
   const [activeSporesCount, setActiveSporesCount] = useState<number>(0);
   const [flowerStatus, setFlowerStatus] = useState<
@@ -788,10 +788,8 @@ export function Game({ onReturnToHub, theme = "translator" }: GameProps) {
       />
 
       <GameModal
-        isLocked={isLocked}
         gameOver={gameOver}
         onReturnToHub={safeReturnToHub}
-        onResume={handleCanvasClick}
         onRestart={() => window.location.reload()}
       />
     </div>
