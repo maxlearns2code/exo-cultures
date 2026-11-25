@@ -54,14 +54,26 @@ export function MartinGame({ onReturnToHub }: MartinGameProps) {
   // Gamepad / Arcade Stick State
   const arcadeInputsRef = useRef<ArcadeInputs | null>(null);
 
+  const safeReturnToHub = useCallback(() => {
+    if (typeof document !== "undefined" && document.exitPointerLock) {
+      document.exitPointerLock();
+    }
+    ArcadeAudio.playCancel();
+    onReturnToHub();
+  }, [onReturnToHub]);
+
   const handleArcadeInput = useCallback(
     (inputs: ArcadeInputs) => {
       arcadeInputsRef.current = inputs;
+      // Single tap of Action 2 [B Button] or Select on 8BitDo stick immediately returns to menu
+      if (inputs.action2 || inputs.select) {
+        safeReturnToHub();
+      }
     },
-    []
+    [safeReturnToHub]
   );
 
-  useArcadeInput(handleArcadeInput, onReturnToHub);
+  useArcadeInput(handleArcadeInput, safeReturnToHub);
 
   // Main Three.js Game Engine Lifecycle
   useEffect(() => {
@@ -432,6 +444,18 @@ export function MartinGame({ onReturnToHub }: MartinGameProps) {
 
     const handleKeyDown = (e: KeyboardEvent) => {
       keys[e.code] = true;
+
+      // Direct keyboard exit shortcut [B] or [Backspace]
+      if (e.key === "b" || e.key === "B" || e.code === "KeyB") {
+        safeReturnToHub();
+        return;
+      }
+
+      // If pointer is unlocked (e.g. after pressing Escape once), pressing Escape or Backspace returns to hub
+      if (!isPointerLocked && (e.key === "Escape" || e.code === "Escape" || e.key === "Backspace" || e.code === "Backspace")) {
+        safeReturnToHub();
+        return;
+      }
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
@@ -749,13 +773,14 @@ export function MartinGame({ onReturnToHub }: MartinGameProps) {
       />
 
       {/* TOP HUD: Echolocation & Mate Summoning Telemetry */}
-      <div className="relative z-20 flex items-center justify-between p-3 bg-black/70 backdrop-blur-sm border-b border-purple-500/40 select-none">
-        <div className="flex items-center gap-2">
+      <div className="relative z-50 flex items-center justify-between p-2.5 md:p-3 bg-black/85 backdrop-blur-sm border-b-2 border-white/20 select-none">
+        <div className="flex items-center gap-2.5">
           <button
-            onClick={onReturnToHub}
-            className="flex items-center px-2.5 py-1 bg-purple-950/80 hover:bg-purple-900 text-purple-300 font-bold text-xs border border-purple-500/60 rounded shadow transition-colors cursor-pointer"
+            onClick={safeReturnToHub}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-black hover:bg-neutral-800 text-white font-black text-xs uppercase border-2 border-white transition-all cursor-pointer shadow-[3px_3px_0px_#ffffff] active:translate-y-0.5"
+            title="Return to Main Menu (or press B / ESC)"
           >
-            <span>[B] HUB</span>
+            <span>◀ [B] BACK TO MAIN MENU</span>
           </button>
           <div>
             <h1 className="text-xs md:text-sm font-bold tracking-wider text-purple-200 uppercase flex items-center gap-1.5">
@@ -770,19 +795,29 @@ export function MartinGame({ onReturnToHub }: MartinGameProps) {
           </div>
         </div>
 
-        {/* Lure / Mate Summon Progress Meter */}
-        <div className="flex flex-col items-end gap-1 min-w-[140px] md:min-w-[200px]">
-          <div className="flex items-center justify-between w-full text-[9px] font-bold">
-            <span className="text-purple-300">
-              <span>MATE SUMMON:</span>
-            </span>
-            <span className="text-amber-300">{lureProgress}%</span>
-          </div>
-          <div className="w-full h-2 rounded bg-black/80 border border-purple-500/60 overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-amber-300 transition-all duration-150"
-              style={{ width: `${lureProgress}%` }}
-            />
+        <div className="flex items-center gap-3">
+          <button
+            onClick={safeReturnToHub}
+            className="hidden sm:flex items-center px-2.5 py-1 bg-red-950/80 hover:bg-red-900 text-red-200 font-bold text-xs uppercase border border-red-500 transition-all cursor-pointer shadow-[2px_2px_0px_#ef4444]"
+            title="Exit Game to Hub"
+          >
+            <span>[QUIT GAME ✕]</span>
+          </button>
+
+          {/* Lure / Mate Summon Progress Meter */}
+          <div className="flex flex-col items-end gap-1 min-w-[120px] md:min-w-[180px]">
+            <div className="flex items-center justify-between w-full text-[9px] font-bold">
+              <span className="text-purple-300">
+                <span>MATE SUMMON:</span>
+              </span>
+              <span className="text-amber-300">{lureProgress}%</span>
+            </div>
+            <div className="w-full h-2 rounded bg-black/80 border border-purple-500/60 overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-amber-300 transition-all duration-150"
+                style={{ width: `${lureProgress}%` }}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -816,33 +851,57 @@ export function MartinGame({ onReturnToHub }: MartinGameProps) {
         </div>
       )}
 
-      {/* CLICK TO ENGAGE SCANNER INTRO MODAL */}
+      {/* PAUSED / ENGAGE SCANNER OVERLAY */}
       {!isLocked && !gameOver && (
         <div
-          onClick={handleCanvasClick}
-          className="absolute inset-0 z-40 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center select-none cursor-pointer"
+          className="absolute inset-0 z-40 bg-black/85 backdrop-blur-sm flex flex-col items-center justify-center p-4 md:p-6 text-center select-none font-mono"
         >
-          <div className="max-w-md bg-neutral-950 border-2 border-purple-500 p-6 rounded shadow-[0_0_30px_rgba(168,85,247,0.5)]">
-            <div className="inline-flex items-center px-3 py-1 bg-purple-950 text-purple-300 border border-purple-500 mb-3 text-[10px] font-bold uppercase tracking-widest">
-              <span>[CHAMBER III: 3D LIDAR RECEPTOR]</span>
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-lg bg-black border-2 border-white p-5 md:p-6 shadow-[8px_8px_0px_#ffffff] text-left"
+          >
+            <div className="flex items-center justify-between border-b-2 border-white/30 pb-2 mb-3">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-purple-300">
+                [PAUSED // SCANNER DISENGAGED]
+              </span>
+              <button
+                onClick={safeReturnToHub}
+                className="px-2.5 py-1 bg-white text-black hover:bg-neutral-200 font-bold text-[10px] uppercase border border-white cursor-pointer shadow-[2px_2px_0px_#ffffff]"
+              >
+                [ESC / B] QUIT TO MENU
+              </button>
             </div>
 
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-2 uppercase tracking-wider drop-shadow-[0_0_10px_#c084fc]">
+            <h2 className="text-lg md:text-xl font-black text-white mb-1.5 uppercase tracking-wider">
               ECHOES IN THE DARK
             </h2>
-            <p className="text-xs text-purple-200 leading-relaxed mb-4">
-              You are navigating a pitch-black subterranean alien chamber. Use <strong>photonic echolocation</strong> to map the invisible walls, charge the four hidden floral beacons, and bloom their resonance flowers to call your distant mate across the dark.
+            <p className="text-xs text-neutral-300 leading-relaxed mb-4">
+              Your mouse is unlocked. Explore the subterranean void with LiDAR echolocation, charge floral beacons, and summon your mate. You can return to the main menu at any time.
             </p>
 
-            <div className="bg-black/80 p-3 rounded border border-purple-900/60 mb-4 text-left text-[11px] space-y-1.5 text-neutral-300">
-              <div>• <strong>Left Click / Arcade [X]:</strong> Wide LiDAR Scan (Map the dark room)</div>
-              <div>• <strong>Right Click / Arcade [Y]:</strong> Focused Beam (Charge beacons & burn spores)</div>
-              <div>• <strong>WASD / Joystick:</strong> Move through the dark chamber</div>
-              <div>• <strong>Hold [E] / Arcade [A]:</strong> Stand near charged beacon to bloom</div>
+            <div className="bg-neutral-900 border border-white/20 p-3 mb-4 text-[11px] space-y-1.5 text-neutral-200 font-mono">
+              <div className="text-white font-bold mb-1 border-b border-white/10 pb-0.5">CONTROLS REFERENCE:</div>
+              <div>• <strong>Left Click / Arcade [X]:</strong> Wide LiDAR Scan (map dark room)</div>
+              <div>• <strong>Right Click / Arcade [Y]:</strong> Focused Beam (charge beacons / burn spores)</div>
+              <div>• <strong>WASD / 8BitDo Stick:</strong> Move through subterranean cavern</div>
+              <div>• <strong>Hold [E] / Arcade [A]:</strong> Bloom floral resonance beacons</div>
+              <div className="text-amber-300 font-bold pt-1">• <strong>Escape / [B] Button:</strong> Unlock Cursor / Return to Main Menu</div>
             </div>
 
-            <div className="py-2.5 px-6 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs uppercase tracking-widest border border-purple-300 shadow-[0_0_15px_#c084fc] transition-all">
-              CLICK ANYWHERE TO ENGAGE POINTER SCANNER
+            <div className="flex flex-col sm:flex-row gap-2.5 w-full">
+              <button
+                onClick={safeReturnToHub}
+                className="flex-1 py-2.5 px-4 bg-black hover:bg-neutral-900 text-white font-bold text-xs uppercase tracking-wider border-2 border-white shadow-[4px_4px_0px_#ffffff] cursor-pointer transition-all text-center"
+              >
+                ◀ BACK TO MAIN MENU [B]
+              </button>
+
+              <button
+                onClick={handleCanvasClick}
+                className="flex-1 py-2.5 px-4 bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider border-2 border-white shadow-[4px_4px_0px_#ffffff] cursor-pointer transition-all text-center animate-pulse"
+              >
+                RESUME GAME [A / CLICK] ▶
+              </button>
             </div>
           </div>
         </div>
@@ -851,28 +910,30 @@ export function MartinGame({ onReturnToHub }: MartinGameProps) {
       {/* GAME OVER / VICTORY OVERLAY */}
       {gameOver && (
         <div
-          onClick={() => window.location.reload()}
-          className="absolute inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center select-none cursor-pointer"
+          className="absolute inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-4 md:p-6 text-center select-none font-mono"
         >
-          <div className="max-w-md bg-neutral-950 border-2 border-purple-400 p-6 rounded shadow-[0_0_40px_rgba(192,132,252,0.6)]">
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-md bg-black border-2 border-white p-6 shadow-[10px_10px_0px_#ffffff] text-center"
+          >
             {gameOver === "win" ? (
               <>
-                <div className="px-4 py-1.5 bg-pink-950/80 border-2 border-pink-400 mx-auto mb-3 text-pink-300 font-bold text-xs tracking-widest uppercase">
+                <div className="inline-block px-4 py-1.5 bg-white text-black font-bold text-xs tracking-widest uppercase mb-3 border-2 border-white">
                   [RESONANCE ESTABLISHED]
                 </div>
-                <h2 className="text-2xl font-bold text-white mb-2 uppercase tracking-widest drop-shadow-[0_0_12px_#ff5fa8]">
+                <h2 className="text-xl md:text-2xl font-bold text-white mb-2 uppercase tracking-widest">
                   YOUR MATE ARRIVES
                 </h2>
-                <p className="text-xs text-purple-200 leading-relaxed mb-5">
+                <p className="text-xs text-neutral-300 leading-relaxed mb-5">
                   The harmonic pulse carried across the cosmic dark. The blooms burned away the shadow. You are not alone anymore.
                 </p>
               </>
             ) : (
               <>
-                <div className="px-4 py-1.5 bg-red-950 border-2 border-red-500 mx-auto mb-3 text-red-400 font-bold text-xs tracking-widest uppercase">
+                <div className="inline-block px-4 py-1.5 bg-red-600 text-white font-bold text-xs tracking-widest uppercase mb-3 border-2 border-white">
                   [BEACONS EXTINGUISHED]
                 </div>
-                <h2 className="text-2xl font-bold text-white mb-2 uppercase tracking-widest drop-shadow-[0_0_12px_#ef4444]">
+                <h2 className="text-xl md:text-2xl font-bold text-white mb-2 uppercase tracking-widest">
                   THE FLOWERS WITHERED
                 </h2>
                 <p className="text-xs text-neutral-300 leading-relaxed mb-5">
@@ -881,8 +942,19 @@ export function MartinGame({ onReturnToHub }: MartinGameProps) {
               </>
             )}
 
-            <div className="py-2.5 px-6 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs uppercase tracking-widest border border-purple-300 shadow-[0_0_15px_#c084fc] transition-all">
-              CLICK TO PLAY AGAIN
+            <div className="flex flex-col sm:flex-row gap-2.5 w-full mt-4">
+              <button
+                onClick={safeReturnToHub}
+                className="flex-1 py-2.5 px-4 bg-black hover:bg-neutral-900 text-white font-bold text-xs uppercase tracking-wider border-2 border-white shadow-[4px_4px_0px_#ffffff] cursor-pointer transition-all"
+              >
+                ◀ BACK TO MAIN MENU [B]
+              </button>
+              <button
+                onClick={() => window.location.reload()}
+                className="flex-1 py-2.5 px-4 bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider border-2 border-white shadow-[4px_4px_0px_#ffffff] cursor-pointer transition-all"
+              >
+                PLAY AGAIN [A] ▶
+              </button>
             </div>
           </div>
         </div>
@@ -925,6 +997,10 @@ export function MartinGame({ onReturnToHub }: MartinGameProps) {
 
         {/* Diagnostic point cloud & active spores counter */}
         <div className="flex items-center gap-3 text-neutral-400 text-[9px]">
+          <span className="hidden sm:inline text-neutral-300 font-bold">
+            [ESC]: UNLOCK • [B]: MENU • [WASD]: MOVE
+          </span>
+          <span className="hidden sm:inline text-neutral-600">|</span>
           <span>
             VIRAL SPORES:{" "}
             <strong className={activeSporesCount > 0 ? "text-red-400 animate-pulse" : "text-neutral-300"}>

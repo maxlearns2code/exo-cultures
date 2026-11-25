@@ -188,8 +188,16 @@ export default function ArcadeLauncherHub() {
 
       if (isAttractMode) return;
 
-      // In active game: universal hold handles exit
-      if (viewMode === "game") return;
+      // In active game: allow pressing Action 2 [B Button] or select to immediately exit to welcome
+      if (viewMode === "game") {
+        if (
+          (currentInputs.action2 && (!prev || !prev.action2)) ||
+          (currentInputs.select && (!prev || !prev.select))
+        ) {
+          returnToWelcome();
+        }
+        return;
+      }
 
       // Action 4 [Y Button] opens the Expo Dossier
       if (currentInputs.action4 && (!prev || !prev.action4)) {
