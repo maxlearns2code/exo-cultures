@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import NextImage from "next/image";
-import { X, BookOpen, Rocket, Tv, Cpu, Palette, CheckCircle2, Radio, Terminal, Sparkles } from "lucide-react";
 
 interface ExpoDossierModalProps {
   isOpen: boolean;
@@ -28,7 +27,6 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
         {/* Modal Header */}
         <div className="flex items-center justify-between border-b-2 border-white p-3 md:p-4 bg-white text-black">
           <div className="flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-black" />
             <div>
               <h2 className="text-xs md:text-sm font-bold uppercase tracking-wider">
                 EXPO DOSSIER • HYPER ISLAND WEEK 51, 2026
@@ -42,7 +40,6 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
             onClick={onClose}
             className="flex items-center gap-1 px-2.5 py-1 bg-black text-white hover:bg-neutral-800 border-2 border-black text-xs font-bold transition-all cursor-pointer"
           >
-            <X className="w-4 h-4" />
             <span>[B / ESC] CLOSE</span>
           </button>
         </div>
@@ -87,9 +84,8 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
               </div>
 
               <div className="p-4 bg-neutral-900 border border-white/20">
-                <h4 className="text-xs font-bold text-white uppercase mb-2 flex items-center gap-1.5">
-                  <Terminal className="w-3.5 h-3.5 text-white" />
-                  Official Briefing Context
+                <h4 className="text-xs font-bold text-white uppercase mb-2">
+                  [OFFICIAL BRIEFING CONTEXT]
                 </h4>
                 <p className="italic text-neutral-300 text-xs">
                   &ldquo;The Intergalactic Worlds Expo is taking place on Earth, Hyper Island campus, Week 51, 2026.
@@ -128,9 +124,8 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-4 bg-neutral-950 border border-white/30 space-y-2">
-                  <h4 className="font-bold text-white text-xs uppercase flex items-center gap-1.5">
-                    <Radio className="w-3.5 h-3.5 text-white" />
-                    Full-Scale Subterranean Immersion Pod
+                  <h4 className="font-bold text-white text-xs uppercase">
+                    [1] Full-Scale Subterranean Immersion Pod
                   </h4>
                   <p className="text-xs text-neutral-300">
                     A physical sensory chamber maintaining a zero-lux subterranean atmosphere with micro-climate mist,
@@ -139,9 +134,8 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
                 </div>
 
                 <div className="p-4 bg-neutral-950 border border-white/30 space-y-2">
-                  <h4 className="font-bold text-white text-xs uppercase flex items-center gap-1.5">
-                    <Palette className="w-3.5 h-3.5 text-white" />
-                    Physical Resonant Floral Beacons
+                  <h4 className="font-bold text-white text-xs uppercase">
+                    [2] Physical Resonant Floral Beacons
                   </h4>
                   <p className="text-xs text-neutral-300">
                     Kinetic mechanical sculptures surrounding the cabinet that physically bloom in real time when charged by the player&apos;s focused beam,
@@ -150,9 +144,8 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
                 </div>
 
                 <div className="p-4 bg-neutral-950 border border-white/30 space-y-2">
-                  <h4 className="font-bold text-white text-xs uppercase flex items-center gap-1.5">
-                    <Rocket className="w-3.5 h-3.5 text-white" />
-                    Volumetric 3D Laser Echolocation Tank
+                  <h4 className="font-bold text-white text-xs uppercase">
+                    [3] Volumetric 3D Laser Echolocation Tank
                   </h4>
                   <p className="text-xs text-neutral-300">
                     A 360-degree holographic glass sphere projecting 220,000 real-time LiDAR particles floating in mid-air,
@@ -161,9 +154,8 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
                 </div>
 
                 <div className="p-4 bg-neutral-950 border border-white/30 space-y-2">
-                  <h4 className="font-bold text-white text-xs uppercase flex items-center gap-1.5">
-                    <Cpu className="w-3.5 h-3.5 text-white" />
-                    Bioluminescent Spore Defense Grid
+                  <h4 className="font-bold text-white text-xs uppercase">
+                    [4] Bioluminescent Spore Defense Grid
                   </h4>
                   <p className="text-xs text-neutral-300">
                     Chilled nitrogen tubes venting synthetic aerosol vapors when viral spores approach, challenging players to defend

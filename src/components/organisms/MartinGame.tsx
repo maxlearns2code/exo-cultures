@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import * as THREE from "three";
-import { ArrowLeft, Play, RotateCcw, Crosshair, Radio, Sparkles, Volume2, VolumeX, Shield, Heart } from "lucide-react";
 import { ArcadeAudio } from "../../utils/audio";
 import { useArcadeInput, ArcadeInputs } from "../../hooks/useArcadeInput";
 
@@ -754,9 +753,8 @@ export function MartinGame({ onReturnToHub }: MartinGameProps) {
         <div className="flex items-center gap-2">
           <button
             onClick={onReturnToHub}
-            className="flex items-center gap-1.5 px-2.5 py-1 bg-purple-950/80 hover:bg-purple-900 text-purple-300 font-bold text-xs border border-purple-500/60 rounded shadow transition-colors cursor-pointer"
+            className="flex items-center px-2.5 py-1 bg-purple-950/80 hover:bg-purple-900 text-purple-300 font-bold text-xs border border-purple-500/60 rounded shadow transition-colors cursor-pointer"
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
             <span>[B] HUB</span>
           </button>
           <div>
@@ -775,8 +773,7 @@ export function MartinGame({ onReturnToHub }: MartinGameProps) {
         {/* Lure / Mate Summon Progress Meter */}
         <div className="flex flex-col items-end gap-1 min-w-[140px] md:min-w-[200px]">
           <div className="flex items-center justify-between w-full text-[9px] font-bold">
-            <span className="text-purple-300 flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-amber-300" />
+            <span className="text-purple-300">
               <span>MATE SUMMON:</span>
             </span>
             <span className="text-amber-300">{lureProgress}%</span>
@@ -813,8 +810,7 @@ export function MartinGame({ onReturnToHub }: MartinGameProps) {
       {/* HOLD [E] / [A] TO BLOOM PROMPT */}
       {promptVisible && (
         <div className="absolute bottom-28 left-0 right-0 z-30 pointer-events-none flex justify-center">
-          <div className="bg-pink-950/90 border-2 border-pink-400 px-4 py-2 rounded text-xs text-white font-bold shadow-[0_0_20px_#ff5fa8] animate-bounce flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-amber-300" />
+          <div className="bg-pink-950/90 border-2 border-pink-400 px-4 py-2 rounded text-xs text-white font-bold shadow-[0_0_20px_#ff5fa8] animate-bounce">
             <span>STAND CLOSE & HOLD [E] OR ARCADE [A] TO BLOOM FLOWER</span>
           </div>
         </div>
@@ -827,9 +823,8 @@ export function MartinGame({ onReturnToHub }: MartinGameProps) {
           className="absolute inset-0 z-40 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center select-none cursor-pointer"
         >
           <div className="max-w-md bg-neutral-950 border-2 border-purple-500 p-6 rounded shadow-[0_0_30px_rgba(168,85,247,0.5)]">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-purple-950 text-purple-300 border border-purple-500 mb-3 text-[10px] font-bold uppercase tracking-widest">
-              <Radio className="w-3.5 h-3.5 animate-pulse" />
-              <span>CHAMBER III: 3D LIDAR RECEPTOR</span>
+            <div className="inline-flex items-center px-3 py-1 bg-purple-950 text-purple-300 border border-purple-500 mb-3 text-[10px] font-bold uppercase tracking-widest">
+              <span>[CHAMBER III: 3D LIDAR RECEPTOR]</span>
             </div>
 
             <h2 className="text-xl md:text-2xl font-bold text-white mb-2 uppercase tracking-wider drop-shadow-[0_0_10px_#c084fc]">
@@ -862,8 +857,8 @@ export function MartinGame({ onReturnToHub }: MartinGameProps) {
           <div className="max-w-md bg-neutral-950 border-2 border-purple-400 p-6 rounded shadow-[0_0_40px_rgba(192,132,252,0.6)]">
             {gameOver === "win" ? (
               <>
-                <div className="w-12 h-12 rounded-full bg-pink-500/20 border-2 border-pink-400 mx-auto mb-3 flex items-center justify-center text-pink-300">
-                  <Sparkles className="w-6 h-6 animate-spin" style={{ animationDuration: "8s" }} />
+                <div className="px-4 py-1.5 bg-pink-950/80 border-2 border-pink-400 mx-auto mb-3 text-pink-300 font-bold text-xs tracking-widest uppercase">
+                  [RESONANCE ESTABLISHED]
                 </div>
                 <h2 className="text-2xl font-bold text-white mb-2 uppercase tracking-widest drop-shadow-[0_0_12px_#ff5fa8]">
                   YOUR MATE ARRIVES
@@ -874,8 +869,8 @@ export function MartinGame({ onReturnToHub }: MartinGameProps) {
               </>
             ) : (
               <>
-                <div className="w-12 h-12 rounded-full bg-red-950 border-2 border-red-500 mx-auto mb-3 flex items-center justify-center text-red-400">
-                  <Shield className="w-6 h-6 animate-pulse" />
+                <div className="px-4 py-1.5 bg-red-950 border-2 border-red-500 mx-auto mb-3 text-red-400 font-bold text-xs tracking-widest uppercase">
+                  [BEACONS EXTINGUISHED]
                 </div>
                 <h2 className="text-2xl font-bold text-white mb-2 uppercase tracking-widest drop-shadow-[0_0_12px_#ef4444]">
                   THE FLOWERS WITHERED

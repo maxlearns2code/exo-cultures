@@ -3,7 +3,6 @@
 import React from "react";
 import Image from "next/image";
 import { CultureInfo } from "@/types";
-import { Play, Sparkles, Radio, Gamepad2, Shield } from "lucide-react";
 
 interface AttractModeProps {
   cultures?: CultureInfo[];
@@ -18,8 +17,7 @@ export function AttractMode({ onDismiss }: AttractModeProps) {
     >
       {/* Top Arcade Marquee */}
       <div className="flex flex-col items-center text-center mt-1">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white text-black border-2 border-white mb-2">
-          <Sparkles className="w-3.5 h-3.5" />
+        <div className="inline-flex items-center px-3 py-1 bg-white text-black border-2 border-white mb-2">
           <span className="text-[10px] font-bold uppercase tracking-widest">
             ATTRACT MODE • COLLABORATIVE EXHIBITION PREVIEW
           </span>
@@ -35,9 +33,8 @@ export function AttractMode({ onDismiss }: AttractModeProps) {
       {/* Center Spotlight: The Single Collaborative Game */}
       <div className="w-full max-w-xl bg-black border-2 border-purple-400 p-4 md:p-5 shadow-[8px_8px_0px_#8b5cf6] flex flex-col items-center text-center my-auto">
         <div className="w-full flex items-center justify-between border-b-2 border-purple-500/40 pb-2 mb-3">
-          <span className="text-[10px] font-bold text-white uppercase tracking-widest flex items-center gap-1">
-            <Radio className="w-3.5 h-3.5 text-purple-400 animate-pulse" />
-            UNIFIED SPECULATIVE EXPEDITION
+          <span className="text-[10px] font-bold text-white uppercase tracking-widest">
+            [UNIFIED SPECULATIVE EXPEDITION]
           </span>
           <span className="text-[10px] font-bold uppercase tracking-wider text-purple-300">
             MAXIME • MARTIN • AISAH • MANA
@@ -75,16 +72,14 @@ export function AttractMode({ onDismiss }: AttractModeProps) {
         </div>
 
         {/* Action Prompt */}
-        <div className="w-full max-w-xs py-2 bg-white text-black font-bold text-xs uppercase tracking-widest border-2 border-white shadow-[4px_4px_0px_#8b5cf6] flex items-center justify-center gap-2 animate-pulse">
-          <Play className="w-4 h-4 fill-current" />
+        <div className="w-full max-w-xs py-2 bg-white text-black font-bold text-xs uppercase tracking-widest border-2 border-white shadow-[4px_4px_0px_#8b5cf6] flex items-center justify-center animate-pulse">
           <span>PRESS [A] OR CLICK TO PLAY</span>
         </div>
       </div>
 
       {/* Footer Arcade Instruction */}
       <div className="text-[10px] text-neutral-400 border-t border-neutral-800 pt-2 flex items-center justify-between w-full max-w-xl">
-        <span className="flex items-center gap-1.5">
-          <Gamepad2 className="w-3.5 h-3.5 text-purple-400" />
+        <span>
           8BitDo Arcade Stick &amp; Mouse/Keyboard Compatible
         </span>
         <span className="text-white font-bold">HYPER ISLAND • WEEK 51, 2026</span>

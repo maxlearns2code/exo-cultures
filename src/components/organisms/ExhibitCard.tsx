@@ -2,7 +2,6 @@
 
 import React from "react";
 import Image from "next/image";
-import { Play, Radio } from "lucide-react";
 import { AlienGlyphs } from "@/components/atoms/AlienGlyphs";
 import { CrosshairReticle } from "@/components/atoms/CrosshairReticle";
 import { ArcadeButton } from "@/components/atoms/Button";
@@ -33,11 +32,10 @@ export function ExhibitCard({
     >
       {/* Top Cap */}
       <div className="p-1.5 bg-black text-white flex items-center justify-between text-[9px] font-bold z-10 relative">
-        <span className="flex items-center gap-1">
-          <Radio className="w-3 h-3 animate-pulse text-purple-400" />
+        <span className="tracking-wider uppercase">
           SECTOR 01: SUB-ABYSS
         </span>
-        <span className="bg-white text-black px-1.5 py-0.2 uppercase">ONLINE</span>
+        <span className="bg-white text-black px-1.5 py-0.2 uppercase font-bold">ONLINE</span>
       </div>
 
       {/* Artwork Area */}
@@ -82,7 +80,6 @@ export function ExhibitCard({
           }}
           className="py-1 px-3"
         >
-          <Play className="w-2.5 h-2.5 fill-current" />
           <span>PLAY [A]</span>
         </ArcadeButton>
       </div>

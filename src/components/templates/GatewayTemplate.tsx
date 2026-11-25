@@ -2,7 +2,6 @@
 
 import React from "react";
 import { CultureInfo, ALIEN_CULTURE_METADATA } from "@/types";
-import { ArrowLeft, BookOpen, Sparkles, Cpu, Play } from "lucide-react";
 import { ExhibitCard } from "@/components/organisms/ExhibitCard";
 import { ArcadeButton } from "@/components/atoms/Button";
 import { ControlsHintBar } from "@/components/molecules/ControlsHintBar";
@@ -33,9 +32,8 @@ export function GatewayTemplate({
         <div className="flex items-center gap-2">
           <button
             onClick={onReturnToIntro}
-            className="flex items-center gap-1.5 px-2.5 py-1 bg-black text-white hover:bg-neutral-800 font-bold text-xs uppercase border-2 border-black transition-all cursor-pointer shadow-[2px_2px_0px_#000000]"
+            className="flex items-center px-2.5 py-1 bg-black text-white hover:bg-neutral-800 font-bold text-xs uppercase border-2 border-black transition-all cursor-pointer shadow-[2px_2px_0px_#000000]"
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
             <span>[B] INTRO</span>
           </button>
           <div>
@@ -58,9 +56,8 @@ export function GatewayTemplate({
           </button>
           <button
             onClick={onOpenDossier}
-            className="text-[10px] text-black border-2 border-black px-2 py-0.5 font-bold hover:bg-black hover:text-white transition-colors cursor-pointer flex items-center gap-1"
+            className="text-[10px] text-black border-2 border-black px-2 py-0.5 font-bold hover:bg-black hover:text-white transition-colors cursor-pointer"
           >
-            <BookOpen className="w-3 h-3" />
             <span>[Y] DOSSIER</span>
           </button>
           <button
@@ -78,8 +75,7 @@ export function GatewayTemplate({
           {/* Left Panel: Narrative Fusion */}
           <div className="md:col-span-4 bg-neutral-100 border-2 border-black p-3.5 shadow-[4px_4px_0px_#000000] flex flex-col justify-between h-full max-h-[340px]">
             <div>
-              <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-black text-white text-[9px] font-bold uppercase mb-2">
-                <Sparkles className="w-3 h-3 text-amber-300" />
+              <div className="inline-flex items-center px-2 py-0.5 bg-black text-white text-[9px] font-bold uppercase mb-2">
                 <span>COMBINED SPECULATIVE LORE</span>
               </div>
               <h2 className="text-xs md:text-sm font-black uppercase mb-1.5">
@@ -124,8 +120,7 @@ export function GatewayTemplate({
           {/* Right Panel: Mechanics & Controls */}
           <div className="md:col-span-4 bg-neutral-100 border-2 border-black p-3.5 shadow-[4px_4px_0px_#000000] flex flex-col justify-between h-full max-h-[340px]">
             <div>
-              <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-black text-white text-[9px] font-bold uppercase mb-2">
-                <Cpu className="w-3 h-3 text-cyan-400" />
+              <div className="inline-flex items-center px-2 py-0.5 bg-black text-white text-[9px] font-bold uppercase mb-2">
                 <span>EXPEDITION CONTROLS</span>
               </div>
               <h2 className="text-xs md:text-sm font-black uppercase mb-1.5">
@@ -148,7 +143,6 @@ export function GatewayTemplate({
               onClick={onLaunch}
               className="w-full mt-3 py-2 text-xs"
             >
-              <Play className="w-3.5 h-3.5 fill-current" />
               <span>LAUNCH GAME [ENTER / A]</span>
             </ArcadeButton>
           </div>

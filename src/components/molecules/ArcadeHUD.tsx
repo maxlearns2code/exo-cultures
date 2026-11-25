@@ -1,6 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 
 interface ArcadeHUDProps {
   title?: string;
@@ -23,9 +22,8 @@ export function ArcadeHUD({
         {showBackButton && (
           <Link
             href="/"
-            className="flex items-center gap-1.5 px-2.5 py-1 bg-black border-2 border-white hover:bg-white hover:text-black text-white text-xs font-bold transition-colors cursor-pointer"
+            className="flex items-center px-2.5 py-1 bg-black border-2 border-white hover:bg-white hover:text-black text-white text-xs font-bold transition-colors cursor-pointer"
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
             <span>[B] HUB</span>
           </Link>
         )}

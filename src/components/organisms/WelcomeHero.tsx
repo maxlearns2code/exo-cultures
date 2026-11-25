@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Play, BookOpen, Sparkles, Radio } from "lucide-react";
 import { ArcadeButton } from "@/components/atoms/Button";
 import { Badge } from "@/components/atoms/Badge";
 
@@ -22,8 +21,7 @@ export function WelcomeHero({
     <div className="flex-1 flex flex-col justify-between p-4 md:p-6 text-center select-none font-mono bg-black text-white relative">
       {/* Header Marquee */}
       <div className="flex flex-col items-center">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white text-black border-2 border-white mb-2">
-          <Sparkles className="w-3.5 h-3.5" />
+        <div className="inline-flex items-center px-3 py-1 bg-white text-black border-2 border-white mb-2">
           <span className="text-[10px] font-bold uppercase tracking-widest">
             INTERGALACTIC WORLDS EXPO • WEEK 51, 2026 • HYPER ISLAND
           </span>
@@ -39,9 +37,8 @@ export function WelcomeHero({
       {/* Exhibition Statement Card */}
       <div className="w-full max-w-lg mx-auto bg-black border-2 border-white p-5 md:p-6 shadow-[8px_8px_0px_#ffffff] flex flex-col items-center text-center my-auto">
         <div className="w-full flex items-center justify-between border-b-2 border-white/20 pb-2 mb-3 text-[11px]">
-          <span className="text-white font-bold uppercase tracking-wider flex items-center gap-1.5">
-            <Radio className="w-3.5 h-3.5 text-purple-400 animate-pulse" />
-            COLLABORATIVE CREATORS
+          <span className="text-white font-bold uppercase tracking-wider">
+            [COLLABORATIVE CREATORS]
           </span>
           <span className="text-white font-bold tracking-wide">
             Maxime • Martin • Aisah • Mana
@@ -69,7 +66,6 @@ export function WelcomeHero({
             onClick={onStartGame}
             className="w-full"
           >
-            <Play className="w-4 h-4 fill-current" />
             <span>START COLLABORATIVE GAME [A]</span>
           </ArcadeButton>
 
@@ -89,7 +85,6 @@ export function WelcomeHero({
               onClick={onOpenDossier}
               className="py-2"
             >
-              <BookOpen className="w-3.5 h-3.5" />
               <span>DOSSIER [Y]</span>
             </ArcadeButton>
           </div>

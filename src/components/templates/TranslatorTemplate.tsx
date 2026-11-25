@@ -3,7 +3,6 @@
 import React from "react";
 import Image from "next/image";
 import { CultureInfo, ALIEN_CULTURE_METADATA } from "@/types";
-import { Play, ArrowLeft, BookOpen, Sparkles, Crosshair } from "lucide-react";
 import { ControlsHintBar } from "@/components/molecules/ControlsHintBar";
 import { ArcadeButton } from "@/components/atoms/Button";
 
@@ -36,9 +35,8 @@ export function TranslatorTemplate({
         <div className="flex items-center gap-2.5">
           <button
             onClick={onReturnToIntro}
-            className="flex items-center gap-1.5 px-2.5 py-1 bg-black hover:bg-neutral-900 text-cyan-400 font-bold text-xs border border-cyan-400/60 transition-all cursor-pointer shadow-[0_0_10px_rgba(0,240,255,0.3)]"
+            className="flex items-center px-2.5 py-1 bg-black hover:bg-neutral-900 text-cyan-400 font-bold text-xs border border-cyan-400/60 transition-all cursor-pointer shadow-[0_0_10px_rgba(0,240,255,0.3)]"
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
             <span>[B] INTRO</span>
           </button>
           <div>
@@ -64,9 +62,8 @@ export function TranslatorTemplate({
           </button>
           <button
             onClick={onOpenDossier}
-            className="text-[10px] text-white border border-neutral-700 px-2 py-0.5 font-bold hover:border-white transition-colors cursor-pointer flex items-center gap-1 bg-black/60"
+            className="text-[10px] text-white border border-neutral-700 px-2 py-0.5 font-bold hover:border-white transition-colors cursor-pointer bg-black/60"
           >
-            <BookOpen className="w-3 h-3" />
             <span>[Y] DOSSIER</span>
           </button>
           <button
@@ -90,8 +87,8 @@ export function TranslatorTemplate({
             className="object-cover"
           />
 
-          <div className="absolute top-2 right-2 text-white z-10 pointer-events-none drop-shadow-[0_0_8px_#c084fc]">
-            <Crosshair className="w-5 h-5 animate-spin" style={{ animationDuration: "10s" }} />
+          <div className="absolute top-2 right-2 text-white z-10 pointer-events-none drop-shadow-[0_0_8px_#c084fc] font-mono text-xs font-bold">
+            [+]
           </div>
 
           <div className="absolute top-2 left-2 z-10 bg-black/90 text-cyan-300 border border-cyan-400/80 text-[10px] px-2 py-0.5 font-mono font-bold tracking-widest shadow-[0_0_10px_#00f0ff]">
@@ -110,7 +107,6 @@ export function TranslatorTemplate({
           <div>
             <div className="flex items-center justify-between border-b border-purple-500/30 pb-1.5 mb-2">
               <div className="flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-pink-400" />
                 <span className="text-xs font-bold tracking-wider uppercase text-white drop-shadow-[0_0_6px_#ffffff]">
                   COLLABORATIVE EXPEDITION • {culture.author}
                 </span>
@@ -160,8 +156,7 @@ export function TranslatorTemplate({
               onClick={onLaunch}
               className="px-6 py-2.5"
             >
-              <Play className="w-4 h-4 fill-current" />
-              <span>▶ PRESS [A] PLAY GAME</span>
+              <span>PRESS [A] PLAY GAME</span>
             </ArcadeButton>
           </div>
         </div>

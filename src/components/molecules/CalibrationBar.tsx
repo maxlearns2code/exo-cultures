@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Volume2, VolumeX, Gamepad2 } from "lucide-react";
 import { ArcadeAudio } from "@/utils/audio";
 
 export type AttractionFXMode = "dual" | "flash" | "glitch" | "off";
@@ -54,8 +53,7 @@ export function CalibrationBar({
             isWhite ? "bg-white border-black text-black" : "bg-black/80 border-green-500 text-green-400"
           }`}
         >
-          <Gamepad2 className="w-3 h-3 text-green-400 animate-pulse" />
-          <span>ARCADE STICK ACTIVE</span>
+          <span>[ARCADE STICK ACTIVE]</span>
         </div>
       )}
 
@@ -92,18 +90,14 @@ export function CalibrationBar({
       {/* Mute/Sound Button */}
       <button
         onClick={handleToggleSound}
-        className={`p-1 border transition-colors cursor-pointer ${
+        className={`px-2 py-0.5 text-[9px] font-bold border transition-colors cursor-pointer ${
           isWhite
             ? "bg-white hover:bg-neutral-100 text-black border-black shadow-[2px_2px_0px_#000000]"
             : "bg-black/80 hover:bg-neutral-900 text-white border-white/40 hover:border-white"
         }`}
         title={isMuted ? "Unmute audio" : "Mute audio"}
       >
-        {isMuted ? (
-          <VolumeX className="w-3.5 h-3.5 text-red-400" />
-        ) : (
-          <Volume2 className="w-3.5 h-3.5 text-white" />
-        )}
+        <span>{isMuted ? "[MUTED]" : "[AUDIO ON]"}</span>
       </button>
     </div>
   );

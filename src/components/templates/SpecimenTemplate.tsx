@@ -3,7 +3,6 @@
 import React from "react";
 import Image from "next/image";
 import { CultureInfo, ALIEN_CULTURE_METADATA } from "@/types";
-import { Play, ArrowLeft, BookOpen, AlertTriangle, Activity, Crosshair } from "lucide-react";
 import { ControlsHintBar } from "@/components/molecules/ControlsHintBar";
 import { ArcadeButton } from "@/components/atoms/Button";
 
@@ -36,9 +35,8 @@ export function SpecimenTemplate({
         <div className="flex items-center gap-2.5">
           <button
             onClick={onReturnToIntro}
-            className="flex items-center gap-1.5 px-2.5 py-1 bg-black hover:bg-emerald-950 text-emerald-400 font-bold text-xs border border-emerald-500 transition-all cursor-pointer shadow-[0_0_8px_rgba(16,185,129,0.4)]"
+            className="flex items-center px-2.5 py-1 bg-black hover:bg-emerald-950 text-emerald-400 font-bold text-xs border border-emerald-500 transition-all cursor-pointer shadow-[0_0_8px_rgba(16,185,129,0.4)]"
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
             <span>[B] INTRO</span>
           </button>
           <div>
@@ -64,9 +62,8 @@ export function SpecimenTemplate({
           </button>
           <button
             onClick={onOpenDossier}
-            className="text-[10px] text-emerald-400 border border-emerald-800 px-2 py-0.5 font-bold hover:border-emerald-500 transition-colors cursor-pointer flex items-center gap-1 bg-black/60"
+            className="text-[10px] text-emerald-400 border border-emerald-800 px-2 py-0.5 font-bold hover:border-emerald-500 transition-colors cursor-pointer bg-black/60"
           >
-            <BookOpen className="w-3 h-3" />
             <span>[Y] DOSSIER</span>
           </button>
           <button
@@ -91,9 +88,8 @@ export function SpecimenTemplate({
                 {culture.title}
               </span>
             </div>
-            <div className="flex items-center gap-1.5 text-[9px] font-mono font-bold text-amber-300 bg-amber-950/80 px-2 py-0.5 border border-amber-500">
-              <AlertTriangle className="w-3 h-3 text-amber-400 animate-pulse" />
-              <span>{alien.hazardClass}</span>
+            <div className="flex items-center text-[9px] font-mono font-bold text-amber-300 bg-amber-950/80 px-2 py-0.5 border border-amber-500">
+              <span>[HAZARD: {alien.hazardClass}]</span>
             </div>
           </div>
 
@@ -114,8 +110,8 @@ export function SpecimenTemplate({
               className="object-cover"
             />
 
-            <div className="absolute top-2 right-2 text-emerald-400 z-10 pointer-events-none">
-              <Crosshair className="w-5 h-5 animate-spin" style={{ animationDuration: "12s" }} />
+            <div className="absolute top-2 right-2 text-emerald-400 z-10 pointer-events-none font-mono text-xs font-bold">
+              [+]
             </div>
 
             <div className="absolute bottom-2 left-4 right-2 z-10 bg-black/80 text-emerald-300 border border-emerald-500/50 p-1 flex items-center justify-between text-[8px]">
@@ -129,9 +125,8 @@ export function SpecimenTemplate({
         <div className="flex-1 relative flex flex-col justify-between border-2 border-emerald-500/60 bg-[#020a05] rounded p-3 text-xs leading-relaxed">
           <div>
             <div className="flex items-center justify-between border-b border-emerald-800/80 pb-1 mb-2">
-              <span className="font-bold text-emerald-300 uppercase tracking-widest text-[10px] flex items-center gap-1">
-                <Activity className="w-3 h-3 text-emerald-400" />
-                ECOSYSTEM TELEMETRY
+              <span className="font-bold text-emerald-300 uppercase tracking-widest text-[10px]">
+                [ECOSYSTEM TELEMETRY]
               </span>
               <span className="text-[9px] px-2 py-0.5 bg-emerald-950 border border-emerald-600 text-emerald-200 font-bold">
                 COLLABORATIVE DEMO
@@ -174,7 +169,6 @@ export function SpecimenTemplate({
               onClick={onLaunch}
               className="py-2 px-5 bg-emerald-500 hover:bg-emerald-400 text-black border-emerald-300 shadow-[0_0_15px_#10b981]"
             >
-              <Play className="w-3.5 h-3.5 fill-current" />
               <span>ENGAGE [A]</span>
             </ArcadeButton>
           </div>
