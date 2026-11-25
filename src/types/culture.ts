@@ -42,35 +42,23 @@ export const COLLABORATIVE_GAME: CultureInfo = {
   mechanics: ["3D LiDAR Echolocation", "Bloom Defense", "Photonic Scan", "Floral Resonance"],
 };
 
+export const COLLABORATIVE_ALIEN_DATA: CultureAlienData = {
+  alienGlyphs: "☲0x45⋔⎎▲",
+  alienName: "EXO-SYM // 0x4D",
+  fragmentCode: "UNIFIED FRAGMENT",
+  fragmentTitle: "COLLABORATIVE 3D LIDAR ABYSS",
+  alienAudience: "Collective exploration combining sensory light, echolocation, acoustic chambers, and atmospheric vapors",
+  sectorId: "SECTOR 01: UNIFIED SUB-ABYSS",
+  planetCoords: "05h 14m • RIGEL-VII EXPEDITION",
+  environmentalTelemetry: "GRAV: 0.12G • 0 LUX • PITCH BLACK CAVERN",
+  beamLock: "LIDAR SCANNER ONLINE • 15kHz",
+  specimenCode: "SPECIMEN EX-01",
+  hazardClass: "CLASS 1 [RESONANT SPORES]",
+  sampleType: "BIOLUMINESCENT FLORAL BEACONS",
+  containmentProtocol: "ISOLATION CELL: FIELD GENERATOR ENGAGED",
+};
+
 export const ALIEN_CULTURE_METADATA: Record<string, CultureAlienData> = {
-  martin: {
-    alienGlyphs: "☲0x45⋔⎎▲",
-    alienName: "EXO-SYM // 0x4D",
-    fragmentCode: "UNIFIED FRAGMENT",
-    fragmentTitle: "COLLABORATIVE 3D LIDAR ABYSS",
-    alienAudience: "Collective exploration combining sensory light, echolocation, acoustic chambers, and atmospheric vapors",
-    sectorId: "SECTOR 01: UNIFIED SUB-ABYSS",
-    planetCoords: "05h 14m • RIGEL-VII EXPEDITION",
-    environmentalTelemetry: "GRAV: 0.12G • 0 LUX • PITCH BLACK CAVERN",
-    beamLock: "LIDAR SCANNER ONLINE • 15kHz",
-    specimenCode: "SPECIMEN EX-01",
-    hazardClass: "CLASS 1 [RESONANT SPORES]",
-    sampleType: "BIOLUMINESCENT FLORAL BEACONS",
-    containmentProtocol: "ISOLATION CELL: FIELD GENERATOR ENGAGED",
-  },
-  "exo-cultures": {
-    alienGlyphs: "☲0x45⋔⎎▲",
-    alienName: "EXO-SYM // 0x4D",
-    fragmentCode: "UNIFIED FRAGMENT",
-    fragmentTitle: "COLLABORATIVE 3D LIDAR ABYSS",
-    alienAudience: "Collective exploration combining sensory light, echolocation, acoustic chambers, and atmospheric vapors",
-    sectorId: "SECTOR 01: UNIFIED SUB-ABYSS",
-    planetCoords: "05h 14m • RIGEL-VII EXPEDITION",
-    environmentalTelemetry: "GRAV: 0.12G • 0 LUX • PITCH BLACK CAVERN",
-    beamLock: "LIDAR SCANNER ONLINE • 15kHz",
-    specimenCode: "SPECIMEN EX-01",
-    hazardClass: "CLASS 1 [RESONANT SPORES]",
-    sampleType: "BIOLUMINESCENT FLORAL BEACONS",
-    containmentProtocol: "ISOLATION CELL: FIELD GENERATOR ENGAGED",
-  },
+  martin: COLLABORATIVE_ALIEN_DATA,
+  "exo-cultures": COLLABORATIVE_ALIEN_DATA,
 };

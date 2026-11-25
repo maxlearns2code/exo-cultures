@@ -3,6 +3,7 @@
 import React from "react";
 import { CultureInfo, ALIEN_CULTURE_METADATA } from "@/types";
 import { ControlsHintBar } from "@/components/molecules/ControlsHintBar";
+import { ExhibitionHeader } from "@/components/molecules/ExhibitionHeader";
 import { ArcadeButton } from "@/components/atoms/Button";
 
 interface TemplateProps {
@@ -30,49 +31,13 @@ export function TranslatorTemplate({
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b20_1px,transparent_1px),linear-gradient(to_bottom,#1e293b20_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
 
       {/* 1. TOP HEADER: Neon Arcade Marquee */}
-      <header className="w-full flex items-center justify-between border-b-2 border-cyan-500/40 pb-2 mb-2 select-none z-10 bg-[#060713]/90 backdrop-blur-sm">
-        <div className="flex items-center gap-2.5">
-          <button
-            onClick={onReturnToIntro}
-            className="flex items-center px-2.5 py-1 bg-black hover:bg-neutral-900 text-cyan-400 font-bold text-xs border border-cyan-400/60 transition-all cursor-pointer shadow-[0_0_10px_rgba(0,240,255,0.3)]"
-          >
-            <span>[B] INTRO</span>
-          </button>
-          <div>
-            <h1 className="text-sm md:text-base font-bold tracking-wider text-cyan-300 uppercase flex items-center gap-2 drop-shadow-[0_0_8px_#00f0ff]">
-              <span>RECALBOX EXO-ARCADE</span>
-              <span className="text-[9px] bg-cyan-950/80 text-cyan-400 border border-cyan-500/50 px-1.5 py-0.2 rounded">
-                THEME: ARCADE
-              </span>
-            </h1>
-            <p className="text-[10px] text-pink-400 tracking-widest drop-shadow-[0_0_6px_#ff007f]">
-              NEON MATRIX // 1420.405 MHz FREE PLAY • ONE UNIFIED GAME
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={onToggleDesign}
-            className="text-[10px] text-cyan-300 border border-cyan-400 px-2 py-0.5 font-bold hover:bg-cyan-400 hover:text-black transition-all cursor-pointer bg-black/80 shadow-[0_0_10px_rgba(0,240,255,0.3)]"
-            title="Switch Recalbox Theme (or press T)"
-          >
-            [THEME: ARCADE ➔]
-          </button>
-          <button
-            onClick={onOpenDossier}
-            className="text-[10px] text-white border border-neutral-700 px-2 py-0.5 font-bold hover:border-white transition-colors cursor-pointer bg-black/60"
-          >
-            <span>[Y] DOSSIER</span>
-          </button>
-          <button
-            onClick={onOpenAttract}
-            className="text-[10px] text-white border border-neutral-700 px-2 py-0.5 font-bold hover:border-white transition-colors cursor-pointer bg-black/60"
-          >
-            [X] PREVIEW
-          </button>
-        </div>
-      </header>
+      <ExhibitionHeader
+        theme="translator"
+        onReturnToIntro={onReturnToIntro}
+        onToggleDesign={onToggleDesign}
+        onOpenDossier={onOpenDossier}
+        onOpenAttract={onOpenAttract}
+      />
 
       {/* 2. CYBER-CHAMFERED HERO SPOTLIGHT VIEWPORT */}
       <div className="w-full flex-1 min-h-0 bg-[#090b1a]/90 border-2 border-purple-400 shadow-[0_0_25px_rgba(192,132,252,0.4),inset_0_0_15px_rgba(192,132,252,0.15)] p-3 flex flex-col md:flex-row gap-4 overflow-hidden relative mb-2.5 z-10">

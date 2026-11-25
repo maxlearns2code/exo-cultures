@@ -2,6 +2,7 @@
 
 import React from "react";
 import { CultureInfo, ALIEN_CULTURE_METADATA } from "@/types";
+import { ExhibitionHeader } from "@/components/molecules";
 import { ControlsHintBar } from "@/components/molecules/ControlsHintBar";
 import { ArcadeButton } from "@/components/atoms/Button";
 
@@ -30,49 +31,13 @@ export function SpecimenTemplate({
       <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(16,185,129,0.06)_1px,transparent_1px)] bg-[size:100%_4px] pointer-events-none" />
 
       {/* 1. TOP BIO-SECURITY TERMINAL HEADER */}
-      <header className="w-full flex items-center justify-between border-b-2 border-emerald-500/70 pb-2 mb-2 select-none z-10 bg-[#030d07]/95">
-        <div className="flex items-center gap-2.5">
-          <button
-            onClick={onReturnToIntro}
-            className="flex items-center px-2.5 py-1 bg-black hover:bg-emerald-950 text-emerald-400 font-bold text-xs border border-emerald-500 transition-all cursor-pointer shadow-[0_0_8px_rgba(16,185,129,0.4)]"
-          >
-            <span>[B] INTRO</span>
-          </button>
-          <div>
-            <h1 className="text-sm md:text-base font-bold tracking-wider text-emerald-300 uppercase flex items-center gap-2 drop-shadow-[0_0_8px_rgba(52,211,153,0.8)]">
-              <span>RECALBOX BIOS v4.2 // BIO-TERMINAL</span>
-              <span className="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-500 px-1.5 py-0.2">
-                THEME: PHOSPHOR
-              </span>
-            </h1>
-            <p className="text-[10px] text-emerald-500/80 tracking-widest">
-              HYPER ISLAND LAB 04 • COLLABORATIVE GAME SPECIMEN ACTIVE █
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={onToggleDesign}
-            className="text-[10px] text-emerald-300 border border-emerald-500 px-2 py-0.5 font-bold hover:bg-emerald-500 hover:text-black transition-all cursor-pointer bg-black/80 shadow-[0_0_10px_rgba(34,197,94,0.4)]"
-            title="Switch Recalbox Theme (or press T)"
-          >
-            [THEME: PHOSPHOR ➔]
-          </button>
-          <button
-            onClick={onOpenDossier}
-            className="text-[10px] text-emerald-400 border border-emerald-800 px-2 py-0.5 font-bold hover:border-emerald-500 transition-colors cursor-pointer bg-black/60"
-          >
-            <span>[Y] DOSSIER</span>
-          </button>
-          <button
-            onClick={onOpenAttract}
-            className="text-[10px] text-emerald-400 border border-emerald-800 px-2 py-0.5 font-bold hover:border-emerald-500 transition-colors cursor-pointer bg-black/60"
-          >
-            [X] PREVIEW
-          </button>
-        </div>
-      </header>
+      <ExhibitionHeader
+        theme="specimen"
+        onReturnToIntro={onReturnToIntro}
+        onToggleDesign={onToggleDesign}
+        onOpenDossier={onOpenDossier}
+        onOpenAttract={onOpenAttract}
+      />
 
       {/* 2. SPLIT-SCREEN PHOSPHOR LABORATORY CONSOLE */}
       <div className="flex-1 min-h-0 flex flex-col md:flex-row gap-4 select-none mb-2 z-10">

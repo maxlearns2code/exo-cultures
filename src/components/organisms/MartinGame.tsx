@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import * as THREE from "three";
 import { ArcadeAudio } from "../../utils/audio";
 import { useArcadeInput, ArcadeInputs } from "../../hooks/useArcadeInput";
+import { GameHUD, GameModal } from "@/components/molecules";
 
 interface MartinGameProps {
   onReturnToHub: () => void;
@@ -772,247 +773,25 @@ export function MartinGame({ onReturnToHub }: MartinGameProps) {
         className="absolute inset-0 w-full h-full cursor-crosshair z-0"
       />
 
-      {/* TOP HUD: Echolocation & Mate Summoning Telemetry */}
-      <div className="relative z-50 flex items-center justify-between p-2.5 md:p-3 bg-black/85 backdrop-blur-sm border-b-2 border-white/20 select-none">
-        <div className="flex items-center gap-2.5">
-          <button
-            onClick={safeReturnToHub}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-black hover:bg-neutral-800 text-white font-black text-xs uppercase border-2 border-white transition-all cursor-pointer shadow-[3px_3px_0px_#ffffff] active:translate-y-0.5"
-            title="Return to Main Menu (or press B / ESC)"
-          >
-            <span>◀ [B] BACK TO MAIN MENU</span>
-          </button>
-          <div>
-            <h1 className="text-xs md:text-sm font-bold tracking-wider text-purple-200 uppercase flex items-center gap-1.5">
-              <span>ECHOLOCATION ARCHIVE // MARTIN</span>
-              <span className="text-[9px] bg-purple-900/60 text-purple-300 border border-purple-400 px-1.5 py-0.2 rounded">
-                CHAMBER III
-              </span>
-            </h1>
-            <p className="text-[9px] text-purple-400 tracking-widest hidden sm:block">
-              3D PHOTONIC LIDAR • 220,000 SCAN POINTS MAX
-            </p>
-          </div>
-        </div>
+      <GameHUD
+        onReturnToHub={safeReturnToHub}
+        lureProgress={lureProgress}
+        isLocked={isLocked}
+        gameOver={gameOver}
+        systemMessage={systemMessage}
+        promptVisible={promptVisible}
+        flowerStatus={flowerStatus}
+        activeSporesCount={activeSporesCount}
+        mappedPoints={mappedPoints}
+      />
 
-        <div className="flex items-center gap-3">
-          <button
-            onClick={safeReturnToHub}
-            className="hidden sm:flex items-center px-2.5 py-1 bg-red-950/80 hover:bg-red-900 text-red-200 font-bold text-xs uppercase border border-red-500 transition-all cursor-pointer shadow-[2px_2px_0px_#ef4444]"
-            title="Exit Game to Hub"
-          >
-            <span>[QUIT GAME ✕]</span>
-          </button>
-
-          {/* Lure / Mate Summon Progress Meter */}
-          <div className="flex flex-col items-end gap-1 min-w-[120px] md:min-w-[180px]">
-            <div className="flex items-center justify-between w-full text-[9px] font-bold">
-              <span className="text-purple-300">
-                <span>MATE SUMMON:</span>
-              </span>
-              <span className="text-amber-300">{lureProgress}%</span>
-            </div>
-            <div className="w-full h-2 rounded bg-black/80 border border-purple-500/60 overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-amber-300 transition-all duration-150"
-                style={{ width: `${lureProgress}%` }}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* CROSSHAIR RETICLE IN CENTER OF SCREEN */}
-      {isLocked && !gameOver && (
-        <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-10">
-          <div className="relative w-6 h-6 flex items-center justify-center">
-            <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00f0ff]" />
-            <div className="absolute w-6 h-[1px] bg-cyan-400/40" />
-            <div className="absolute h-6 w-[1px] bg-cyan-400/40" />
-          </div>
-        </div>
-      )}
-
-      {/* SYSTEM ANNOUNCEMENT BANNER */}
-      {systemMessage && (
-        <div className="absolute top-16 left-0 right-0 z-30 pointer-events-none flex justify-center px-4">
-          <div className="bg-black/90 border border-purple-400/80 px-4 py-1.5 rounded text-xs text-purple-200 font-bold shadow-[0_0_15px_rgba(168,85,247,0.4)] animate-pulse">
-            {systemMessage}
-          </div>
-        </div>
-      )}
-
-      {/* HOLD [E] / [A] TO BLOOM PROMPT */}
-      {promptVisible && (
-        <div className="absolute bottom-28 left-0 right-0 z-30 pointer-events-none flex justify-center">
-          <div className="bg-pink-950/90 border-2 border-pink-400 px-4 py-2 rounded text-xs text-white font-bold shadow-[0_0_20px_#ff5fa8] animate-bounce">
-            <span>STAND CLOSE & HOLD [E] OR ARCADE [A] TO BLOOM FLOWER</span>
-          </div>
-        </div>
-      )}
-
-      {/* PAUSED / ENGAGE SCANNER OVERLAY */}
-      {!isLocked && !gameOver && (
-        <div
-          className="absolute inset-0 z-40 bg-black/85 backdrop-blur-sm flex flex-col items-center justify-center p-4 md:p-6 text-center select-none font-mono"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-lg bg-black border-2 border-white p-5 md:p-6 shadow-[8px_8px_0px_#ffffff] text-left"
-          >
-            <div className="flex items-center justify-between border-b-2 border-white/30 pb-2 mb-3">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-purple-300">
-                [PAUSED // SCANNER DISENGAGED]
-              </span>
-              <button
-                onClick={safeReturnToHub}
-                className="px-2.5 py-1 bg-white text-black hover:bg-neutral-200 font-bold text-[10px] uppercase border border-white cursor-pointer shadow-[2px_2px_0px_#ffffff]"
-              >
-                [ESC / B] QUIT TO MENU
-              </button>
-            </div>
-
-            <h2 className="text-lg md:text-xl font-black text-white mb-1.5 uppercase tracking-wider">
-              ECHOES IN THE DARK
-            </h2>
-            <p className="text-xs text-neutral-300 leading-relaxed mb-4">
-              Your mouse is unlocked. Explore the subterranean void with LiDAR echolocation, charge floral beacons, and summon your mate. You can return to the main menu at any time.
-            </p>
-
-            <div className="bg-neutral-900 border border-white/20 p-3 mb-4 text-[11px] space-y-1.5 text-neutral-200 font-mono">
-              <div className="text-white font-bold mb-1 border-b border-white/10 pb-0.5">CONTROLS REFERENCE:</div>
-              <div>• <strong>Left Click / Arcade [X]:</strong> Wide LiDAR Scan (map dark room)</div>
-              <div>• <strong>Right Click / Arcade [Y]:</strong> Focused Beam (charge beacons / burn spores)</div>
-              <div>• <strong>WASD / 8BitDo Stick:</strong> Move through subterranean cavern</div>
-              <div>• <strong>Hold [E] / Arcade [A]:</strong> Bloom floral resonance beacons</div>
-              <div className="text-amber-300 font-bold pt-1">• <strong>Escape / [B] Button:</strong> Unlock Cursor / Return to Main Menu</div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-2.5 w-full">
-              <button
-                onClick={safeReturnToHub}
-                className="flex-1 py-2.5 px-4 bg-black hover:bg-neutral-900 text-white font-bold text-xs uppercase tracking-wider border-2 border-white shadow-[4px_4px_0px_#ffffff] cursor-pointer transition-all text-center"
-              >
-                ◀ BACK TO MAIN MENU [B]
-              </button>
-
-              <button
-                onClick={handleCanvasClick}
-                className="flex-1 py-2.5 px-4 bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider border-2 border-white shadow-[4px_4px_0px_#ffffff] cursor-pointer transition-all text-center animate-pulse"
-              >
-                RESUME GAME [A / CLICK] ▶
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* GAME OVER / VICTORY OVERLAY */}
-      {gameOver && (
-        <div
-          className="absolute inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-4 md:p-6 text-center select-none font-mono"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-md bg-black border-2 border-white p-6 shadow-[10px_10px_0px_#ffffff] text-center"
-          >
-            {gameOver === "win" ? (
-              <>
-                <div className="inline-block px-4 py-1.5 bg-white text-black font-bold text-xs tracking-widest uppercase mb-3 border-2 border-white">
-                  [RESONANCE ESTABLISHED]
-                </div>
-                <h2 className="text-xl md:text-2xl font-bold text-white mb-2 uppercase tracking-widest">
-                  YOUR MATE ARRIVES
-                </h2>
-                <p className="text-xs text-neutral-300 leading-relaxed mb-5">
-                  The harmonic pulse carried across the cosmic dark. The blooms burned away the shadow. You are not alone anymore.
-                </p>
-              </>
-            ) : (
-              <>
-                <div className="inline-block px-4 py-1.5 bg-red-600 text-white font-bold text-xs tracking-widest uppercase mb-3 border-2 border-white">
-                  [BEACONS EXTINGUISHED]
-                </div>
-                <h2 className="text-xl md:text-2xl font-bold text-white mb-2 uppercase tracking-widest">
-                  THE FLOWERS WITHERED
-                </h2>
-                <p className="text-xs text-neutral-300 leading-relaxed mb-5">
-                  The viral spores took every bloom. Nothing is left to summon your mate through the abyss.
-                </p>
-              </>
-            )}
-
-            <div className="flex flex-col sm:flex-row gap-2.5 w-full mt-4">
-              <button
-                onClick={safeReturnToHub}
-                className="flex-1 py-2.5 px-4 bg-black hover:bg-neutral-900 text-white font-bold text-xs uppercase tracking-wider border-2 border-white shadow-[4px_4px_0px_#ffffff] cursor-pointer transition-all"
-              >
-                ◀ BACK TO MAIN MENU [B]
-              </button>
-              <button
-                onClick={() => window.location.reload()}
-                className="flex-1 py-2.5 px-4 bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider border-2 border-white shadow-[4px_4px_0px_#ffffff] cursor-pointer transition-all"
-              >
-                PLAY AGAIN [A] ▶
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* BOTTOM HUD: Flower & Spore Status + Diagnostic Counter */}
-      <div className="relative z-20 p-2.5 bg-black/75 backdrop-blur-sm border-t border-purple-500/40 select-none flex flex-wrap items-center justify-between text-[10px]">
-        {/* 4 Flowers Status */}
-        <div className="flex items-center gap-2 flex-wrap">
-          {flowerStatus.map((fl, i) => {
-            const statusLabel =
-              fl.state === 0
-                ? "SEARCHING"
-                : fl.state === 1
-                ? "CHARGED"
-                : fl.state === 2
-                ? `BLOOM ${fl.hp}%`
-                : "WITHERED";
-
-            const badgeColor =
-              fl.state === 2
-                ? "bg-pink-950/80 text-pink-300 border-pink-500"
-                : fl.state === 1
-                ? "bg-amber-950/80 text-amber-300 border-amber-500 animate-pulse"
-                : fl.state === 3
-                ? "bg-neutral-900 text-neutral-500 border-neutral-700"
-                : "bg-neutral-900 text-neutral-400 border-neutral-700";
-
-            return (
-              <div
-                key={fl.name}
-                className={`px-2 py-0.5 rounded border text-[9px] font-bold ${badgeColor}`}
-              >
-                <span>{fl.name}: </span>
-                <span>{statusLabel}</span>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Diagnostic point cloud & active spores counter */}
-        <div className="flex items-center gap-3 text-neutral-400 text-[9px]">
-          <span className="hidden sm:inline text-neutral-300 font-bold">
-            [ESC]: UNLOCK • [B]: MENU • [WASD]: MOVE
-          </span>
-          <span className="hidden sm:inline text-neutral-600">|</span>
-          <span>
-            VIRAL SPORES:{" "}
-            <strong className={activeSporesCount > 0 ? "text-red-400 animate-pulse" : "text-neutral-300"}>
-              {activeSporesCount} ACTIVE
-            </strong>
-          </span>
-          <span>|</span>
-          <span className="text-cyan-300 font-bold">
-            {mappedPoints.toLocaleString()} PTS MAPPED
-          </span>
-        </div>
-      </div>
+      <GameModal
+        isLocked={isLocked}
+        gameOver={gameOver}
+        onReturnToHub={safeReturnToHub}
+        onResume={handleCanvasClick}
+        onRestart={() => window.location.reload()}
+      />
     </div>
   );
 }

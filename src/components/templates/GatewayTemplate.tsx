@@ -3,6 +3,7 @@
 import React from "react";
 import { CultureInfo, ALIEN_CULTURE_METADATA } from "@/types";
 import { ExhibitCard } from "@/components/organisms/ExhibitCard";
+import { ExhibitionHeader } from "@/components/molecules";
 import { ArcadeButton } from "@/components/atoms/Button";
 import { ControlsHintBar } from "@/components/molecules/ControlsHintBar";
 
@@ -28,46 +29,13 @@ export function GatewayTemplate({
   return (
     <div className="flex-1 flex flex-col justify-between font-mono bg-white text-black select-none relative overflow-hidden p-3 md:p-5">
       {/* 1. TOP BRUTALIST ARCHITECTURAL HEADER */}
-      <header className="w-full border-b-4 border-black pb-2 flex items-center justify-between select-none">
-        <div className="flex items-center gap-2">
-          <button
-            onClick={onReturnToIntro}
-            className="flex items-center px-2.5 py-1 bg-black text-white hover:bg-neutral-800 font-bold text-xs uppercase border-2 border-black transition-all cursor-pointer shadow-[2px_2px_0px_#000000]"
-          >
-            <span>[B] INTRO</span>
-          </button>
-          <div>
-            <h1 className="text-sm md:text-base font-black tracking-wider uppercase">
-              EXO-CULTURES // THE COLLABORATIVE EXHIBITION
-            </h1>
-            <p className="text-[9px] text-neutral-600 font-bold uppercase">
-              RECALBOX THEME: BRUTALIST GALLERY • ONE SHARED ALIEN GAME
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-1.5">
-          <button
-            onClick={onToggleDesign}
-            className="text-[10px] text-black border-2 border-black px-2 py-0.5 font-bold hover:bg-black hover:text-white transition-colors cursor-pointer bg-neutral-100 shadow-[2px_2px_0px_#000000]"
-            title="Switch Recalbox Theme (or press T)"
-          >
-            [THEME: GALLERY ➔]
-          </button>
-          <button
-            onClick={onOpenDossier}
-            className="text-[10px] text-black border-2 border-black px-2 py-0.5 font-bold hover:bg-black hover:text-white transition-colors cursor-pointer"
-          >
-            <span>[Y] DOSSIER</span>
-          </button>
-          <button
-            onClick={onOpenAttract}
-            className="text-[10px] text-black border-2 border-black px-2 py-0.5 font-bold hover:bg-black hover:text-white transition-colors cursor-pointer"
-          >
-            [X] PREVIEW
-          </button>
-        </div>
-      </header>
+      <ExhibitionHeader
+        theme="gateway"
+        onReturnToIntro={onReturnToIntro}
+        onToggleDesign={onToggleDesign}
+        onOpenDossier={onOpenDossier}
+        onOpenAttract={onOpenAttract}
+      />
 
       {/* 2. CENTER STAGE: THE SINGLE COLLABORATIVE GAME SHOWCASE */}
       <div className="flex-1 min-h-0 flex items-center justify-center py-2 my-auto">
