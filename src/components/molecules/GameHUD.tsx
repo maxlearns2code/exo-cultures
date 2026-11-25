@@ -97,6 +97,11 @@ export function GameHUD({
       : isPhosphor
       ? "text-emerald-400"
       : "text-cyan-300",
+    closeButton: isBrutalist
+      ? "bg-black text-white hover:bg-neutral-800 border-2 border-white shadow-[2px_2px_0px_#ffffff]"
+      : isPhosphor
+      ? "bg-black text-emerald-300 hover:bg-emerald-950 border-2 border-emerald-500 shadow-[2px_2px_0px_#10b981]"
+      : "bg-black text-purple-200 hover:bg-purple-950 border-2 border-purple-500 shadow-[2px_2px_0px_#9d00ff]",
   };
 
   return (
@@ -106,10 +111,10 @@ export function GameHUD({
         <div className="flex items-center gap-2.5">
           <button
             onClick={onReturnToHub}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-black hover:bg-neutral-800 text-white font-black text-xs uppercase border-2 border-white transition-all cursor-pointer shadow-[3px_3px_0px_#ffffff] active:translate-y-0.5"
-            title="Return to Main Menu (or press B / ESC)"
+            className={`flex items-center gap-1 px-2.5 py-1 text-xs font-bold uppercase transition-all cursor-pointer ${themeStyles.closeButton}`}
+            title="Close [B / ESC]"
           >
-            <span>◀ [B] BACK TO MAIN MENU</span>
+            <span>[B / ESC] CLOSE</span>
           </button>
           <div>
             <h1 className={`text-xs md:text-sm font-bold tracking-wider uppercase flex items-center gap-1.5 ${themeStyles.titleColor}`}>
@@ -125,14 +130,6 @@ export function GameHUD({
         </div>
 
         <div className="flex items-center gap-3">
-          <button
-            onClick={onReturnToHub}
-            className="hidden sm:flex items-center px-2.5 py-1 bg-red-950/80 hover:bg-red-900 text-red-200 font-bold text-xs uppercase border border-red-500 transition-all cursor-pointer shadow-[2px_2px_0px_#ef4444]"
-            title="Exit Game to Hub"
-          >
-            <span>[QUIT GAME ✕]</span>
-          </button>
-
           {/* Lure / Mate Summon Progress Meter */}
           <div className="flex flex-col items-end gap-1 min-w-[120px] md:min-w-[180px]">
             <div className="flex items-center justify-between w-full text-[9px] font-bold">

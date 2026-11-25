@@ -51,7 +51,7 @@ export function GameModal({
             onClick={onReturnToHub}
             className="flex-1 py-2.5 px-4 bg-black hover:bg-neutral-900 text-white font-bold text-xs uppercase tracking-wider border-2 border-white shadow-[4px_4px_0px_#ffffff] cursor-pointer transition-all"
           >
-            ◀ BACK TO MAIN MENU [B]
+            [B / ESC] CLOSE
           </button>
           <button
             onClick={onRestart}
