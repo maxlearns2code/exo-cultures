@@ -34,7 +34,7 @@ export function AttractMode({ onDismiss }: AttractModeProps) {
             [UNIFIED SPECULATIVE EXPEDITION]
           </span>
           <span className="text-[10px] font-bold uppercase tracking-wider text-purple-300">
-            MAXIME • MARTIN • AISAH • MANA
+            AISAH • MANA • MARTIN • MAXIME
           </span>
         </div>
 

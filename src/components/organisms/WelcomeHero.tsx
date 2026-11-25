@@ -39,7 +39,7 @@ export function WelcomeHero({
             [COLLABORATIVE CREATORS]
           </span>
           <span className="text-white font-bold tracking-wide">
-            Maxime • Martin • Aisah • Mana
+            Aisah • Mana • Martin • Maxime
           </span>
         </div>
 

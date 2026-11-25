@@ -183,7 +183,7 @@ export function ExpoDossierModal({
               <div className="space-y-2">
                 <h4 className="font-bold text-white uppercase text-xs">Our Unified Group Pavilion Strategy</h4>
                 <p>
-                  Rather than fragmenting the pavilion into disconnected, isolated mini-demos, our team (Maxime Dewynter, Martin, Aisah, and Mana) decided to
+                  Rather than fragmenting the pavilion into disconnected, isolated mini-demos, our team (Aisah, Mana, Martin, and Maxime Dewynter) decided to
                   <strong> combine our speculative fiction into one common collaborative game</strong>.
                 </p>
                 <p>
@@ -253,7 +253,7 @@ export function ExpoDossierModal({
                   The Combined Story: Four Worlds, One Journey
                 </h3>
                 <p className="text-xs text-neutral-400">
-                  Narrative Fusion of Maxime, Martin, Aisah &amp; Mana
+                  Narrative Fusion of Aisah, Mana, Martin &amp; Maxime
                 </p>
               </div>
 
@@ -284,20 +284,20 @@ export function ExpoDossierModal({
                     How We Merged Our Four Real Concepts &amp; Letters of Intent
                   </div>
                   <p className="text-neutral-300">
-                    <strong>1. Life Beneath the Ice &amp; Light Wave Communication (Maxime &mdash; &ldquo;Chromatic Symbiosis&rdquo;):</strong>
-                    Set on a rocky moon of Saturn where zero sunlight penetrates the thick frozen crust. Beings communicate and navigate by projecting colored light waves and heat energy. A father guides his twin sons to discover living warm forms that unlock a swirling portal to our collaborative world.
-                  </p>
-                  <p className="text-neutral-300">
-                    <strong>2. 3D LiDAR, Astronomy &amp; Floral Mate-Summoning (Martin &mdash; &ldquo;Ørgäæ&rdquo;):</strong>
-                    Orbiting a binary star system in the Andromeda Galaxy with 4D spatial perception. To reproduce and communicate across the void, beings interact with rare resonant flowers that pulse, sing, and dance, mapped through 3D photonic LiDAR echolocation scans.
-                  </p>
-                  <p className="text-neutral-300">
-                    <strong>3. The Mycelium Forest &amp; The Silent Hill (Aisah &mdash; &ldquo;Cutting Exchange&rdquo;):</strong>
+                    <strong>1. The Mycelium Forest &amp; The Silent Hill (Aisah &mdash; &ldquo;Cutting Exchange&rdquo;):</strong>
                     A vast moss forest operating as one interconnected consciousness like fungal mycelium. An invasive virus weakens the network, severing senses (&ldquo;We used to hear the hill from here&rdquo;). Survival depends on passing rare virus-eating root cuttings hand-to-hand at the communal gathering.
                   </p>
                   <p className="text-neutral-300">
-                    <strong>4. The Non-Digital Society (Mana &mdash; &ldquo;Wanna Go To A Better Planet? // NewLife&rdquo;):</strong>
+                    <strong>2. The Non-Digital Society (Mana &mdash; &ldquo;Wanna Go To A Better Planet? // NewLife&rdquo;):</strong>
                     A provocative satire questioning digital overload, artificial intelligence, and capitalist power. It envisions an organic existence stripped of screens, mirrors, and technology, proving that tactile, physical community and love prevail over darkness.
+                  </p>
+                  <p className="text-neutral-300">
+                    <strong>3. 3D LiDAR, Astronomy &amp; Floral Mate-Summoning (Martin &mdash; &ldquo;Ørgäæ&rdquo;):</strong>
+                    Orbiting a binary star system in the Andromeda Galaxy with 4D spatial perception. To reproduce and communicate across the void, beings interact with rare resonant flowers that pulse, sing, and dance, mapped through 3D photonic LiDAR echolocation scans.
+                  </p>
+                  <p className="text-neutral-300">
+                    <strong>4. Life Beneath the Ice &amp; Light Wave Communication (Maxime &mdash; &ldquo;Chromatic Symbiosis&rdquo;):</strong>
+                    Set on a rocky moon of Saturn where zero sunlight penetrates the thick frozen crust. Beings communicate and navigate by projecting colored light waves and heat energy. A father guides his twin sons to discover living warm forms that unlock a swirling portal to our collaborative world.
                   </p>
                 </div>
               </div>
@@ -453,25 +453,14 @@ export function ExpoDossierModal({
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                <div className="p-3 bg-neutral-950 border-2 border-white">
+                <div className="p-3 bg-neutral-950 border border-white/40">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-white uppercase">Maxime Dewynter</span>
-                    <span className="px-1.5 py-0.5 bg-white text-black text-[9px] font-bold">ARCADE &amp; NARRATIVE</span>
+                    <span className="font-bold text-white uppercase">Aisah</span>
+                    <span className="px-1.5 py-0.5 bg-emerald-600 text-white text-[9px] font-bold">MYCELIUM &amp; THREAT</span>
                   </div>
-                  <p className="text-neutral-400 mb-1">Concept: <strong>Chromatic Symbiosis</strong></p>
+                  <p className="text-neutral-400 mb-1">Concept: <strong>We used to hear the hill from here</strong></p>
                   <p className="text-neutral-300 text-[11px]">
-                    Sub-ice moon ecology, light-wave &amp; heat sensory communication, father-and-twins portal journey. Engineered the CRT arcade cabinet architecture, 8BitDo gamepad input engine, and unified exhibition launcher.
-                  </p>
-                </div>
-
-                <div className="p-3 bg-neutral-950 border-2 border-white">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-white uppercase">Martin</span>
-                    <span className="px-1.5 py-0.5 bg-purple-600 text-white text-[9px] font-bold">3D ENGINE &amp; BOTANY</span>
-                  </div>
-                  <p className="text-neutral-400 mb-1">Concept: <strong>Ørgäæ</strong></p>
-                  <p className="text-neutral-300 text-[11px]">
-                    Binary star astronomy, 4D perception, and pulsing floral mate-summoning mechanics. Designed the 3D Three.js LiDAR raycasting engine (220,000 point-cloud reflections) and flower blooming physics.
+                    Moss forest collective mycelium consciousness, invasive viral disruption, and communal cutting exchanges. Co-constructed alien skeletal anatomy and inspired the in-game viral spore hazard.
                   </p>
                 </div>
 
@@ -486,14 +475,25 @@ export function ExpoDossierModal({
                   </p>
                 </div>
 
-                <div className="p-3 bg-neutral-950 border border-white/40">
+                <div className="p-3 bg-neutral-950 border-2 border-white">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-white uppercase">Aisah</span>
-                    <span className="px-1.5 py-0.5 bg-emerald-600 text-white text-[9px] font-bold">MYCELIUM &amp; THREAT</span>
+                    <span className="font-bold text-white uppercase">Martin</span>
+                    <span className="px-1.5 py-0.5 bg-purple-600 text-white text-[9px] font-bold">3D ENGINE &amp; BOTANY</span>
                   </div>
-                  <p className="text-neutral-400 mb-1">Concept: <strong>We used to hear the hill from here</strong></p>
+                  <p className="text-neutral-400 mb-1">Concept: <strong>Ørgäæ</strong></p>
                   <p className="text-neutral-300 text-[11px]">
-                    Moss forest collective mycelium consciousness, invasive viral disruption, and communal cutting exchanges. Co-constructed alien skeletal anatomy and inspired the in-game viral spore hazard.
+                    Binary star astronomy, 4D perception, and pulsing floral mate-summoning mechanics. Designed the 3D Three.js LiDAR raycasting engine (220,000 point-cloud reflections) and flower blooming physics.
+                  </p>
+                </div>
+
+                <div className="p-3 bg-neutral-950 border-2 border-white">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-bold text-white uppercase">Maxime Dewynter</span>
+                    <span className="px-1.5 py-0.5 bg-white text-black text-[9px] font-bold">ARCADE &amp; NARRATIVE</span>
+                  </div>
+                  <p className="text-neutral-400 mb-1">Concept: <strong>Chromatic Symbiosis</strong></p>
+                  <p className="text-neutral-300 text-[11px]">
+                    Sub-ice moon ecology, light-wave &amp; heat sensory communication, father-and-twins portal journey. Engineered the CRT arcade cabinet architecture, 8BitDo gamepad input engine, and unified exhibition launcher.
                   </p>
                 </div>
               </div>

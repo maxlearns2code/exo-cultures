@@ -111,7 +111,7 @@ export function SpecimenTemplate({
             </div>
 
             <p className="text-[11px] text-emerald-200/90 leading-snug mb-3">
-              Subterranean containment zone engineered by Maxime, Martin, Aisah, and Mana. Raycasting sensors track 220,000 photonic LiDAR reflections in real-time.
+              Subterranean containment zone engineered by Aisah, Mana, Martin, and Maxime. Raycasting sensors track 220,000 photonic LiDAR reflections in real-time.
             </p>
 
             <div className="space-y-1.5 text-[10px] bg-black/60 p-2.5 border border-emerald-900 rounded mb-3">
@@ -137,7 +137,7 @@ export function SpecimenTemplate({
 
           <div className="mt-3 pt-2 border-t border-emerald-800 flex items-center justify-between">
             <span className="text-[9px] text-emerald-600 font-bold">
-              AUTH: MAXIME • MARTIN • AISAH • MANA
+              AUTH: AISAH • MANA • MARTIN • MAXIME
             </span>
 
             <ArcadeButton

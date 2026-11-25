@@ -50,26 +50,26 @@ export function GatewayTemplate({
                 FOUR STORIES IN ONE
               </h2>
               <p className="text-[10px] text-neutral-700 leading-relaxed mb-3">
-                Maxime, Martin, Aisah, and Mana combined their four individual speculative worlds into a single extraterrestrial journey through the subterranean void.
+                Aisah, Mana, Martin, and Maxime combined their four individual speculative worlds into a single extraterrestrial journey through the subterranean void.
               </p>
               <div className="space-y-1.5 text-[9px] border-t border-black/20 pt-2">
-                <div className="flex items-center gap-1 text-black font-bold">
-                  <span>• Maxime:</span> <span className="font-normal text-neutral-600">Sub-ice oceanic abyss &amp; light</span>
-                </div>
-                <div className="flex items-center gap-1 text-black font-bold">
-                  <span>• Martin:</span> <span className="font-normal text-neutral-600">3D LiDAR point-cloud echolocation</span>
-                </div>
                 <div className="flex items-center gap-1 text-black font-bold">
                   <span>• Aisah:</span> <span className="font-normal text-neutral-600">Mycelium moss network &amp; viral cutting exchange</span>
                 </div>
                 <div className="flex items-center gap-1 text-black font-bold">
                   <span>• Mana:</span> <span className="font-normal text-neutral-600">Anti-digital society &amp; satirical philosophy</span>
                 </div>
+                <div className="flex items-center gap-1 text-black font-bold">
+                  <span>• Martin:</span> <span className="font-normal text-neutral-600">3D LiDAR point-cloud echolocation</span>
+                </div>
+                <div className="flex items-center gap-1 text-black font-bold">
+                  <span>• Maxime:</span> <span className="font-normal text-neutral-600">Sub-ice oceanic abyss &amp; light</span>
+                </div>
               </div>
             </div>
 
             <div className="mt-3 pt-2 border-t border-black text-[9px] text-neutral-500 font-bold">
-              TEAM: MAXIME • MARTIN • AISAH • MANA
+              TEAM: AISAH • MANA • MARTIN • MAXIME
             </div>
           </div>
 
