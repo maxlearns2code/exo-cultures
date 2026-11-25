@@ -64,7 +64,7 @@ export function WelcomeHero({
             onClick={onStartGame}
             className="w-full py-3"
           >
-            <span>▶ PLAY GAME [A]</span>
+            <span>▶ PLAY GAME</span>
           </ArcadeButton>
 
           <ArcadeButton
@@ -73,13 +73,9 @@ export function WelcomeHero({
             onClick={onExplain}
             className="w-full py-3"
           >
-            <span>◆ WHAT WE DID [Y]</span>
+            <span>◆ WHAT WE DID</span>
           </ArcadeButton>
         </div>
-
-        <span className="text-[10px] text-neutral-400 mt-3 font-mono">
-          Press [A] to Play Game • Press [Y] for What We Did
-        </span>
       </div>
 
       {/* Exhibition Footer */}
