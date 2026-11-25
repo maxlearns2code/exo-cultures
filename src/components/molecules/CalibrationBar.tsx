@@ -45,7 +45,7 @@ export function CalibrationBar({
   };
 
   return (
-    <div className="absolute top-2 right-2 z-[150] flex items-center gap-1.5 font-mono select-none">
+    <div className="absolute top-2 right-2 z-[300] flex items-center gap-1.5 font-mono select-none">
       {/* Gamepad status indicator */}
       {hasGamepad && (
         <div

@@ -56,7 +56,7 @@ export function CRTOverlay({
 
         {/* Top-Left: Close Button (mirrors Top-Right: theme, dual, sound) */}
         {onClose && (
-          <div className="absolute top-2 left-2 z-[150] flex items-center gap-1.5 font-mono select-none">
+          <div className="absolute top-2 left-2 z-[300] flex items-center gap-1.5 font-mono select-none">
             <button
               onClick={onClose}
               className={`px-2 py-0.5 text-[9px] font-bold border transition-all cursor-pointer ${

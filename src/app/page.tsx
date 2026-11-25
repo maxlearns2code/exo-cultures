@@ -183,6 +183,7 @@ export default function ArcadeLauncherHub() {
       if (isDossierOpen) {
         if (
           (currentInputs.action2 && (!prev || !prev.action2)) ||
+          (currentInputs.start && (!prev || !prev.start)) ||
           (currentInputs.select && (!prev || !prev.select))
         ) {
           setIsDossierOpen(false);
@@ -307,9 +308,9 @@ export default function ArcadeLauncherHub() {
       onToggleFX={handleToggleFX}
       activeFXType={activeFXType}
       theme={viewMode === "hub" && hubDesign === "gateway" ? "white" : "black"}
-      hubDesign={viewMode === "welcome" ? undefined : hubDesign}
-      onToggleHubDesign={viewMode === "welcome" ? undefined : handleToggleHubDesign}
-      onClose={viewMode !== "welcome" ? returnToWelcome : undefined}
+      hubDesign={viewMode === "welcome" && !isDossierOpen ? undefined : hubDesign}
+      onToggleHubDesign={viewMode === "welcome" && !isDossierOpen ? undefined : handleToggleHubDesign}
+      onClose={isDossierOpen ? () => setIsDossierOpen(false) : viewMode !== "welcome" ? returnToWelcome : undefined}
     >
       {/* Dossier Modal Overlay (Organism) */}
       <ExpoDossierModal

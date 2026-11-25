@@ -25,19 +25,6 @@ export function ExpoDossierModal({
   const isBrutalist = hubDesign === "gateway";
   const isPhosphor = hubDesign === "specimen";
 
-  const getThemeLabel = (design?: AlienHubDesign) => {
-    switch (design) {
-      case "gateway":
-        return "THEME: GALLERY ➔";
-      case "translator":
-        return "THEME: ARCADE ➔";
-      case "specimen":
-        return "THEME: PHOSPHOR ➔";
-      default:
-        return "THEME: GALLERY ➔";
-    }
-  };
-
   const themeStyles = {
     container: isBrutalist
       ? "border-2 border-white shadow-[10px_10px_0px_#ffffff]"
@@ -54,16 +41,6 @@ export function ExpoDossierModal({
       : isPhosphor
       ? "text-emerald-400/80"
       : "text-purple-300/80",
-    themeButton: isBrutalist
-      ? "bg-white hover:bg-neutral-200 text-black border-2 border-black text-xs font-bold shadow-[2px_2px_0px_#000000]"
-      : isPhosphor
-      ? "bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border-2 border-emerald-400 text-xs font-bold shadow-[2px_2px_0px_#10b981]"
-      : "bg-purple-900 hover:bg-purple-800 text-purple-200 border-2 border-purple-400 text-xs font-bold shadow-[2px_2px_0px_#9d00ff]",
-    closeButton: isBrutalist
-      ? "bg-black text-white hover:bg-neutral-800 border-2 border-black text-xs font-bold"
-      : isPhosphor
-      ? "bg-black text-emerald-300 hover:bg-emerald-950 border-2 border-emerald-500 text-xs font-bold"
-      : "bg-[#0a0014] text-purple-200 hover:bg-purple-950 border-2 border-purple-500 text-xs font-bold",
     tabBar: isBrutalist
       ? "border-b-2 border-white/30 bg-neutral-950"
       : isPhosphor
@@ -93,43 +70,21 @@ export function ExpoDossierModal({
 
   return (
     <div
-      className="fixed inset-0 z-[250] bg-black/95 flex items-center justify-center p-3 md:p-6 font-mono text-white select-none backdrop-blur-sm"
+      className="fixed inset-0 z-[250] bg-black/95 flex items-center justify-center pt-12 pb-4 px-3 md:pt-14 md:pb-6 md:px-6 font-mono text-white select-none backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className={`w-full max-w-4xl max-h-[92vh] bg-black flex flex-col overflow-hidden ${themeStyles.container}`}
+        className={`w-full max-w-4xl max-h-[86vh] bg-black flex flex-col overflow-hidden ${themeStyles.container}`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className={`flex items-center justify-between p-3 md:p-4 ${themeStyles.header}`}>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={onClose}
-              className={`flex items-center gap-1 px-2.5 py-1 transition-all cursor-pointer ${themeStyles.closeButton}`}
-              title="Close [B / ESC]"
-            >
-              <span>[B / ESC] CLOSE</span>
-            </button>
-            <div>
-              <h2 className="text-xs md:text-sm font-bold uppercase tracking-wider">
-                EXPO DOSSIER • HYPER ISLAND WEEK 51, 2026
-              </h2>
-              <p className={`text-[10px] ${themeStyles.headerSub}`}>
-                The Intergalactic Worlds Expo — Unified Group Pavilion &amp; Collaborative Game
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            {onToggleHubDesign && hubDesign && (
-              <button
-                onClick={onToggleHubDesign}
-                className={`px-2.5 py-1 transition-all cursor-pointer ${themeStyles.themeButton}`}
-                title="Switch Exhibition Theme [T]"
-              >
-                <span>[{getThemeLabel(hubDesign)}]</span>
-              </button>
-            )}
-          </div>
+        <div className={`p-3 md:p-4 border-b-2 ${themeStyles.header}`}>
+          <h2 className="text-xs md:text-sm font-bold uppercase tracking-wider">
+            EXPO DOSSIER • HYPER ISLAND WEEK 51, 2026
+          </h2>
+          <p className={`text-[10px] ${themeStyles.headerSub}`}>
+            The Intergalactic Worlds Expo — Unified Group Pavilion &amp; Collaborative Game
+          </p>
         </div>
 
         {/* Tab Navigation: 5 Distinct Focused Tabs */}
