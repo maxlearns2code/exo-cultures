@@ -22,23 +22,97 @@ export function ExpoDossierModal({
 
   if (!isOpen) return null;
 
+  const isBrutalist = hubDesign === "gateway";
+  const isPhosphor = hubDesign === "specimen";
+
+  const getThemeLabel = (design?: AlienHubDesign) => {
+    switch (design) {
+      case "gateway":
+        return "THEME: GALLERY ➔";
+      case "translator":
+        return "THEME: ARCADE ➔";
+      case "specimen":
+        return "THEME: PHOSPHOR ➔";
+      default:
+        return "THEME: GALLERY ➔";
+    }
+  };
+
+  const themeStyles = {
+    container: isBrutalist
+      ? "border-2 border-white shadow-[10px_10px_0px_#ffffff]"
+      : isPhosphor
+      ? "border-2 border-emerald-500 shadow-[10px_10px_0px_#10b981]"
+      : "border-2 border-purple-500 shadow-[10px_10px_0px_#9d00ff]",
+    header: isBrutalist
+      ? "border-b-2 border-white bg-white text-black"
+      : isPhosphor
+      ? "border-b-2 border-emerald-500 bg-[#00240d] text-emerald-200"
+      : "border-b-2 border-purple-500 bg-[#18002e] text-purple-200",
+    headerSub: isBrutalist
+      ? "text-neutral-800"
+      : isPhosphor
+      ? "text-emerald-400/80"
+      : "text-purple-300/80",
+    themeButton: isBrutalist
+      ? "bg-white hover:bg-neutral-200 text-black border-2 border-black text-xs font-bold shadow-[2px_2px_0px_#000000]"
+      : isPhosphor
+      ? "bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border-2 border-emerald-400 text-xs font-bold shadow-[2px_2px_0px_#10b981]"
+      : "bg-purple-900 hover:bg-purple-800 text-purple-200 border-2 border-purple-400 text-xs font-bold shadow-[2px_2px_0px_#9d00ff]",
+    closeButton: isBrutalist
+      ? "bg-black text-white hover:bg-neutral-800 border-2 border-black text-xs font-bold"
+      : isPhosphor
+      ? "bg-black text-emerald-300 hover:bg-emerald-950 border-2 border-emerald-500 text-xs font-bold"
+      : "bg-[#0a0014] text-purple-200 hover:bg-purple-950 border-2 border-purple-500 text-xs font-bold",
+    tabBar: isBrutalist
+      ? "border-b-2 border-white/30 bg-neutral-950"
+      : isPhosphor
+      ? "border-b-2 border-emerald-500/40 bg-black"
+      : "border-b-2 border-purple-500/40 bg-[#0a0014]",
+    activeTab: isBrutalist
+      ? "bg-white text-black font-bold"
+      : isPhosphor
+      ? "bg-emerald-600 text-black font-bold shadow-[0_0_8px_rgba(16,185,129,0.5)]"
+      : "bg-purple-600 text-white font-bold shadow-[0_0_8px_rgba(168,85,247,0.5)]",
+    inactiveTab: isBrutalist
+      ? "text-neutral-400 hover:text-white hover:bg-neutral-900 border-r border-white/20"
+      : isPhosphor
+      ? "text-emerald-500/60 hover:text-emerald-300 hover:bg-emerald-950/40 border-r border-emerald-500/20"
+      : "text-purple-300/60 hover:text-purple-200 hover:bg-purple-950/40 border-r border-purple-500/20",
+    contentBorder: isBrutalist
+      ? "border-l-4 border-white"
+      : isPhosphor
+      ? "border-l-4 border-emerald-400"
+      : "border-l-4 border-cyan-400",
+    footer: isBrutalist
+      ? "border-t-2 border-white bg-neutral-950 text-neutral-400"
+      : isPhosphor
+      ? "border-t-2 border-emerald-500/40 bg-black text-emerald-400/80"
+      : "border-t-2 border-purple-500/40 bg-[#0a0014] text-purple-300/80",
+    footerButton: isBrutalist
+      ? "bg-white text-black hover:bg-neutral-200"
+      : isPhosphor
+      ? "bg-emerald-500 text-black hover:bg-emerald-400"
+      : "bg-purple-600 text-white hover:bg-purple-500",
+  };
+
   return (
     <div
       className="fixed inset-0 z-[250] bg-black/95 flex items-center justify-center p-3 md:p-6 font-mono text-white select-none backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-4xl max-h-[92vh] bg-black border-2 border-white flex flex-col shadow-[10px_10px_0px_#ffffff] overflow-hidden"
+        className={`w-full max-w-4xl max-h-[92vh] bg-black flex flex-col overflow-hidden ${themeStyles.container}`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="flex items-center justify-between border-b-2 border-white p-3 md:p-4 bg-white text-black">
+        <div className={`flex items-center justify-between p-3 md:p-4 ${themeStyles.header}`}>
           <div className="flex items-center gap-2">
             <div>
               <h2 className="text-xs md:text-sm font-bold uppercase tracking-wider">
                 EXPO DOSSIER • HYPER ISLAND WEEK 51, 2026
               </h2>
-              <p className="text-[10px] text-neutral-800">
+              <p className={`text-[10px] ${themeStyles.headerSub}`}>
                 The Intergalactic Worlds Expo — Unified Group Pavilion &amp; Collaborative Game
               </p>
             </div>
@@ -47,15 +121,15 @@ export function ExpoDossierModal({
             {onToggleHubDesign && hubDesign && (
               <button
                 onClick={onToggleHubDesign}
-                className="px-2.5 py-1 bg-white hover:bg-neutral-200 text-black border-2 border-black text-xs font-bold transition-all cursor-pointer shadow-[2px_2px_0px_#000000]"
+                className={`px-2.5 py-1 transition-all cursor-pointer ${themeStyles.themeButton}`}
                 title="Switch Exhibition Theme [T]"
               >
-                <span>[THEME: {hubDesign.toUpperCase()}]</span>
+                <span>[{getThemeLabel(hubDesign)}]</span>
               </button>
             )}
             <button
               onClick={onClose}
-              className="flex items-center gap-1 px-2.5 py-1 bg-black text-white hover:bg-neutral-800 border-2 border-black text-xs font-bold transition-all cursor-pointer"
+              className={`flex items-center gap-1 px-2.5 py-1 transition-all cursor-pointer ${themeStyles.closeButton}`}
             >
               <span>[B / ESC] CLOSE</span>
             </button>
@@ -63,7 +137,7 @@ export function ExpoDossierModal({
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex flex-wrap border-b-2 border-white/30 bg-neutral-950 text-[10px] md:text-xs">
+        <div className={`flex flex-wrap text-[10px] md:text-xs ${themeStyles.tabBar}`}>
           {[
             { id: "expo", label: "01. THE EXPO BRIEF" },
             { id: "unlimited", label: "02. UNLIMITED CONCEPT" },
@@ -76,10 +150,10 @@ export function ExpoDossierModal({
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as DossierTab)}
-              className={`px-3 py-2 font-bold uppercase transition-colors border-r border-white/20 cursor-pointer ${
+              className={`px-3 py-2 font-bold uppercase transition-colors cursor-pointer ${
                 activeTab === tab.id
-                  ? "bg-white text-black"
-                  : "text-neutral-400 hover:text-white hover:bg-neutral-900"
+                  ? themeStyles.activeTab
+                  : themeStyles.inactiveTab
               }`}
             >
               {tab.label}
@@ -92,7 +166,7 @@ export function ExpoDossierModal({
           {/* TAB 1: THE EXPO BRIEF */}
           {activeTab === "expo" && (
             <div className="space-y-4">
-              <div className="border-l-4 border-white pl-3">
+              <div className={`${themeStyles.contentBorder} pl-3`}>
                 <h3 className="text-base font-bold text-white uppercase tracking-wider">
                   The Intergalactic Worlds Expo — Earth Pavilion
                 </h3>
@@ -131,7 +205,7 @@ export function ExpoDossierModal({
           {/* TAB 2: UNLIMITED CONCEPT */}
           {activeTab === "unlimited" && (
             <div className="space-y-4">
-              <div className="border-l-4 border-white pl-3">
+              <div className={`${themeStyles.contentBorder} pl-3`}>
                 <h3 className="text-base font-bold text-white uppercase tracking-wider">
                   Question 1: With Unlimited Time &amp; Resources, What Would We Have Built?
                 </h3>
@@ -187,7 +261,7 @@ export function ExpoDossierModal({
           {/* TAB 3: OUR PROTOTYPE */}
           {activeTab === "prototype" && (
             <div className="space-y-4">
-              <div className="border-l-4 border-white pl-3">
+              <div className={`${themeStyles.contentBorder} pl-3`}>
                 <h3 className="text-base font-bold text-white uppercase tracking-wider">
                   Question 2: What Did We Build? (Our Working Prototype)
                 </h3>
@@ -240,7 +314,7 @@ export function ExpoDossierModal({
           {/* TAB 4: OUR PROCESS & HARDWARE */}
           {activeTab === "tech" && (
             <div className="space-y-4">
-              <div className="border-l-4 border-white pl-3">
+              <div className={`${themeStyles.contentBorder} pl-3`}>
                 <h3 className="text-base font-bold text-white uppercase tracking-wider">
                   Our Process: Hardware Choices &amp; Technical Architecture
                 </h3>
@@ -287,7 +361,7 @@ export function ExpoDossierModal({
           {/* TAB 5: SCENOGRAPHY */}
           {activeTab === "scenography" && (
             <div className="space-y-4">
-              <div className="border-l-4 border-white pl-3">
+              <div className={`${themeStyles.contentBorder} pl-3`}>
                 <h3 className="text-base font-bold text-white uppercase tracking-wider">
                   Physical Scenography: Building the Scene Around the CRT
                 </h3>
@@ -337,7 +411,7 @@ export function ExpoDossierModal({
           {/* TAB 6: THE COMBINED STORY */}
           {activeTab === "story" && (
             <div className="space-y-4">
-              <div className="border-l-4 border-white pl-3">
+              <div className={`${themeStyles.contentBorder} pl-3`}>
                 <h3 className="text-base font-bold text-white uppercase tracking-wider">
                   The Combined Story: Four Worlds, One Journey
                 </h3>
@@ -396,7 +470,7 @@ export function ExpoDossierModal({
           {/* TAB 7: TEAM ROLES */}
           {activeTab === "team" && (
             <div className="space-y-4">
-              <div className="border-l-4 border-white pl-3">
+              <div className={`${themeStyles.contentBorder} pl-3`}>
                 <h3 className="text-base font-bold text-white uppercase tracking-wider">
                   Team Members &amp; Collaborative Contributions
                 </h3>
@@ -455,11 +529,11 @@ export function ExpoDossierModal({
         </div>
 
         {/* Modal Footer */}
-        <div className="border-t-2 border-white p-3 bg-neutral-950 flex items-center justify-between text-[10px] text-neutral-400">
+        <div className={`p-3 flex items-center justify-between text-[10px] ${themeStyles.footer}`}>
           <span>THE INTERGALACTIC WORLDS EXPO • WEEK 51, 2026</span>
           <button
             onClick={onClose}
-            className="px-3 py-1 bg-white text-black font-bold uppercase hover:bg-neutral-200 transition-colors"
+            className={`px-3 py-1 font-bold uppercase transition-colors cursor-pointer ${themeStyles.footerButton}`}
           >
             [B / ESC] RETURN
           </button>

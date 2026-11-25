@@ -40,28 +40,27 @@ export default function ArcadeLauncherHub() {
   const handleToggleHubDesign = useCallback(() => {
     ArcadeAudio.playAlienGlitch();
     setHubDesign((prev) => {
-      const designs: AlienHubDesign[] = ["translator", "gateway", "specimen"];
+      const designs: AlienHubDesign[] = ["gateway", "translator", "specimen"];
       return designs[(designs.indexOf(prev) + 1) % designs.length];
     });
-    setViewMode((prev) => (prev === "welcome" ? "hub" : prev));
   }, []);
 
-  // Keyboard shortcut [T] or [U] toggles between the 3 Recalbox themes (only on game/hub, not on main welcome)
+  // Keyboard shortcut [T] or [U] toggles between the 3 Recalbox themes (only on game or when dossier is open)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "t" || e.key === "T" || e.key === "u" || e.key === "U") {
-        if (viewMode !== "welcome") {
+        if (viewMode === "game" || isDossierOpen || viewMode === "hub") {
           handleToggleHubDesign();
         }
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleToggleHubDesign, viewMode]);
+  }, [handleToggleHubDesign, viewMode, isDossierOpen]);
 
-  const enterHub = useCallback(() => {
+  const enterDossier = useCallback(() => {
     ArcadeAudio.playSelect();
-    setViewMode("hub");
+    setIsDossierOpen(true);
   }, []);
 
   const launchGame = useCallback(() => {
@@ -301,7 +300,7 @@ export default function ArcadeLauncherHub() {
         <WelcomeHero
           displayTitle={displayTitle}
           onStartGame={launchGame}
-          onExplain={enterHub}
+          onExplain={enterDossier}
         />
       )}
 
