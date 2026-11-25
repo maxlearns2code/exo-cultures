@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import {
   CRTOverlay,
   AttractMode,
@@ -14,19 +13,14 @@ import {
   AttractionFXMode,
   AlienHubDesign,
 } from "@/components";
-import { CultureInfo, COLLABORATIVE_GAME } from "@/types";
+import { COLLABORATIVE_GAME } from "@/types";
 import { useArcadeInput, ArcadeInputs } from "@/hooks/useArcadeInput";
 import { ArcadeAudio } from "@/utils/audio";
-
-// Single collaborative game combining all 4 members' narratives
-const CULTURES: CultureInfo[] = [COLLABORATIVE_GAME];
 
 const IDLE_RETURN_TO_WELCOME_MS = 60000;
 const ALIEN_GLYPHS = ["⍙", "⟒", "⌰", "☊", "⍜", "⋔", "⎎", "⏁", "⊑", "⌇", "▲", "◈", "⬡", "☵", "☲", "0x45", "0x58", "0x4F"];
 
 export default function ArcadeLauncherHub() {
-  const router = useRouter();
-
   // Navigation state: "welcome" (Title Hero) | "hub" (Themed Showcase) | "game" (Active 3D Engine)
   const [viewMode, setViewMode] = useState<"welcome" | "hub" | "game">("welcome");
   const [isAttractMode, setIsAttractMode] = useState<boolean>(false);
@@ -309,7 +303,7 @@ export default function ArcadeLauncherHub() {
         <>
           {hubDesign === "gateway" && (
             <GatewayTemplate
-              culture={CULTURES[0]}
+              culture={COLLABORATIVE_GAME}
               onLaunch={launchGame}
               onOpenDossier={() => setIsDossierOpen(true)}
               onOpenAttract={() => setIsAttractMode(true)}
@@ -320,7 +314,7 @@ export default function ArcadeLauncherHub() {
 
           {hubDesign === "translator" && (
             <TranslatorTemplate
-              culture={CULTURES[0]}
+              culture={COLLABORATIVE_GAME}
               onLaunch={launchGame}
               onOpenDossier={() => setIsDossierOpen(true)}
               onOpenAttract={() => setIsAttractMode(true)}
@@ -331,7 +325,7 @@ export default function ArcadeLauncherHub() {
 
           {hubDesign === "specimen" && (
             <SpecimenTemplate
-              culture={CULTURES[0]}
+              culture={COLLABORATIVE_GAME}
               onLaunch={launchGame}
               onOpenDossier={() => setIsDossierOpen(true)}
               onOpenAttract={() => setIsAttractMode(true)}

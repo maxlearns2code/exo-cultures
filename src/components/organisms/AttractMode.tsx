@@ -2,10 +2,8 @@
 
 import React from "react";
 import Image from "next/image";
-import { CultureInfo } from "@/types";
 
 interface AttractModeProps {
-  cultures?: CultureInfo[];
   onDismiss: () => void;
 }
 
