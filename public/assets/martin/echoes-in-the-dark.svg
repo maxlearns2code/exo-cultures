@@ -172,8 +172,8 @@
   <!-- Top Bar -->
   <g font-family="monospace" text-anchor="middle" font-weight="bold">
     <!-- Sector Tag -->
-    <rect x="200" y="24" width="200" height="22" fill="#000000" stroke="#00f0ff" stroke-width="1.2"/>
-    <text x="300" y="39" fill="#00f0ff" font-size="10" letter-spacing="3">SECTOR 03: SUB-ABYSS</text>
+    <rect x="180" y="24" width="240" height="22" fill="#000000" stroke="#00f0ff" stroke-width="1.2"/>
+    <text x="300" y="39" fill="#00f0ff" font-size="10" letter-spacing="3">SECTOR 01: UNIFIED SUB-ABYSS</text>
   </g>
 
   <!-- Top Left Target Reticle -->
@@ -203,7 +203,7 @@
     <!-- Subtitle -->
     <text x="300" y="560" font-size="10" font-weight="bold" fill="#00f0ff" letter-spacing="2">3D PHOTONIC LIDAR &amp; FLORAL RESONANCE</text>
     <!-- Author Credit -->
-    <text x="300" y="576" font-size="8" fill="#a855f7" letter-spacing="1">CURATED BY MARTIN • EX-03</text>
+    <text x="300" y="576" font-size="8" fill="#a855f7" letter-spacing="1">MAXIME • MARTIN • AISAH • MANA</text>
   </g>
 
   <!-- Corner Border Brackets (Arcade CRT Framing) -->
