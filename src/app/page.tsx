@@ -268,13 +268,13 @@ export default function ArcadeLauncherHub() {
   return (
     <CRTOverlay
       exitHoldProgress={exitHoldProgress}
-      hasGamepad={hasGamepad}
+      hasGamepad={viewMode !== "welcome" && hasGamepad}
       fxMode={fxMode}
       onToggleFX={handleToggleFX}
       activeFXType={activeFXType}
       theme={viewMode === "welcome" || viewMode === "game" ? "black" : hubDesign === "gateway" ? "white" : "black"}
-      hubDesign={hubDesign}
-      onToggleHubDesign={handleToggleHubDesign}
+      hubDesign={viewMode === "hub" ? hubDesign : undefined}
+      onToggleHubDesign={viewMode === "hub" ? handleToggleHubDesign : undefined}
     >
       {/* Dossier Modal Overlay (Organism) */}
       <ExpoDossierModal isOpen={isDossierOpen} onClose={() => setIsDossierOpen(false)} />

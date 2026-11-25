@@ -46,14 +46,14 @@ export function CalibrationBar({
 
   return (
     <div className="absolute top-2 right-2 z-[150] flex items-center gap-1.5 font-mono select-none">
-      {/* 8BitDo Gamepad indicator */}
+      {/* Gamepad status indicator */}
       {hasGamepad && (
         <div
           className={`hidden sm:flex items-center gap-1 px-2 py-0.5 text-[9px] border font-bold uppercase ${
-            isWhite ? "bg-white border-black text-black" : "bg-black/80 border-green-500 text-green-400"
+            isWhite ? "bg-white border-black text-black" : "bg-black border-white text-white"
           }`}
         >
-          <span>[ARCADE STICK ACTIVE]</span>
+          <span>[STICK ACTIVE]</span>
         </div>
       )}
 
@@ -64,7 +64,7 @@ export function CalibrationBar({
           className={`px-2 py-0.5 text-[9px] font-bold border transition-all cursor-pointer ${
             isWhite
               ? "bg-white hover:bg-neutral-100 text-black border-black shadow-[2px_2px_0px_#000000]"
-              : "bg-black/80 hover:bg-neutral-900 text-cyan-300 border-cyan-400/80 shadow-[0_0_8px_rgba(0,240,255,0.4)]"
+              : "bg-black hover:bg-white hover:text-black text-white border-white shadow-[2px_2px_0px_#ffffff]"
           }`}
           title="Switch Recalbox Theme [T]"
         >
@@ -79,7 +79,7 @@ export function CalibrationBar({
           className={`px-2 py-0.5 text-[9px] font-bold border transition-all cursor-pointer ${
             isWhite
               ? "bg-white hover:bg-neutral-100 text-black border-black shadow-[2px_2px_0px_#000000]"
-              : "bg-black/80 hover:bg-neutral-900 text-yellow-300 border-yellow-400/80 shadow-[0_0_8px_rgba(250,204,21,0.4)]"
+              : "bg-black hover:bg-white hover:text-black text-white border-white shadow-[2px_2px_0px_#ffffff]"
           }`}
           title="Toggle Screen Attraction FX"
         >
@@ -93,7 +93,7 @@ export function CalibrationBar({
         className={`px-2 py-0.5 text-[9px] font-bold border transition-colors cursor-pointer ${
           isWhite
             ? "bg-white hover:bg-neutral-100 text-black border-black shadow-[2px_2px_0px_#000000]"
-            : "bg-black/80 hover:bg-neutral-900 text-white border-white/40 hover:border-white"
+            : "bg-black hover:bg-white hover:text-black text-white border-white shadow-[2px_2px_0px_#ffffff]"
         }`}
         title={isMuted ? "Unmute audio" : "Mute audio"}
       >

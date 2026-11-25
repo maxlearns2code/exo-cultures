@@ -47,15 +47,15 @@ export function WelcomeHero({
 
         <p className="text-xs md:text-sm text-neutral-200 leading-relaxed mb-4">
           Welcome to the Earth pavilion of the <strong>Intergalactic Worlds Expo</strong>.
-          Four creators joined forces to fuse their speculative fiction into <strong>one common interactive game</strong>.
-          Equipped with photonic LiDAR sensors, illuminate a pitch-black subterranean void, charge dormant floral beacons, and survive hostile viral spores.
+          Four creators joined forces to fuse their speculative worlds into <strong>one common extraterrestrial journey</strong>.
+          Step forward to explore the subterranean abyss, awaken dormant resonance blooms, and experience a unified alien reality.
         </p>
 
         {/* Concept & Experience Pills */}
         <div className="flex flex-wrap justify-center gap-2 mb-4">
           <Badge variant="default">One Shared Story</Badge>
-          <Badge variant="default">3D LiDAR Point Cloud</Badge>
-          <Badge variant="default">Floral Resonance</Badge>
+          <Badge variant="default">Joint Group Pavilion</Badge>
+          <Badge variant="default">Interactive Installation</Badge>
         </div>
 
         {/* Action Buttons */}
@@ -91,14 +91,14 @@ export function WelcomeHero({
         </div>
 
         <span className="text-[10px] text-neutral-400 mt-3 font-mono">
-          Press [A] to Play • Press [Y] for Process • Press [X] to Test FX
+          Press [A] to Play • Press [Y] for Dossier
         </span>
       </div>
 
       {/* Exhibition Footer */}
       <div className="text-[10px] text-neutral-400 border-t-2 border-white/20 pt-2 flex items-center justify-between">
         <span>HYPER ISLAND CAMPUS • WEEK 51, 2026</span>
-        <span>8BITDO ARCADE &amp; KEYBOARD/MOUSE COMPATIBLE</span>
+        <span>EXHIBITION PAVILION</span>
       </div>
     </div>
   );
