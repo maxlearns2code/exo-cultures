@@ -447,14 +447,16 @@ export function Game({ onReturnToHub, theme = "translator" }: GameProps) {
     const handleKeyDown = (e: KeyboardEvent) => {
       keys[e.code] = true;
 
-      // Direct keyboard exit shortcut [B] or [Backspace]
-      if (e.key === "b" || e.key === "B" || e.code === "KeyB") {
-        safeReturnToHub();
-        return;
-      }
-
-      // If pointer is unlocked (e.g. after pressing Escape once), pressing Escape or Backspace returns to hub
-      if (!isPointerLocked && (e.key === "Escape" || e.code === "Escape" || e.key === "Backspace" || e.code === "Backspace")) {
+      // Direct keyboard exit shortcut: single tap of [Escape], [B], or [Backspace] immediately returns to menu
+      if (
+        e.key === "Escape" ||
+        e.code === "Escape" ||
+        e.key === "b" ||
+        e.key === "B" ||
+        e.code === "KeyB" ||
+        e.key === "Backspace" ||
+        e.code === "Backspace"
+      ) {
         safeReturnToHub();
         return;
       }

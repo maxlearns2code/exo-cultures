@@ -19,11 +19,14 @@ export default function GamePage() {
     });
   }, []);
 
-  // Keyboard shortcut [T] or [U] toggles theme in game
+  // Keyboard shortcut [T] or [U] toggles theme in game; [Escape] exits immediately
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "t" || e.key === "T" || e.key === "u" || e.key === "U") {
         handleToggleHubDesign();
+      }
+      if (e.key === "Escape" || e.code === "Escape") {
+        handleReturnToHub();
       }
     };
     window.addEventListener("keydown", handleKeyDown);

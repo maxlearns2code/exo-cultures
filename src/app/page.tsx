@@ -45,18 +45,10 @@ export default function ArcadeLauncherHub() {
     });
   }, []);
 
-  // Keyboard shortcut [T] or [U] toggles between the 3 Recalbox themes (only on game or when dossier is open)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "t" || e.key === "T" || e.key === "u" || e.key === "U") {
-        if (viewMode === "game" || isDossierOpen || viewMode === "hub") {
-          handleToggleHubDesign();
-        }
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleToggleHubDesign, viewMode, isDossierOpen]);
+  const returnToWelcome = useCallback(() => {
+    ArcadeAudio.playCancel();
+    setViewMode("welcome");
+  }, []);
 
   const enterDossier = useCallback(() => {
     ArcadeAudio.playSelect();
@@ -68,10 +60,26 @@ export default function ArcadeLauncherHub() {
     setViewMode("game");
   }, []);
 
-  const returnToWelcome = useCallback(() => {
-    ArcadeAudio.playCancel();
-    setViewMode("welcome");
-  }, []);
+  // Keyboard shortcut [T] or [U] toggles themes; [Escape] exits game or closes modal immediately
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "t" || e.key === "T" || e.key === "u" || e.key === "U") {
+        if (viewMode === "game" || isDossierOpen || viewMode === "hub") {
+          handleToggleHubDesign();
+        }
+      }
+      if (e.key === "Escape" || e.code === "Escape") {
+        if (isDossierOpen) {
+          setIsDossierOpen(false);
+          ArcadeAudio.playCancel();
+        } else if (viewMode === "game") {
+          returnToWelcome();
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleToggleHubDesign, viewMode, isDossierOpen, returnToWelcome]);
 
   const registerActivity = useCallback(() => {
     lastInteractionRef.current = Date.now();

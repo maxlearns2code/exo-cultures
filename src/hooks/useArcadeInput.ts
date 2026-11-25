@@ -102,13 +102,8 @@ export function useArcadeInput(
       const btnStart = pad?.buttons[9]?.pressed ?? false;
 
       // Exit combo detection:
-      // Physical: SELECT + START held together
-      // Keyboard: Escape held, or Backspace held, or Escape+Backspace
-      const isExitPressed =
-        (btnSelect && btnStart) ||
-        (keys.has("Escape") && keys.has("Backspace")) ||
-        keys.has("Backspace") ||
-        keys.has("Escape");
+      // Physical arcade stick only: SELECT + START held together
+      const isExitPressed = Boolean(btnSelect && btnStart);
 
       if (isExitPressed) {
         if (exitHoldStartRef.current === null) {
