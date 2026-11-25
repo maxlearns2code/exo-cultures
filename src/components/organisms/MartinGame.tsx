@@ -3,8 +3,8 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import * as THREE from "three";
 import { ArrowLeft, Play, RotateCcw, Crosshair, Radio, Sparkles, Volume2, VolumeX, Shield, Heart } from "lucide-react";
-import { ArcadeAudio } from "@/utils/audio";
-import { useArcadeInput, ArcadeInputs } from "@/hooks/useArcadeInput";
+import { ArcadeAudio } from "../../utils/audio";
+import { useArcadeInput, ArcadeInputs } from "../../hooks/useArcadeInput";
 
 interface MartinGameProps {
   onReturnToHub: () => void;
