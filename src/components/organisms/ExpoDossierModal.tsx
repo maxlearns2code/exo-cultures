@@ -10,7 +10,7 @@ interface ExpoDossierModalProps {
   onToggleHubDesign?: () => void;
 }
 
-type DossierTab = "expo" | "unlimited" | "prototype" | "tech" | "team" | "scenography" | "story";
+type DossierTab = "vision" | "story" | "prototype" | "tech" | "team";
 
 export function ExpoDossierModal({
   isOpen,
@@ -18,7 +18,7 @@ export function ExpoDossierModal({
   hubDesign,
   onToggleHubDesign,
 }: ExpoDossierModalProps) {
-  const [activeTab, setActiveTab] = useState<DossierTab>("expo");
+  const [activeTab, setActiveTab] = useState<DossierTab>("vision");
 
   if (!isOpen) return null;
 
@@ -125,22 +125,21 @@ export function ExpoDossierModal({
             <button
               onClick={onClose}
               className={`flex items-center gap-1 px-2.5 py-1 transition-all cursor-pointer ${themeStyles.closeButton}`}
+              title="Close [B / ESC]"
             >
               <span>[B / ESC] CLOSE</span>
             </button>
           </div>
         </div>
 
-        {/* Tab Navigation */}
+        {/* Tab Navigation: 5 Distinct Focused Tabs */}
         <div className={`flex flex-wrap text-[10px] md:text-xs ${themeStyles.tabBar}`}>
           {[
-            { id: "expo", label: "01. THE EXPO BRIEF" },
-            { id: "unlimited", label: "02. UNLIMITED CONCEPT" },
+            { id: "vision", label: "01. EXPO & VISION" },
+            { id: "story", label: "02. COMBINED STORY" },
             { id: "prototype", label: "03. OUR PROTOTYPE" },
-            { id: "tech", label: "04. OUR PROCESS & HARDWARE" },
-            { id: "scenography", label: "05. SCENOGRAPHY" },
-            { id: "story", label: "06. THE COMBINED STORY" },
-            { id: "team", label: "07. TEAM ROLES" },
+            { id: "tech", label: "04. HARDWARE & SCENOGRAPHY" },
+            { id: "team", label: "05. TEAM ROLES" },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -158,8 +157,8 @@ export function ExpoDossierModal({
 
         {/* Tab Content Body (Scrollable) */}
         <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 text-xs md:text-sm leading-relaxed text-neutral-200">
-          {/* TAB 1: THE EXPO BRIEF */}
-          {activeTab === "expo" && (
+          {/* TAB 1: EXPO & SPECULATIVE VISION */}
+          {activeTab === "vision" && (
             <div className="space-y-4">
               <div className={`${themeStyles.contentBorder} pl-3`}>
                 <h3 className="text-base font-bold text-white uppercase tracking-wider">
@@ -194,59 +193,111 @@ export function ExpoDossierModal({
                   using real-time 3D photonic LiDAR echolocation.
                 </p>
               </div>
+
+              <div className="border-t border-white/20 pt-4 space-y-3">
+                <div className="border-l-2 border-white pl-2">
+                  <h4 className="text-xs font-bold text-white uppercase">
+                    Speculative Vision: With Unlimited Time &amp; Resources, What Would We Have Built?
+                  </h4>
+                  <p className="text-[11px] text-neutral-400">
+                    The unconstrained blueprint of our collaborative installation
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="p-3 bg-neutral-950 border border-white/30 space-y-1">
+                    <h5 className="font-bold text-white text-xs uppercase">
+                      [1] Full-Scale Subterranean Immersion Pod
+                    </h5>
+                    <p className="text-xs text-neutral-300">
+                      A physical zero-lux climate chamber with atmospheric mist, where visitors wear photonic haptic suits translating raycasted LiDAR points into gentle tactile vibrations across their skin.
+                    </p>
+                  </div>
+
+                  <div className="p-3 bg-neutral-950 border border-white/30 space-y-1">
+                    <h5 className="font-bold text-white text-xs uppercase">
+                      [2] Physical Resonant Floral Beacons
+                    </h5>
+                    <p className="text-xs text-neutral-300">
+                      Kinetic mechanical sculptures surrounding the cabinet that physically bloom in real time when charged by the focused beam, emitting ultrasonic acoustic pulses and warm amber light.
+                    </p>
+                  </div>
+
+                  <div className="p-3 bg-neutral-950 border border-white/30 space-y-1">
+                    <h5 className="font-bold text-white text-xs uppercase">
+                      [3] Volumetric 3D Laser Echolocation Tank
+                    </h5>
+                    <p className="text-xs text-neutral-300">
+                      A 360-degree holographic glass sphere projecting 220,000 real-time LiDAR particles floating in mid-air, allowing onlookers to watch the cavern illuminate from every angle.
+                    </p>
+                  </div>
+
+                  <div className="p-3 bg-neutral-950 border border-white/30 space-y-1">
+                    <h5 className="font-bold text-white text-xs uppercase">
+                      [4] Bioluminescent Spore Defense Grid
+                    </h5>
+                    <p className="text-xs text-neutral-300">
+                      Chilled nitrogen tubes venting aerosol vapors when viral spores approach, challenging players to defend the resonant ecosystem across physical and digital space.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
-          {/* TAB 2: UNLIMITED CONCEPT */}
-          {activeTab === "unlimited" && (
+          {/* TAB 2: THE COMBINED STORY */}
+          {activeTab === "story" && (
             <div className="space-y-4">
               <div className={`${themeStyles.contentBorder} pl-3`}>
                 <h3 className="text-base font-bold text-white uppercase tracking-wider">
-                  Question 1: With Unlimited Time &amp; Resources, What Would We Have Built?
+                  The Combined Story: Four Worlds, One Journey
                 </h3>
                 <p className="text-xs text-neutral-400">
-                  The Speculative Vision of the Unified Pavilion
+                  Narrative Fusion of Maxime, Martin, Aisah &amp; Mana
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 bg-neutral-950 border border-white/30 space-y-2">
-                  <h4 className="font-bold text-white text-xs uppercase">
-                    [1] Full-Scale Subterranean Immersion Pod
-                  </h4>
-                  <p className="text-xs text-neutral-300">
-                    A physical sensory chamber maintaining a zero-lux subterranean atmosphere with micro-climate mist,
-                    where visitors wear photonic haptic feedback suits translating raycasted LiDAR points into gentle tactile vibrations across their skin.
-                  </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="md:col-span-1 flex flex-col items-center">
+                  <div className="relative w-full aspect-square border-2 border-white overflow-hidden shadow-[6px_6px_0px_#ffffff] mb-2 bg-black p-3 font-mono flex flex-col justify-between select-none">
+                    <div className="flex justify-between items-start border-b border-white/40 pb-1">
+                      <span className="text-[8px] font-bold text-neutral-400">EXO-CULTURES 2026</span>
+                      <span className="text-[8px] bg-white text-black px-1 font-bold">SCHEMATIC</span>
+                    </div>
+                    <div className="text-center py-2 space-y-1">
+                      <div className="text-[11px] font-black tracking-widest text-white uppercase">ECHOES IN THE DARK</div>
+                      <div className="text-[7px] text-neutral-400">3D LIDAR • RAYCASTING ENGINE</div>
+                      <div className="text-[9px] text-white/80 tracking-widest pt-1 font-bold">☲ 0x45 ⋔ ⎎ ▲</div>
+                    </div>
+                    <div className="border-t border-white/40 pt-1 text-[7px] text-neutral-400 flex justify-between">
+                      <span>RIGEL-VII SUB-ABYSS</span>
+                      <span>4 CREATORS • 1 WORLD</span>
+                    </div>
+                  </div>
+                  <span className="text-[10px] text-neutral-400 uppercase font-bold text-center">
+                    Typographic Exhibition Diagram
+                  </span>
                 </div>
 
-                <div className="p-4 bg-neutral-950 border border-white/30 space-y-2">
-                  <h4 className="font-bold text-white text-xs uppercase">
-                    [2] Physical Resonant Floral Beacons
-                  </h4>
-                  <p className="text-xs text-neutral-300">
-                    Kinetic mechanical sculptures surrounding the cabinet that physically bloom in real time when charged by the player&apos;s focused beam,
-                    emitting ultrasonic acoustic frequencies and warm amber warmth.
+                <div className="md:col-span-2 space-y-3 bg-neutral-950 p-4 border border-white/30 text-xs">
+                  <div className="font-bold text-white uppercase border-b border-white/20 pb-1">
+                    How We Merged Our Four Real Concepts &amp; Letters of Intent
+                  </div>
+                  <p className="text-neutral-300">
+                    <strong>1. Life Beneath the Ice &amp; Light Wave Communication (Maxime &mdash; &ldquo;Chromatic Symbiosis&rdquo;):</strong>
+                    Set on a rocky moon of Saturn where zero sunlight penetrates the thick frozen crust. Beings communicate and navigate by projecting colored light waves and heat energy. A father guides his twin sons to discover living warm forms that unlock a swirling portal to our collaborative world.
                   </p>
-                </div>
-
-                <div className="p-4 bg-neutral-950 border border-white/30 space-y-2">
-                  <h4 className="font-bold text-white text-xs uppercase">
-                    [3] Volumetric 3D Laser Echolocation Tank
-                  </h4>
-                  <p className="text-xs text-neutral-300">
-                    A 360-degree holographic glass sphere projecting 220,000 real-time LiDAR particles floating in mid-air,
-                    allowing onlookers outside the cabinet to watch the player illuminate the pitch-black cavern from every angle.
+                  <p className="text-neutral-300">
+                    <strong>2. 3D LiDAR, Astronomy &amp; Floral Mate-Summoning (Martin &mdash; &ldquo;Ørgäæ&rdquo;):</strong>
+                    Orbiting a binary star system in the Andromeda Galaxy with 4D spatial perception. To reproduce and communicate across the void, beings interact with rare resonant flowers that pulse, sing, and dance, mapped through 3D photonic LiDAR echolocation scans.
                   </p>
-                </div>
-
-                <div className="p-4 bg-neutral-950 border border-white/30 space-y-2">
-                  <h4 className="font-bold text-white text-xs uppercase">
-                    [4] Bioluminescent Spore Defense Grid
-                  </h4>
-                  <p className="text-xs text-neutral-300">
-                    Chilled nitrogen tubes venting synthetic aerosol vapors when viral spores approach, challenging players to defend
-                    the resonant ecosystem across both physical and digital space.
+                  <p className="text-neutral-300">
+                    <strong>3. The Mycelium Forest &amp; The Silent Hill (Aisah &mdash; &ldquo;Cutting Exchange&rdquo;):</strong>
+                    A vast moss forest operating as one interconnected consciousness like fungal mycelium. An invasive virus weakens the network, severing senses (&ldquo;We used to hear the hill from here&rdquo;). Survival depends on passing rare virus-eating root cuttings hand-to-hand at the communal gathering.
+                  </p>
+                  <p className="text-neutral-300">
+                    <strong>4. The Non-Digital Society (Mana &mdash; &ldquo;Wanna Go To A Better Planet? // NewLife&rdquo;):</strong>
+                    A provocative satire questioning digital overload, artificial intelligence, and capitalist power. It envisions an organic existence stripped of screens, mirrors, and technology, proving that tactile, physical community and love prevail over darkness.
                   </p>
                 </div>
               </div>
@@ -306,18 +357,19 @@ export function ExpoDossierModal({
             </div>
           )}
 
-          {/* TAB 4: OUR PROCESS & HARDWARE */}
+          {/* TAB 4: HARDWARE & SCENOGRAPHY */}
           {activeTab === "tech" && (
             <div className="space-y-4">
               <div className={`${themeStyles.contentBorder} pl-3`}>
                 <h3 className="text-base font-bold text-white uppercase tracking-wider">
-                  Our Process: Hardware Choices &amp; Technical Architecture
+                  Hardware Choices, Technical Architecture &amp; Scenography
                 </h3>
                 <p className="text-xs text-neutral-400">
-                  Why We Chose 15kHz CRT, Raspberry Pi 400, 8BitDo &amp; Next.js + Three.js
+                  Engineering the 15kHz CRT Machine &amp; Gallery Booth Installation
                 </p>
               </div>
 
+              {/* Technical Rationale */}
               <div className="space-y-3">
                 <div className="p-3 bg-neutral-900 border-l-2 border-white">
                   <div className="font-bold text-white text-xs uppercase mb-1">Why 14&quot; Analog RGB CRT TV (15kHz SCART)?</div>
@@ -342,39 +394,24 @@ export function ExpoDossierModal({
                     Three.js provides high-performance 220,000-point dynamic buffer geometries, while procedural Web Audio guarantees 100% offline audio with zero audio file load lag.
                   </p>
                 </div>
+              </div>
 
-                <div className="p-3 bg-neutral-900 border-l-2 border-white">
-                  <div className="font-bold text-white text-xs uppercase mb-1">Universal Arcade &amp; Keyboard Controls</div>
-                  <p className="text-xs text-neutral-300">
-                    Dual input architecture: physical arcade stick mapped via Gamepad API (`useArcadeInput`), alongside standard keyboard WASD and mouse PointerLock for desktop visitors.
+              {/* Physical Scenography */}
+              <div className="border-t border-white/20 pt-4 space-y-3">
+                <div className="border-l-2 border-white pl-2">
+                  <h4 className="text-xs font-bold text-white uppercase">
+                    Physical Scenography: Building the Scene Around the CRT
+                  </h4>
+                  <p className="text-[11px] text-neutral-400">
+                    Bridging the physical gallery space and the digital void
                   </p>
                 </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 5: SCENOGRAPHY */}
-          {activeTab === "scenography" && (
-            <div className="space-y-4">
-              <div className={`${themeStyles.contentBorder} pl-3`}>
-                <h3 className="text-base font-bold text-white uppercase tracking-wider">
-                  Physical Scenography: Building the Scene Around the CRT
-                </h3>
-                <p className="text-xs text-neutral-400">
-                  Gallery Booth Setup at Hyper Island Week 51
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                <p className="text-xs text-neutral-300">
-                  The physical installation bridges the gap between digital screen and reality:
-                </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                   <div className="p-3 bg-neutral-950 border border-white/20">
                     <div className="font-bold text-white mb-1 uppercase">1. Black Bedrock &amp; Preserved Moss Base</div>
                     <p className="text-neutral-400">
-                      The wooden podium supporting the 14&quot; CRT monitor is wrapped in textured matte black fabric, covered with volcanic rock fragments and preserved moss echoing the subterranean bedrock layer.
+                      The podium supporting the 14&quot; CRT monitor is wrapped in textured matte black fabric, covered with volcanic rock fragments and preserved moss echoing the subterranean layer.
                     </p>
                   </div>
 
@@ -403,66 +440,7 @@ export function ExpoDossierModal({
             </div>
           )}
 
-          {/* TAB 6: THE COMBINED STORY */}
-          {activeTab === "story" && (
-            <div className="space-y-4">
-              <div className={`${themeStyles.contentBorder} pl-3`}>
-                <h3 className="text-base font-bold text-white uppercase tracking-wider">
-                  The Combined Story: Four Worlds, One Journey
-                </h3>
-                <p className="text-xs text-neutral-400">
-                  Narrative Fusion of Maxime, Martin, Aisah &amp; Mana
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="md:col-span-1 flex flex-col items-center">
-                  <div className="relative w-full aspect-square border-2 border-white overflow-hidden shadow-[6px_6px_0px_#ffffff] mb-2 bg-black p-3 font-mono flex flex-col justify-between select-none">
-                    <div className="flex justify-between items-start border-b border-white/40 pb-1">
-                      <span className="text-[8px] font-bold text-neutral-400">EXO-CULTURES 2026</span>
-                      <span className="text-[8px] bg-white text-black px-1 font-bold">SCHEMATIC</span>
-                    </div>
-                    <div className="text-center py-2 space-y-1">
-                      <div className="text-[11px] font-black tracking-widest text-white uppercase">ECHOES IN THE DARK</div>
-                      <div className="text-[7px] text-neutral-400">3D LIDAR • RAYCASTING ENGINE</div>
-                      <div className="text-[9px] text-white/80 tracking-widest pt-1 font-bold">☲ 0x45 ⋔ ⎎ ▲</div>
-                    </div>
-                    <div className="border-t border-white/40 pt-1 text-[7px] text-neutral-400 flex justify-between">
-                      <span>RIGEL-VII SUB-ABYSS</span>
-                      <span>4 CREATORS • 1 WORLD</span>
-                    </div>
-                  </div>
-                  <span className="text-[10px] text-neutral-400 uppercase font-bold text-center">
-                    Typographic Exhibition Diagram
-                  </span>
-                </div>
-
-                <div className="md:col-span-2 space-y-3 bg-neutral-950 p-4 border border-white/30 text-xs">
-                  <div className="font-bold text-white uppercase border-b border-white/20 pb-1">
-                    How We Merged Our Four Real Concepts &amp; Letters of Intent
-                  </div>
-                  <p className="text-neutral-300">
-                    <strong>1. Life Beneath the Ice &amp; Light Wave Communication (Maxime &mdash; &ldquo;Chromatic Symbiosis&rdquo;):</strong>
-                    Set on a rocky moon of Saturn where zero sunlight penetrates the thick frozen crust. Beings communicate and navigate by projecting colored light waves and heat energy. A father guides his twin sons to discover living warm forms that unlock a swirling portal to our collaborative world.
-                  </p>
-                  <p className="text-neutral-300">
-                    <strong>2. 3D LiDAR, Astronomy &amp; Floral Mate-Summoning (Martin &mdash; &ldquo;Ørgäæ&rdquo;):</strong>
-                    Orbiting a binary star system in the Andromeda Galaxy with 4D spatial perception. To reproduce and communicate across the void, beings interact with rare resonant flowers that pulse, sing, and dance, mapped through 3D photonic LiDAR echolocation scans.
-                  </p>
-                  <p className="text-neutral-300">
-                    <strong>3. The Mycelium Forest &amp; The Silent Hill (Aisah &mdash; &ldquo;Cutting Exchange&rdquo;):</strong>
-                    A vast moss forest operating as one interconnected consciousness like fungal mycelium. An invasive virus weakens the network, severing senses (&ldquo;We used to hear the hill from here&rdquo;). Survival depends on passing rare virus-eating root cuttings hand-to-hand at the communal gathering.
-                  </p>
-                  <p className="text-neutral-300">
-                    <strong>4. The Non-Digital Society (Mana &mdash; &ldquo;Wanna Go To A Better Planet? // NewLife&rdquo;):</strong>
-                    A provocative satire questioning digital overload, artificial intelligence, and capitalist power. It envisions an organic existence stripped of screens, mirrors, and technology, proving that tactile, physical community and love prevail over darkness.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 7: TEAM ROLES */}
+          {/* TAB 5: TEAM ROLES */}
           {activeTab === "team" && (
             <div className="space-y-4">
               <div className={`${themeStyles.contentBorder} pl-3`}>
