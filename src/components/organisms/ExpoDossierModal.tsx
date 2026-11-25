@@ -102,7 +102,14 @@ export function ExpoDossierModal({
       >
         {/* Modal Header */}
         <div className={`flex items-center justify-between p-3 md:p-4 ${themeStyles.header}`}>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={onClose}
+              className={`flex items-center gap-1 px-2.5 py-1 transition-all cursor-pointer ${themeStyles.closeButton}`}
+              title="Close [B / ESC]"
+            >
+              <span>[B / ESC] CLOSE</span>
+            </button>
             <div>
               <h2 className="text-xs md:text-sm font-bold uppercase tracking-wider">
                 EXPO DOSSIER • HYPER ISLAND WEEK 51, 2026
@@ -122,13 +129,6 @@ export function ExpoDossierModal({
                 <span>[{getThemeLabel(hubDesign)}]</span>
               </button>
             )}
-            <button
-              onClick={onClose}
-              className={`flex items-center gap-1 px-2.5 py-1 transition-all cursor-pointer ${themeStyles.closeButton}`}
-              title="Close [B / ESC]"
-            >
-              <span>[B / ESC] CLOSE</span>
-            </button>
           </div>
         </div>
 

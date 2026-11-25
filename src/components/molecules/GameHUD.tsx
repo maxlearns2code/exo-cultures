@@ -97,25 +97,13 @@ export function GameHUD({
       : isPhosphor
       ? "text-emerald-400"
       : "text-cyan-300",
-    closeButton: isBrutalist
-      ? "bg-black text-white hover:bg-neutral-800 border-2 border-white shadow-[2px_2px_0px_#ffffff]"
-      : isPhosphor
-      ? "bg-black text-emerald-300 hover:bg-emerald-950 border-2 border-emerald-500 shadow-[2px_2px_0px_#10b981]"
-      : "bg-black text-purple-200 hover:bg-purple-950 border-2 border-purple-500 shadow-[2px_2px_0px_#9d00ff]",
   };
 
   return (
     <>
       {/* TOP HUD: Echolocation & Mate Summoning Telemetry */}
       <div className={`relative z-50 flex items-center justify-between p-2.5 md:p-3 bg-black/85 backdrop-blur-sm select-none ${themeStyles.topBar}`}>
-        <div className="flex items-center gap-2.5">
-          <button
-            onClick={onReturnToHub}
-            className={`flex items-center gap-1 px-2.5 py-1 text-xs font-bold uppercase transition-all cursor-pointer ${themeStyles.closeButton}`}
-            title="Close [B / ESC]"
-          >
-            <span>[B / ESC] CLOSE</span>
-          </button>
+        <div className="flex items-center gap-2.5 pl-24 sm:pl-28">
           <div>
             <h1 className={`text-xs md:text-sm font-bold tracking-wider uppercase flex items-center gap-1.5 ${themeStyles.titleColor}`}>
               <span>ECHOLOCATION ARCHIVE // 3D LIDAR</span>
@@ -129,7 +117,7 @@ export function GameHUD({
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 pr-36 sm:pr-48">
           {/* Lure / Mate Summon Progress Meter */}
           <div className="flex flex-col items-end gap-1 min-w-[120px] md:min-w-[180px]">
             <div className="flex items-center justify-between w-full text-[9px] font-bold">

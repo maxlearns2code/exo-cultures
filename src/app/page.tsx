@@ -309,6 +309,7 @@ export default function ArcadeLauncherHub() {
       theme={viewMode === "hub" && hubDesign === "gateway" ? "white" : "black"}
       hubDesign={viewMode === "welcome" ? undefined : hubDesign}
       onToggleHubDesign={viewMode === "welcome" ? undefined : handleToggleHubDesign}
+      onClose={viewMode !== "welcome" ? returnToWelcome : undefined}
     >
       {/* Dossier Modal Overlay (Organism) */}
       <ExpoDossierModal

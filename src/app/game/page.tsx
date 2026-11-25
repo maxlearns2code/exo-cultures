@@ -81,6 +81,7 @@ export default function GamePage() {
       hubDesign={hubDesign}
       onToggleHubDesign={handleToggleHubDesign}
       theme={hubDesign === "gateway" ? "white" : "black"}
+      onClose={handleReturnToHub}
     >
       <Game onReturnToHub={handleReturnToHub} theme={hubDesign} />
     </CRTOverlay>
