@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { CRTOverlay, MartinGame } from "@/components";
+import { CRTOverlay, Game } from "@/components";
 import { AlienHubDesign } from "@/components/molecules/CalibrationBar";
 import { useArcadeInput } from "@/hooks/useArcadeInput";
 import { ArcadeAudio } from "@/utils/audio";
 
-export default function MartinCulturePage() {
+export default function GamePage() {
   const router = useRouter();
   const [hubDesign, setHubDesign] = useState<AlienHubDesign>("translator");
 
@@ -44,7 +44,7 @@ export default function MartinCulturePage() {
       onToggleHubDesign={handleToggleHubDesign}
       theme={hubDesign === "gateway" ? "white" : "black"}
     >
-      <MartinGame onReturnToHub={handleReturnToHub} theme={hubDesign} />
+      <Game onReturnToHub={handleReturnToHub} theme={hubDesign} />
     </CRTOverlay>
   );
 }

@@ -1,15 +1,23 @@
 "use client";
 
 import React, { useState } from "react";
+import { AlienHubDesign } from "@/components/molecules/CalibrationBar";
 
 interface ExpoDossierModalProps {
   isOpen: boolean;
   onClose: () => void;
+  hubDesign?: AlienHubDesign;
+  onToggleHubDesign?: () => void;
 }
 
 type DossierTab = "expo" | "unlimited" | "prototype" | "tech" | "team" | "scenography" | "story";
 
-export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
+export function ExpoDossierModal({
+  isOpen,
+  onClose,
+  hubDesign,
+  onToggleHubDesign,
+}: ExpoDossierModalProps) {
   const [activeTab, setActiveTab] = useState<DossierTab>("expo");
 
   if (!isOpen) return null;
@@ -35,12 +43,23 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
               </p>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="flex items-center gap-1 px-2.5 py-1 bg-black text-white hover:bg-neutral-800 border-2 border-black text-xs font-bold transition-all cursor-pointer"
-          >
-            <span>[B / ESC] CLOSE</span>
-          </button>
+          <div className="flex items-center gap-2">
+            {onToggleHubDesign && hubDesign && (
+              <button
+                onClick={onToggleHubDesign}
+                className="px-2.5 py-1 bg-white hover:bg-neutral-200 text-black border-2 border-black text-xs font-bold transition-all cursor-pointer shadow-[2px_2px_0px_#000000]"
+                title="Switch Exhibition Theme [T]"
+              >
+                <span>[THEME: {hubDesign.toUpperCase()}]</span>
+              </button>
+            )}
+            <button
+              onClick={onClose}
+              className="flex items-center gap-1 px-2.5 py-1 bg-black text-white hover:bg-neutral-800 border-2 border-black text-xs font-bold transition-all cursor-pointer"
+            >
+              <span>[B / ESC] CLOSE</span>
+            </button>
+          </div>
         </div>
 
         {/* Tab Navigation */}

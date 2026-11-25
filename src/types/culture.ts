@@ -29,12 +29,12 @@ export interface CultureAlienData {
 }
 
 export const COLLABORATIVE_GAME: CultureInfo = {
-  id: "martin",
+  id: "game",
   name: "Echoes in the Dark",
   author: "Maxime • Martin • Aisah • Mana",
   title: "Echoes in the Dark",
   subtitle: "3D Photonic LiDAR & Floral Resonance",
-  route: "/games/martin",
+  route: "/game",
   themeColor: "violet",
   status: "READY TO PLAY",
   description:
@@ -59,6 +59,7 @@ export const COLLABORATIVE_ALIEN_DATA: CultureAlienData = {
 };
 
 export const ALIEN_CULTURE_METADATA: Record<string, CultureAlienData> = {
+  game: COLLABORATIVE_ALIEN_DATA,
   martin: COLLABORATIVE_ALIEN_DATA,
   "exo-cultures": COLLABORATIVE_ALIEN_DATA,
 };

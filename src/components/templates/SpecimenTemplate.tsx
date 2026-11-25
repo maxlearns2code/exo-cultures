@@ -23,7 +23,7 @@ export function SpecimenTemplate({
   onReturnToIntro,
   onToggleDesign,
 }: TemplateProps) {
-  const alien = ALIEN_CULTURE_METADATA[culture.id] || ALIEN_CULTURE_METADATA["martin"];
+  const alien = ALIEN_CULTURE_METADATA[culture.id] || ALIEN_CULTURE_METADATA["game"];
 
   return (
     <div className="flex-1 flex flex-col justify-between font-mono bg-[#030d07] text-[#34d399] select-none relative overflow-hidden p-2 md:p-4">

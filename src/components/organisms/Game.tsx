@@ -6,7 +6,7 @@ import { ArcadeAudio } from "../../utils/audio";
 import { useArcadeInput, ArcadeInputs } from "../../hooks/useArcadeInput";
 import { GameHUD, GameModal, AlienHubDesign } from "@/components/molecules";
 
-interface MartinGameProps {
+interface GameProps {
   onReturnToHub: () => void;
   theme?: AlienHubDesign;
 }
@@ -32,7 +32,7 @@ interface Virus {
   ph: number;
 }
 
-export function MartinGame({ onReturnToHub, theme = "translator" }: MartinGameProps) {
+export function Game({ onReturnToHub, theme = "translator" }: GameProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 

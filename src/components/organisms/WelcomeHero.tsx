@@ -7,15 +7,13 @@ import { Badge } from "@/components/atoms/Badge";
 interface WelcomeHeroProps {
   displayTitle: string;
   onStartGame: () => void;
-  onEnterHub: () => void;
-  onOpenDossier: () => void;
+  onExplain: () => void;
 }
 
 export function WelcomeHero({
   displayTitle,
   onStartGame,
-  onEnterHub,
-  onOpenDossier,
+  onExplain,
 }: WelcomeHeroProps) {
   return (
     <div className="flex-1 flex flex-col justify-between p-4 md:p-6 text-center select-none font-mono bg-black text-white relative">
@@ -58,40 +56,29 @@ export function WelcomeHero({
           <Badge variant="default">Interactive Installation</Badge>
         </div>
 
-        {/* Action Buttons */}
-        <div className="w-full max-w-sm flex flex-col gap-2.5">
+        {/* Exactly 2 CTA Action Buttons */}
+        <div className="w-full max-w-sm flex flex-col gap-3">
           <ArcadeButton
             variant="primary"
             size="lg"
             onClick={onStartGame}
-            className="w-full"
+            className="w-full py-3"
           >
-            <span>START COLLABORATIVE GAME [A]</span>
+            <span>▶ PLAY GAME [A]</span>
           </ArcadeButton>
 
-          <div className="grid grid-cols-2 gap-2">
-            <ArcadeButton
-              variant="secondary"
-              size="sm"
-              onClick={onEnterHub}
-              className="py-2"
-            >
-              <span>EXHIBITION HUB</span>
-            </ArcadeButton>
-
-            <ArcadeButton
-              variant="secondary"
-              size="sm"
-              onClick={onOpenDossier}
-              className="py-2"
-            >
-              <span>DOSSIER [Y]</span>
-            </ArcadeButton>
-          </div>
+          <ArcadeButton
+            variant="secondary"
+            size="lg"
+            onClick={onExplain}
+            className="w-full py-3"
+          >
+            <span>◆ WHAT WE DID [Y]</span>
+          </ArcadeButton>
         </div>
 
         <span className="text-[10px] text-neutral-400 mt-3 font-mono">
-          Press [A] to Play • Press [Y] for Dossier
+          Press [A] to Play Game • Press [Y] for What We Did
         </span>
       </div>
 

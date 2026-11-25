@@ -6,7 +6,7 @@ import {
   AttractMode,
   ExpoDossierModal,
   WelcomeHero,
-  MartinGame,
+  Game,
   GatewayTemplate,
   TranslatorTemplate,
   SpecimenTemplate,
@@ -274,7 +274,12 @@ export default function ArcadeLauncherHub() {
       onToggleHubDesign={viewMode === "welcome" ? undefined : handleToggleHubDesign}
     >
       {/* Dossier Modal Overlay (Organism) */}
-      <ExpoDossierModal isOpen={isDossierOpen} onClose={() => setIsDossierOpen(false)} />
+      <ExpoDossierModal
+        isOpen={isDossierOpen}
+        onClose={() => setIsDossierOpen(false)}
+        hubDesign={hubDesign}
+        onToggleHubDesign={handleToggleHubDesign}
+      />
 
       {/* Attract Mode Screensaver Overlay (Organism) */}
       {isAttractMode && (
@@ -288,7 +293,7 @@ export default function ArcadeLauncherHub() {
 
       {/* 1. ACTIVE 3D GAME (Organism) */}
       {viewMode === "game" && (
-        <MartinGame onReturnToHub={returnToWelcome} theme={hubDesign} />
+        <Game onReturnToHub={returnToWelcome} theme={hubDesign} />
       )}
 
       {/* 2. EXHIBITION PRESENTATION WELCOME HERO (Organism) */}
@@ -296,8 +301,7 @@ export default function ArcadeLauncherHub() {
         <WelcomeHero
           displayTitle={displayTitle}
           onStartGame={launchGame}
-          onEnterHub={enterHub}
-          onOpenDossier={() => setIsDossierOpen(true)}
+          onExplain={enterHub}
         />
       )}
 

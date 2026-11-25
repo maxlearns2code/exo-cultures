@@ -113,7 +113,7 @@ export function GameHUD({
           </button>
           <div>
             <h1 className={`text-xs md:text-sm font-bold tracking-wider uppercase flex items-center gap-1.5 ${themeStyles.titleColor}`}>
-              <span>ECHOLOCATION ARCHIVE // MARTIN</span>
+              <span>ECHOLOCATION ARCHIVE // 3D LIDAR</span>
               <span className={`text-[9px] px-1.5 py-0.2 rounded border ${themeStyles.badgeColor}`}>
                 {isBrutalist ? "BRUTALIST" : isPhosphor ? "PHOSPHOR" : "CHAMBER III"}
               </span>
