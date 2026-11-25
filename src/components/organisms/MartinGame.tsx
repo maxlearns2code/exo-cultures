@@ -4,10 +4,11 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import * as THREE from "three";
 import { ArcadeAudio } from "../../utils/audio";
 import { useArcadeInput, ArcadeInputs } from "../../hooks/useArcadeInput";
-import { GameHUD, GameModal } from "@/components/molecules";
+import { GameHUD, GameModal, AlienHubDesign } from "@/components/molecules";
 
 interface MartinGameProps {
   onReturnToHub: () => void;
+  theme?: AlienHubDesign;
 }
 
 interface FlowerState {
@@ -31,7 +32,7 @@ interface Virus {
   ph: number;
 }
 
-export function MartinGame({ onReturnToHub }: MartinGameProps) {
+export function MartinGame({ onReturnToHub, theme = "translator" }: MartinGameProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -783,6 +784,7 @@ export function MartinGame({ onReturnToHub }: MartinGameProps) {
         flowerStatus={flowerStatus}
         activeSporesCount={activeSporesCount}
         mappedPoints={mappedPoints}
+        theme={theme}
       />
 
       <GameModal

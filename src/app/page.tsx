@@ -46,16 +46,18 @@ export default function ArcadeLauncherHub() {
     setViewMode((prev) => (prev === "welcome" ? "hub" : prev));
   }, []);
 
-  // Keyboard shortcut [T] or [U] toggles between the 3 Recalbox themes
+  // Keyboard shortcut [T] or [U] toggles between the 3 Recalbox themes (only on game/hub, not on main welcome)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "t" || e.key === "T" || e.key === "u" || e.key === "U") {
-        handleToggleHubDesign();
+        if (viewMode !== "welcome") {
+          handleToggleHubDesign();
+        }
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleToggleHubDesign]);
+  }, [handleToggleHubDesign, viewMode]);
 
   const enterHub = useCallback(() => {
     ArcadeAudio.playSelect();
@@ -268,8 +270,8 @@ export default function ArcadeLauncherHub() {
       onToggleFX={handleToggleFX}
       activeFXType={activeFXType}
       theme={viewMode === "hub" && hubDesign === "gateway" ? "white" : "black"}
-      hubDesign={viewMode === "game" ? undefined : hubDesign}
-      onToggleHubDesign={viewMode === "game" ? undefined : handleToggleHubDesign}
+      hubDesign={viewMode === "welcome" ? undefined : hubDesign}
+      onToggleHubDesign={viewMode === "welcome" ? undefined : handleToggleHubDesign}
     >
       {/* Dossier Modal Overlay (Organism) */}
       <ExpoDossierModal isOpen={isDossierOpen} onClose={() => setIsDossierOpen(false)} />
@@ -286,7 +288,7 @@ export default function ArcadeLauncherHub() {
 
       {/* 1. ACTIVE 3D GAME (Organism) */}
       {viewMode === "game" && (
-        <MartinGame onReturnToHub={returnToWelcome} />
+        <MartinGame onReturnToHub={returnToWelcome} theme={hubDesign} />
       )}
 
       {/* 2. EXHIBITION PRESENTATION WELCOME HERO (Organism) */}
