@@ -2,31 +2,29 @@
 
 import React from "react";
 import Image from "next/image";
-import { CultureInfo, ALIEN_CULTURE_METADATA } from "@/components/hub/CultureCard";
-import { Play, Cpu, Radio, ArrowLeft, BookOpen, Sparkles, Crosshair } from "lucide-react";
+import { CultureInfo, ALIEN_CULTURE_METADATA } from "@/types";
+import { Play, ArrowLeft, BookOpen, Sparkles, Crosshair } from "lucide-react";
+import { ControlsHintBar } from "@/components/molecules/ControlsHintBar";
+import { ArcadeButton } from "@/components/atoms/Button";
 
-interface ViewProps {
-  cultures: CultureInfo[];
-  selectedIndex: number;
-  onSelect: (index: number) => void;
-  onLaunch: (index: number) => void;
+interface TemplateProps {
+  culture: CultureInfo;
+  onLaunch: () => void;
   onOpenDossier: () => void;
   onOpenAttract: () => void;
   onReturnToIntro: () => void;
   onToggleDesign: () => void;
 }
 
-export function TranslatorHubView({
-  cultures,
-  selectedIndex,
+export function TranslatorTemplate({
+  culture,
   onLaunch,
   onOpenDossier,
   onOpenAttract,
   onReturnToIntro,
   onToggleDesign,
-}: ViewProps) {
-  const current = cultures[selectedIndex] || cultures[0];
-  const alien = ALIEN_CULTURE_METADATA[current.id] || ALIEN_CULTURE_METADATA["martin"];
+}: TemplateProps) {
+  const alien = ALIEN_CULTURE_METADATA[culture.id] || ALIEN_CULTURE_METADATA["martin"];
 
   return (
     <div className="flex-1 flex flex-col justify-between font-mono bg-[#060713] text-white select-none relative overflow-hidden p-2 md:p-4">
@@ -85,19 +83,17 @@ export function TranslatorHubView({
         {/* Left Side: Glowing Holographic Artwork */}
         <div className="relative w-full md:w-5/12 h-48 md:h-full border border-purple-500/50 overflow-hidden bg-black flex items-center justify-center">
           <Image
-            src={current.imageSrc || "/assets/martin/echoes-in-the-dark.svg"}
-            alt={current.title}
+            src={culture.imageSrc || "/assets/martin/echoes-in-the-dark.svg"}
+            alt={culture.title}
             fill
             priority
             className="object-cover"
           />
 
-          {/* Crosshair Overlay */}
           <div className="absolute top-2 right-2 text-white z-10 pointer-events-none drop-shadow-[0_0_8px_#c084fc]">
             <Crosshair className="w-5 h-5 animate-spin" style={{ animationDuration: "10s" }} />
           </div>
 
-          {/* Neon Marquee Hologram Watermark */}
           <div className="absolute top-2 left-2 z-10 bg-black/90 text-cyan-300 border border-cyan-400/80 text-[10px] px-2 py-0.5 font-mono font-bold tracking-widest shadow-[0_0_10px_#00f0ff]">
             GLYPH: {alien.alienGlyphs}
           </div>
@@ -116,11 +112,11 @@ export function TranslatorHubView({
               <div className="flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-pink-400" />
                 <span className="text-xs font-bold tracking-wider uppercase text-white drop-shadow-[0_0_6px_#ffffff]">
-                  COLLABORATIVE EXPEDITION • {current.author}
+                  COLLABORATIVE EXPEDITION • {culture.author}
                 </span>
               </div>
               <span className="text-[9px] font-bold px-2 py-0.5 border bg-purple-500/20 text-purple-300 border-purple-400">
-                {alien.fragmentCode} • {current.status}
+                {alien.fragmentCode} • {culture.status}
               </span>
             </div>
 
@@ -129,7 +125,7 @@ export function TranslatorHubView({
                 {alien.fragmentTitle}
               </div>
               <h2 className="text-lg md:text-xl font-bold tracking-wide text-white uppercase drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]">
-                {current.title}
+                {culture.title}
               </h2>
               <p className="text-xs font-bold tracking-tight text-cyan-300 mt-0.5">
                 Sensory Matrix: {alien.alienAudience}
@@ -137,7 +133,7 @@ export function TranslatorHubView({
             </div>
 
             <p className="text-[11px] leading-relaxed text-neutral-200 bg-black/70 p-2.5 border border-purple-900/60 rounded line-clamp-3">
-              {current.description}
+              {culture.description}
             </p>
 
             <div className="grid grid-cols-2 gap-2 mt-2 text-[10px]">
@@ -152,40 +148,27 @@ export function TranslatorHubView({
             </div>
           </div>
 
-          {/* Glowing Neon Coin-Op Launch Bar */}
           <div className="mt-2 pt-2 border-t border-purple-500/30 flex items-center justify-between gap-3">
             <div className="text-[10px] text-neutral-400 flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
               <span className="font-bold text-white">CARRIER:</span> {alien.alienName}
             </div>
 
-            <button
-              onClick={() => onLaunch(selectedIndex)}
-              className="flex items-center gap-2 px-6 py-2.5 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer font-mono bg-purple-500 hover:bg-purple-400 text-black border-purple-300 shadow-[0_0_15px_#c084fc]"
+            <ArcadeButton
+              variant="neon"
+              size="md"
+              onClick={onLaunch}
+              className="px-6 py-2.5"
             >
               <Play className="w-4 h-4 fill-current" />
               <span>▶ PRESS [A] PLAY GAME</span>
-            </button>
+            </ArcadeButton>
           </div>
         </div>
       </div>
 
       {/* 3. LOWER TELEMETRY BAR */}
-      <footer className="w-full pt-1.5 border-t border-cyan-500/30 text-[10px] text-cyan-400/90 flex items-center justify-between select-none z-10">
-        <div className="flex items-center gap-2">
-          <span className="text-white font-bold">[A]</span>
-          <span>Engage Simulator</span>
-          <span className="text-cyan-600">|</span>
-          <span className="text-white font-bold">[Y]</span>
-          <span>Dossier</span>
-          <span className="text-cyan-600">|</span>
-          <span className="text-white font-bold">[T]</span>
-          <span>Switch Recalbox Theme</span>
-        </div>
-        <div className="text-pink-400 font-bold drop-shadow-[0_0_5px_#ff007f]">
-          HYPER ISLAND WEEK 51, 2026 • 8BITDO ARCADE READY
-        </div>
-      </footer>
+      <ControlsHintBar theme="neon" />
     </div>
   );
 }

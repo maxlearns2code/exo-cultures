@@ -1,32 +1,30 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
-import { CultureInfo, ALIEN_CULTURE_METADATA } from "@/components/hub/CultureCard";
-import { Layers, Play, Cpu, Radio, ArrowLeft, BookOpen, Crosshair, Sparkles } from "lucide-react";
+import { CultureInfo, ALIEN_CULTURE_METADATA } from "@/types";
+import { ArrowLeft, BookOpen, Sparkles, Cpu, Play } from "lucide-react";
+import { ExhibitCard } from "@/components/organisms/ExhibitCard";
+import { ArcadeButton } from "@/components/atoms/Button";
+import { ControlsHintBar } from "@/components/molecules/ControlsHintBar";
 
-interface ViewProps {
-  cultures: CultureInfo[];
-  selectedIndex: number;
-  onSelect: (index: number) => void;
-  onLaunch: (index: number) => void;
+interface TemplateProps {
+  culture: CultureInfo;
+  onLaunch: () => void;
   onOpenDossier: () => void;
   onOpenAttract: () => void;
   onReturnToIntro: () => void;
   onToggleDesign: () => void;
 }
 
-export function GatewayHubView({
-  cultures,
-  selectedIndex,
+export function GatewayTemplate({
+  culture,
   onLaunch,
   onOpenDossier,
   onOpenAttract,
   onReturnToIntro,
   onToggleDesign,
-}: ViewProps) {
-  const current = cultures[selectedIndex] || cultures[0];
-  const alien = ALIEN_CULTURE_METADATA[current.id] || ALIEN_CULTURE_METADATA["martin"];
+}: TemplateProps) {
+  const alien = ALIEN_CULTURE_METADATA[culture.id] || ALIEN_CULTURE_METADATA["martin"];
 
   return (
     <div className="flex-1 flex flex-col justify-between font-mono bg-white text-black select-none relative overflow-hidden p-3 md:p-5">
@@ -111,66 +109,16 @@ export function GatewayHubView({
             </div>
           </div>
 
-          {/* Center Column: Square Exhibition Card (The Game Poster & Target) */}
+          {/* Center Column: Exhibit Card Organism */}
           <div className="md:col-span-4 flex flex-col items-center">
-            <div
-              onClick={() => onLaunch(selectedIndex)}
-              className="relative aspect-square w-full max-w-[260px] border-4 border-black bg-white shadow-[8px_8px_0px_#000000] overflow-hidden cursor-pointer group transition-transform hover:scale-[1.02]"
-            >
-              {/* Top Cap */}
-              <div className="p-1.5 bg-black text-white flex items-center justify-between text-[9px] font-bold z-10 relative">
-                <span className="flex items-center gap-1">
-                  <Radio className="w-3 h-3 animate-pulse text-purple-400" />
-                  SECTOR 01: SUB-ABYSS
-                </span>
-                <span className="bg-white text-black px-1.5 py-0.2 uppercase">ONLINE</span>
-              </div>
-
-              {/* Artwork */}
-              <div className="relative flex-1 w-full min-h-[190px] bg-black">
-                <Image
-                  src={current.imageSrc || "/assets/martin/echoes-in-the-dark.svg"}
-                  alt={current.title}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-
-                <div className="absolute top-1.5 right-1.5 text-white z-10 pointer-events-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
-                  <Crosshair className="w-4 h-4 animate-spin" style={{ animationDuration: "12s" }} />
-                </div>
-
-                {/* Glyphs */}
-                <div className="absolute top-1.5 left-1.5 z-10 flex flex-col gap-0.5 text-[10px] font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none">
-                  {alien.alienGlyphs.split("").slice(0, 4).map((g, i) => (
-                    <span key={i}>{g}</span>
-                  ))}
-                </div>
-
-                {/* Bottom telemetry strip */}
-                <div className="absolute bottom-1 left-1.5 right-1.5 z-10 pointer-events-none bg-black/90 text-white border border-white/40 px-1.5 py-0.5 flex items-center justify-between text-[8px] font-mono">
-                  <span className="font-bold truncate">{alien.planetCoords.split("•")[0]}</span>
-                  <span className="text-neutral-300 text-[7px]">{alien.beamLock}</span>
-                </div>
-              </div>
-
-              {/* Card Footer Plinth */}
-              <div className="p-2 bg-white border-t-2 border-black flex items-center justify-between">
-                <div>
-                  <h3 className="text-xs font-black uppercase text-black">{current.title}</h3>
-                  <p className="text-[8px] text-neutral-600 font-bold">PROTOTYPE: 3D THREE.JS</p>
-                </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onLaunch(selectedIndex);
-                  }}
-                  className="py-1 px-3 bg-black hover:bg-neutral-800 text-white font-bold text-[9px] uppercase tracking-wider flex items-center gap-1 shadow-[2px_2px_0px_#8b5cf6]"
-                >
-                  <Play className="w-2.5 h-2.5 fill-current" />
-                  <span>PLAY [A]</span>
-                </button>
-              </div>
-            </div>
+            <ExhibitCard
+              title={culture.title}
+              imageSrc={culture.imageSrc}
+              alienGlyphs={alien.alienGlyphs}
+              planetCoords={alien.planetCoords}
+              beamLock={alien.beamLock}
+              onLaunch={onLaunch}
+            />
           </div>
 
           {/* Right Panel: Mechanics & Controls */}
@@ -194,33 +142,21 @@ export function GatewayHubView({
               </div>
             </div>
 
-            <button
-              onClick={() => onLaunch(selectedIndex)}
-              className="w-full mt-3 py-2 bg-black hover:bg-neutral-800 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 border-2 border-black shadow-[3px_3px_0px_#000000] cursor-pointer"
+            <ArcadeButton
+              variant="brutalist"
+              size="md"
+              onClick={onLaunch}
+              className="w-full mt-3 py-2 text-xs"
             >
               <Play className="w-3.5 h-3.5 fill-current" />
               <span>LAUNCH GAME [ENTER / A]</span>
-            </button>
+            </ArcadeButton>
           </div>
         </div>
       </div>
 
       {/* 3. SOLID BLACK BRUTALIST STATUS BAR */}
-      <footer className="w-full pt-1.5 border-t-4 border-black text-[10px] text-neutral-800 flex items-center justify-between select-none">
-        <div className="flex items-center gap-2">
-          <span className="text-black font-bold">[A]</span>
-          <span>Launch Game</span>
-          <span className="text-neutral-400">|</span>
-          <span className="text-black font-bold">[Y]</span>
-          <span>Expo Dossier</span>
-          <span className="text-neutral-400">|</span>
-          <span className="text-black font-bold">[T]</span>
-          <span>Switch Recalbox Theme</span>
-        </div>
-        <div className="text-black font-bold">
-          COLLABORATIVE SPECULATIVE EXHIBITION • HYPER ISLAND WEEK 51, 2026
-        </div>
-      </footer>
+      <ControlsHintBar theme="white" />
     </div>
   );
 }

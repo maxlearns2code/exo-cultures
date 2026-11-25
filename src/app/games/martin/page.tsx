@@ -2,8 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { CRTOverlay } from "@/components/arcade/CRTOverlay";
-import { MartinGame } from "@/components/games/martin/MartinGame";
+import { CRTOverlay, MartinGame } from "@/components";
 import { useArcadeInput } from "@/hooks/useArcadeInput";
 
 export default function MartinCulturePage() {

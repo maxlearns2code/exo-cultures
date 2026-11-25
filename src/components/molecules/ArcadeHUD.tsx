@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
@@ -20,28 +18,28 @@ export function ArcadeHUD({
   energy,
 }: ArcadeHUDProps) {
   return (
-    <header className="w-full flex items-center justify-between border-b-2 border-white/20 pb-2 mb-3 select-none">
+    <header className="w-full flex items-center justify-between border-b-2 border-white/20 pb-2 mb-3 select-none font-mono">
       <div className="flex items-center gap-3">
         {showBackButton && (
           <Link
             href="/"
-            className="flex items-center gap-1.5 px-2.5 py-1 bg-black border-2 border-white hover:bg-white hover:text-black text-white text-xs font-mono font-bold transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-2.5 py-1 bg-black border-2 border-white hover:bg-white hover:text-black text-white text-xs font-bold transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>[B] HUB</span>
           </Link>
         )}
         <div>
-          <h1 className="text-sm md:text-base font-bold tracking-wider font-mono text-white uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]">
+          <h1 className="text-sm md:text-base font-bold tracking-wider text-white uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]">
             {title}
           </h1>
-          <p className="text-[10px] text-neutral-400 tracking-widest font-mono">
+          <p className="text-[10px] text-neutral-400 tracking-widest">
             {subtitle}
           </p>
         </div>
       </div>
 
-      <div className="flex items-center gap-4 text-xs font-mono">
+      <div className="flex items-center gap-4 text-xs">
         {energy !== undefined && (
           <div className="flex items-center gap-2">
             <span className="text-[10px] text-neutral-400 font-bold uppercase">WARMTH:</span>
@@ -71,29 +69,5 @@ export function ArcadeHUD({
         </div>
       </div>
     </header>
-  );
-}
-
-export function ArcadeControlsFooter() {
-  return (
-    <footer className="w-full mt-auto pt-2 border-t-2 border-white/20 text-[10px] font-mono text-neutral-300 flex flex-wrap items-center justify-between select-none">
-      <div className="flex items-center gap-2">
-        <span className="text-white font-bold">JOYSTICK:</span>
-        <span>Move</span>
-        <span className="text-neutral-600">|</span>
-        <span className="text-white font-bold">[A]</span>
-        <span>Confirm</span>
-        <span className="text-neutral-600">|</span>
-        <span className="text-white font-bold">[B]</span>
-        <span>Back / Hub</span>
-        <span className="text-neutral-600">|</span>
-        <span className="text-white font-bold">[X]</span>
-        <span>Action</span>
-      </div>
-      <div className="text-neutral-400 flex items-center gap-1">
-        <span className="text-white font-bold">[SEL+START]</span>
-        <span>Hold 2s Hub</span>
-      </div>
-    </footer>
   );
 }

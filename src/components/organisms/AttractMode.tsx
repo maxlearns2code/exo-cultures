@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { CultureInfo } from "./CultureCard";
+import { CultureInfo } from "@/types";
 import { Play, Sparkles, Radio, Gamepad2, Shield } from "lucide-react";
 
 interface AttractModeProps {
