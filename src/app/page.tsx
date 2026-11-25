@@ -43,6 +43,7 @@ export default function ArcadeLauncherHub() {
       const designs: AlienHubDesign[] = ["translator", "gateway", "specimen"];
       return designs[(designs.indexOf(prev) + 1) % designs.length];
     });
+    setViewMode((prev) => (prev === "welcome" ? "hub" : prev));
   }, []);
 
   // Keyboard shortcut [T] or [U] toggles between the 3 Recalbox themes
@@ -262,13 +263,13 @@ export default function ArcadeLauncherHub() {
   return (
     <CRTOverlay
       exitHoldProgress={exitHoldProgress}
-      hasGamepad={viewMode !== "welcome" && hasGamepad}
+      hasGamepad={hasGamepad}
       fxMode={fxMode}
       onToggleFX={handleToggleFX}
       activeFXType={activeFXType}
-      theme={viewMode === "welcome" || viewMode === "game" ? "black" : hubDesign === "gateway" ? "white" : "black"}
-      hubDesign={viewMode === "hub" ? hubDesign : undefined}
-      onToggleHubDesign={viewMode === "hub" ? handleToggleHubDesign : undefined}
+      theme={viewMode === "hub" && hubDesign === "gateway" ? "white" : "black"}
+      hubDesign={viewMode === "game" ? undefined : hubDesign}
+      onToggleHubDesign={viewMode === "game" ? undefined : handleToggleHubDesign}
     >
       {/* Dossier Modal Overlay (Organism) */}
       <ExpoDossierModal isOpen={isDossierOpen} onClose={() => setIsDossierOpen(false)} />
