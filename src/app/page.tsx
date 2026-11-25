@@ -17,7 +17,7 @@ import { COLLABORATIVE_GAME } from "@/types";
 import { useArcadeInput, ArcadeInputs } from "@/hooks/useArcadeInput";
 import { ArcadeAudio } from "@/utils/audio";
 
-const IDLE_RETURN_TO_WELCOME_MS = 60000;
+const IDLE_RETURN_TO_WELCOME_MS = 5 * 60 * 1000; // 5 minutes of inactivity
 const ALIEN_GLYPHS = ["⍙", "⟒", "⌰", "☊", "⍜", "⋔", "⎎", "⏁", "⊑", "⌇", "▲", "◈", "⬡", "☵", "☲", "0x45", "0x58", "0x4F"];
 
 export default function ArcadeLauncherHub() {
@@ -35,6 +35,7 @@ export default function ArcadeLauncherHub() {
   const [hubDesign, setHubDesign] = useState<AlienHubDesign>("gateway");
 
   const lastInteractionRef = useRef<number>(Date.now());
+  const lastEyeCatcherRef = useRef<number>(Date.now());
   const prevInputsRef = useRef<ArcadeInputs | null>(null);
 
   const handleToggleHubDesign = useCallback(() => {
@@ -239,28 +240,57 @@ export default function ArcadeLauncherHub() {
 
   const { exitHoldProgress, hasGamepad } = useArcadeInput(handleInputs, returnToWelcome);
 
+  // Register all user activity (mouse movement, clicks, touches, wheel, keys) to reset idle timer
+  useEffect(() => {
+    const handleUserActivity = () => {
+      lastInteractionRef.current = Date.now();
+      lastEyeCatcherRef.current = Date.now();
+      if (isAttractMode) {
+        setIsAttractMode(false);
+        ArcadeAudio.playSelect();
+      }
+    };
+
+    window.addEventListener("mousemove", handleUserActivity, { passive: true });
+    window.addEventListener("mousedown", handleUserActivity, { passive: true });
+    window.addEventListener("keydown", handleUserActivity, { passive: true });
+    window.addEventListener("touchstart", handleUserActivity, { passive: true });
+    window.addEventListener("wheel", handleUserActivity, { passive: true });
+
+    return () => {
+      window.removeEventListener("mousemove", handleUserActivity);
+      window.removeEventListener("mousedown", handleUserActivity);
+      window.removeEventListener("keydown", handleUserActivity);
+      window.removeEventListener("touchstart", handleUserActivity);
+      window.removeEventListener("wheel", handleUserActivity);
+    };
+  }, [isAttractMode]);
+
   // Periodic Eye-Catcher
   useEffect(() => {
     if (viewMode !== "welcome" || isDossierOpen || fxMode === "off") return;
 
     const interval = setInterval(() => {
-      const idleTime = Date.now() - lastInteractionRef.current;
+      const idleTime = Date.now() - lastEyeCatcherRef.current;
       if (idleTime >= 18000) {
         triggerFX(fxMode);
-        lastInteractionRef.current = Date.now();
+        lastEyeCatcherRef.current = Date.now();
       }
     }, 4000);
 
     return () => clearInterval(interval);
   }, [fxMode, isDossierOpen, triggerFX, viewMode]);
 
-  // Idle timeout: Return to welcome after 60s
+  // Idle timeout: Return to main page (welcome) after 5 minutes of inactivity
   useEffect(() => {
     if (viewMode === "welcome" && !isDossierOpen && !isAttractMode) return;
 
     const interval = setInterval(() => {
       const idleTime = Date.now() - lastInteractionRef.current;
       if (idleTime >= IDLE_RETURN_TO_WELCOME_MS) {
+        if (typeof document !== "undefined" && document.exitPointerLock) {
+          document.exitPointerLock();
+        }
         setViewMode("welcome");
         setIsDossierOpen(false);
         setIsAttractMode(false);
