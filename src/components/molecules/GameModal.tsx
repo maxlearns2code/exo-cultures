@@ -51,13 +51,13 @@ export function GameModal({
             onClick={onReturnToHub}
             className="flex-1 py-2.5 px-4 bg-black hover:bg-neutral-900 text-white font-bold text-xs uppercase tracking-wider border-2 border-white shadow-[4px_4px_0px_#ffffff] cursor-pointer transition-all"
           >
-            [B / ESC] CLOSE
+            [✕ CLOSE]
           </button>
           <button
             onClick={onRestart}
             className="flex-1 py-2.5 px-4 bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider border-2 border-white shadow-[4px_4px_0px_#ffffff] cursor-pointer transition-all"
           >
-            PLAY AGAIN [A] ▶
+            PLAY AGAIN ▶
           </button>
         </div>
       </div>

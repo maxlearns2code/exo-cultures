@@ -64,9 +64,9 @@ export function CRTOverlay({
                   ? "bg-white hover:bg-neutral-100 text-black border-black shadow-[2px_2px_0px_#000000]"
                   : "bg-black hover:bg-white hover:text-black text-white border-white shadow-[2px_2px_0px_#ffffff]"
               }`}
-              title="Close [B / ESC]"
+              title="Close"
             >
-              <span>[B / ESC] CLOSE</span>
+              <span>[✕ CLOSE]</span>
             </button>
           </div>
         )}
