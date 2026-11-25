@@ -1,39 +1,38 @@
-# 👾 EXO-CULTURES: 4 Alien Civilizations Web Arcade
+# 👾 EXO-CULTURES: Unified Collaborative Alien Expedition
 
 > **Interactive Arcade Cabinet & Web Platform for Raspberry Pi 400 + 8BitDo Arcade Stick + 14" CRT TV**  
 > **Exhibition Context:** Physical gallery showcase & worldwide web platform  
-> **Team Creators:** Maxime Dewynter, Aisah, Martin, Mana  
-> **Framework:** Next.js (App Router, React 19, TypeScript, Tailwind CSS)  
+> **Team Creators:** Maxime Dewynter, Martin, Aisah, Mana  
+> **Framework:** Next.js (App Router, React 19, TypeScript, Three.js, Tailwind CSS)  
 > **GitHub Repository:** [https://github.com/maxlearns2code/exo-cultures](https://github.com/maxlearns2code/exo-cultures.git)  
 
 ---
 
-## 🏛️ Platform Overview
+## 🏛️ Project Overview: One Unified Game
 
-`exo-cultures` is a unified arcade hub launcher hosting 4 playable alien games:
-1. **Chromatic Symbiosis (Maxime Dewynter):** *Harmonic Wave Resonator* — 2D Top-down optical light & frequency puzzle set in the sub-ice abyssal ocean.
-2. **Aisah's Culture (Aisah):** Interactive alien ecosystem & bioluminescent collective showcase.
-3. **Martin's Culture (Martin):** Cybernetic & geometric resonance architecture showcase.
-4. **Mana's Culture (Mana):** Gravitational & atmospheric fluid dynamics showcase.
+Rather than presenting fragmented individual mini-demos, our team (Maxime Dewynter, Martin, Aisah, and Mana) has **combined our speculative fiction into one common collaborative game**: **Echoes in the Dark**.
+
+- **Narrative Fusion:**
+  1. **The Sub-Ice Oceanic Abyss (Maxime):** The environmental foundation—a subterranean void deprived of star-light where acoustic and light frequencies replace conventional speech.
+  2. **3D Photonic LiDAR & Floral Resonance (Martin):** The core 3D interaction engine—real-time raycasting LiDAR scans that reveal pitch-black terrain, with dormant floral beacons waiting to bloom.
+  3. **Acoustic Harmony & Calling Chambers (Aisah):** The resonance ecology—bloomed flowers emit acoustic harmonic pulses to call a distant counterpart through the cosmos.
+  4. **Atmospheric Vectors & Spore Defense (Mana):** The exospheric hazards—airborne viral spore colonies that threaten to infect and wither the resonant flowers.
 
 ---
 
 ## 🕹️ Hardware & Controls
 
-### Universal Control Mapping (8BitDo Arcade Stick & Keyboard)
+### Universal Control Mapping (8BitDo Arcade Stick & Keyboard/Mouse)
 
-| Logical Action | 8BitDo Arcade Stick | Keyboard Primary | Keyboard Alternative |
+| Logical Action | 8BitDo Arcade Stick | Keyboard / Mouse Primary | Keyboard Alternative |
 | :--- | :--- | :--- | :--- |
-| **Move Up** | Joystick UP / D-Pad Up | `ArrowUp` | `W` |
-| **Move Down** | Joystick DOWN / D-Pad Down | `ArrowDown` | `S` |
-| **Move Left** | Joystick LEFT / D-Pad Left | `ArrowLeft` | `A` |
-| **Move Right** | Joystick RIGHT / D-Pad Right | `ArrowRight` | `D` |
-| **Action 1 (Primary / Beam / Select)** | Button A (Bottom Row 1) | `Space` | `Z` |
-| **Action 2 (Secondary / Shift / Back)** | Button B (Bottom Row 2) | `Enter` | `X` |
-| **Action 3 (Special / Pulse)** | Button X (Top Row 1) | `ShiftLeft` | `C` |
-| **Action 4 (Cycle / Harmonize)** | Button Y (Top Row 2) | `KeyQ` | `V` |
-| **Menu / Pause** | START | `Escape` | `P` |
-| **Universal Exit to Hub (Hold 2s)** | SELECT + START | `Escape` (Hold 2s) | `Backspace` |
+| **Move Forward/Back** | Joystick UP / DOWN | `W` / `S` | `ArrowUp` / `ArrowDown` |
+| **Strafe Left/Right** | Joystick LEFT / RIGHT | `A` / `D` | `ArrowLeft` / `ArrowRight` |
+| **Wide LiDAR Scan** | Button X (Top Row 1) | **Mouse Left-Click** | `Space` / `Z` |
+| **Focused Beam (Charge/Burn)** | Button Y (Top Row 2) | **Mouse Right-Click** | `KeyQ` / `C` |
+| **Bloom Floral Beacon** | Hold Button A (Bottom Row 1) | **Hold `E`** | Hold `Enter` |
+| **Exhibition Dossier** | Button Y (on Hub) | `Y` | `D` |
+| **Universal Exit (Hold 1.2s)** | Hold START / SELECT | **Hold `Escape` (1.2s)** | `Backspace` |
 
 ---
 
@@ -42,9 +41,9 @@
 ### Installation
 ```bash
 # Install dependencies
-pnpm install # or npm install
+pnpm install
 
-# Run development server (accessible at http://localhost:3000)
+# Run development server
 pnpm dev
 
 # Build for production / exhibition kiosk
@@ -53,7 +52,7 @@ pnpm start
 ```
 
 ### 📺 Exhibition Mode (Raspberry Pi 400 + Recalbox RGB Dual)
-- **Aspect Ratio:** Native 4:3 (640×480 @ 60Hz 15kHz SCART).
-- **Attract Mode:** Automatically triggers after 90s of inactivity to showcase animated previews of all 4 cultures.
-- **Universal Exit:** Holding `SELECT + START` for 2 seconds safely brings players back to the central hub without needing a keyboard or mouse.
-- **Deflicker Protection:** Chunky 2px+ borders and high-contrast typography prevent scanline jitter on interlaced CRT tubes.
+- **Display Output:** 15kHz analog RGB via SCART to 14" CRT TV.
+- **Aspect Ratio:** CRT 4:3 safe-zone framing with procedural scanlines and curvature.
+- **Universal Exit:** Holding `START` for 1.2 seconds safely returns to the exhibition title screen.
+- **Zero Asset Loading Lag:** Procedural Three.js vector point cloud buffer and Web Audio API synthesis for 100% offline reliability.

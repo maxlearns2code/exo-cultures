@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { CultureInfo, ALIEN_CULTURE_METADATA } from "@/components/hub/CultureCard";
-import { Layers, Play, Cpu, Wind, Radio, ArrowLeft, BookOpen, Crosshair } from "lucide-react";
+import { Layers, Play, Cpu, Radio, ArrowLeft, BookOpen, Crosshair, Sparkles } from "lucide-react";
 
 interface ViewProps {
   cultures: CultureInfo[];
@@ -16,87 +16,41 @@ interface ViewProps {
   onToggleDesign: () => void;
 }
 
-const BRUTALIST_ACCENTS = {
-  cyan: {
-    color: "#0891b2",
-    badge: "bg-cyan-600 text-white border-cyan-800",
-    button: "bg-black hover:bg-neutral-800 text-white border-2 border-black shadow-[3px_3px_0px_#0891b2]",
-    tag: "text-cyan-800",
-  },
-  emerald: {
-    color: "#059669",
-    badge: "bg-emerald-600 text-white border-emerald-800",
-    button: "bg-black hover:bg-neutral-800 text-white border-2 border-black shadow-[3px_3px_0px_#059669]",
-    tag: "text-emerald-800",
-  },
-  violet: {
-    color: "#7c3aed",
-    badge: "bg-purple-600 text-white border-purple-800",
-    button: "bg-black hover:bg-neutral-800 text-white border-2 border-black shadow-[3px_3px_0px_#7c3aed]",
-    tag: "text-purple-800",
-  },
-  amber: {
-    color: "#d97706",
-    badge: "bg-amber-500 text-black border-amber-700 font-bold",
-    button: "bg-black hover:bg-neutral-800 text-white border-2 border-black shadow-[3px_3px_0px_#d97706]",
-    tag: "text-amber-800",
-  },
-};
-
 export function GatewayHubView({
   cultures,
   selectedIndex,
-  onSelect,
   onLaunch,
   onOpenDossier,
   onOpenAttract,
   onReturnToIntro,
   onToggleDesign,
 }: ViewProps) {
-  const current = cultures[selectedIndex];
-  const alien = ALIEN_CULTURE_METADATA[current.id] || ALIEN_CULTURE_METADATA["chromatic-symbiosis"];
-
-  const getIcon = (themeColor: string) => {
-    switch (themeColor) {
-      case "cyan":
-        return <Layers className="w-3.5 h-3.5 text-black" />;
-      case "emerald":
-        return <Radio className="w-3.5 h-3.5 text-black" />;
-      case "violet":
-        return <Cpu className="w-3.5 h-3.5 text-black" />;
-      case "amber":
-        return <Wind className="w-3.5 h-3.5 text-black" />;
-      default:
-        return null;
-    }
-  };
+  const current = cultures[selectedIndex] || cultures[0];
+  const alien = ALIEN_CULTURE_METADATA[current.id] || ALIEN_CULTURE_METADATA["martin"];
 
   return (
-    <div className="flex-1 flex flex-col justify-between font-mono bg-white text-black select-none p-0.5">
-      {/* 1. TOP HEADER: Swiss Brutalist Exhibition Header */}
-      <header className="w-full flex items-center justify-between border-b-4 border-black pb-2 mb-2 select-none">
-        <div className="flex items-center gap-3">
+    <div className="flex-1 flex flex-col justify-between font-mono bg-white text-black select-none relative overflow-hidden p-3 md:p-5">
+      {/* 1. TOP BRUTALIST ARCHITECTURAL HEADER */}
+      <header className="w-full border-b-4 border-black pb-2 flex items-center justify-between select-none">
+        <div className="flex items-center gap-2">
           <button
             onClick={onReturnToIntro}
-            className="flex items-center gap-1.5 px-3 py-1 bg-black text-white font-bold text-xs border-2 border-black transition-transform cursor-pointer shadow-[2px_2px_0px_#555555] active:translate-x-0.5 active:translate-y-0.5"
+            className="flex items-center gap-1.5 px-2.5 py-1 bg-black text-white hover:bg-neutral-800 font-bold text-xs uppercase border-2 border-black transition-all cursor-pointer shadow-[2px_2px_0px_#000000]"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>[B] INTRO</span>
           </button>
           <div>
-            <h1 className="text-sm md:text-base font-bold tracking-wider text-black uppercase flex items-center gap-2">
-              <span>EXO-CULTURES EXHIBITION</span>
-              <span className="text-[9px] bg-black text-white px-2 py-0.5 uppercase tracking-widest font-bold">
-                THEME: GALLERY
-              </span>
+            <h1 className="text-sm md:text-base font-black tracking-wider uppercase">
+              EXO-CULTURES // THE COLLABORATIVE EXHIBITION
             </h1>
-            <p className="text-[10px] text-neutral-600 tracking-widest font-semibold uppercase">
-              PAVILION 04 • 4 SQUARE GALLERY EXHIBITS • HYPER ISLAND WEEK 51
+            <p className="text-[9px] text-neutral-600 font-bold uppercase">
+              RECALBOX THEME: BRUTALIST GALLERY • ONE SHARED ALIEN GAME
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <button
             onClick={onToggleDesign}
             className="text-[10px] text-black border-2 border-black px-2 py-0.5 font-bold hover:bg-black hover:text-white transition-colors cursor-pointer bg-neutral-100 shadow-[2px_2px_0px_#000000]"
@@ -109,7 +63,7 @@ export function GatewayHubView({
             className="text-[10px] text-black border-2 border-black px-2 py-0.5 font-bold hover:bg-black hover:text-white transition-colors cursor-pointer flex items-center gap-1"
           >
             <BookOpen className="w-3 h-3" />
-            <span>[Y] PROCESS</span>
+            <span>[Y] DOSSIER</span>
           </button>
           <button
             onClick={onOpenAttract}
@@ -120,159 +74,151 @@ export function GatewayHubView({
         </div>
       </header>
 
-      {/* 2. THE 4 SQUARE GALLERY CARDS (SQUARED & CENTERED ON EXHIBITION WALL) */}
-      <div className="flex-1 min-h-0 flex flex-col items-center justify-center select-none py-2 my-auto">
-        <div className="grid grid-cols-4 gap-3.5 w-full max-w-[940px] items-center justify-center">
-          {cultures.map((culture, index) => {
-            const isSel = index === selectedIndex;
-            const cardAlien = ALIEN_CULTURE_METADATA[culture.id] || ALIEN_CULTURE_METADATA["chromatic-symbiosis"];
-            const cardAccent = BRUTALIST_ACCENTS[culture.themeColor];
-            const isPlayable = culture.status === "READY TO PLAY";
-
-            return (
-              <div
-                key={culture.id}
-                onClick={() => {
-                  onSelect(index);
-                  if (isSel) onLaunch(index);
-                }}
-                className={`relative aspect-square w-full flex flex-col justify-between transition-all duration-200 cursor-pointer overflow-hidden ${
-                  isSel
-                    ? `border-4 border-black bg-white text-black shadow-[8px_8px_0px_#000000] scale-[1.03] z-30`
-                    : "border-2 border-neutral-400 bg-neutral-100 text-neutral-800 opacity-80 hover:opacity-100 hover:border-black shadow-[3px_3px_0px_#cccccc]"
-                }`}
-              >
-                {/* Top Cap Strip */}
-                <div
-                  className={`p-1.5 px-2 border-b-2 border-black flex items-center justify-between z-10 shrink-0 ${
-                    isSel ? "bg-black text-white" : "bg-neutral-200 text-black"
-                  }`}
-                >
-                  <div className="flex items-center gap-1.5 min-w-0">
-                    <span className={isSel ? "text-white" : "text-black"}>
-                      {getIcon(culture.themeColor)}
-                    </span>
-                    <span className="text-[10px] font-bold font-mono uppercase tracking-wider truncate">
-                      {cardAlien.sectorId.split(":")[0]}
-                    </span>
-                  </div>
-                  <span
-                    className={`text-[8px] font-mono px-1.5 py-0.2 border uppercase font-bold tracking-widest ${
-                      isSel ? "bg-white text-black border-white" : "bg-black text-white border-black"
-                    }`}
-                  >
-                    {isSel ? "ACTIVE" : "STANDBY"}
-                  </span>
+      {/* 2. CENTER STAGE: THE SINGLE COLLABORATIVE GAME SHOWCASE */}
+      <div className="flex-1 min-h-0 flex items-center justify-center py-2 my-auto">
+        <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+          {/* Left Panel: Narrative Fusion */}
+          <div className="md:col-span-4 bg-neutral-100 border-2 border-black p-3.5 shadow-[4px_4px_0px_#000000] flex flex-col justify-between h-full max-h-[340px]">
+            <div>
+              <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-black text-white text-[9px] font-bold uppercase mb-2">
+                <Sparkles className="w-3 h-3 text-amber-300" />
+                <span>COMBINED SPECULATIVE LORE</span>
+              </div>
+              <h2 className="text-xs md:text-sm font-black uppercase mb-1.5">
+                FOUR STORIES IN ONE
+              </h2>
+              <p className="text-[10px] text-neutral-700 leading-relaxed mb-3">
+                Maxime, Martin, Aisah, and Mana combined their four individual speculative worlds into a single extraterrestrial journey through the subterranean void.
+              </p>
+              <div className="space-y-1.5 text-[9px] border-t border-black/20 pt-2">
+                <div className="flex items-center gap-1 text-black font-bold">
+                  <span>• Maxime:</span> <span className="font-normal text-neutral-600">Sub-ice oceanic abyss &amp; light</span>
                 </div>
-
-                {/* Center: Square Artwork Area (Fills the center of the square card) */}
-                <div className="relative flex-1 w-full min-h-0 overflow-hidden bg-black flex items-center justify-center border-y-2 border-black">
-                  {culture.imageSrc ? (
-                    <Image
-                      src={culture.imageSrc}
-                      alt={culture.title}
-                      fill
-                      className={`object-cover transition-all duration-300 ${
-                        isSel ? "opacity-100 scale-105" : "opacity-45 grayscale"
-                      }`}
-                    />
-                  ) : (
-                    <div className="flex flex-col items-center justify-center text-center p-2">
-                      <Radio className={`w-8 h-8 text-neutral-400 mb-1 ${isSel ? "animate-pulse" : ""}`} />
-                      <span className="text-[9px] font-mono text-neutral-300 font-bold uppercase">
-                        SIGNAL PENDING
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Stargate Target Crosshair when Selected */}
-                  {isSel && (
-                    <div className="absolute top-1.5 right-1.5 text-white z-10 pointer-events-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
-                      <Crosshair className="w-4 h-4 animate-spin" style={{ animationDuration: "12s" }} />
-                    </div>
-                  )}
-
-                  {/* Vertical Native Alien Glyphs Stamp */}
-                  <div className="absolute top-1.5 left-1.5 z-10 flex flex-col gap-0.5 text-[10px] font-bold tracking-widest text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none font-mono">
-                    {cardAlien.alienGlyphs.split("").slice(0, 4).map((glyph, i) => (
-                      <span key={i} className="animate-pulse" style={{ animationDelay: `${i * 120}ms` }}>
-                        {glyph}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Telemetry Strip on Bottom of Image */}
-                  <div className="absolute bottom-1 left-1.5 right-1.5 z-10 pointer-events-none bg-black/90 text-white border border-white/40 px-1.5 py-0.5 flex items-center justify-between text-[8px] font-mono">
-                    <span className="font-bold text-white truncate">{cardAlien.planetCoords.split("•")[0]}</span>
-                    <span className="text-neutral-300 hidden sm:inline text-[7px]">{cardAlien.beamLock}</span>
-                  </div>
-
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none" />
+                <div className="flex items-center gap-1 text-black font-bold">
+                  <span>• Martin:</span> <span className="font-normal text-neutral-600">3D LiDAR point-cloud echolocation</span>
                 </div>
-
-                {/* Bottom Plinth */}
-                <div className="p-1.5 px-2 bg-white z-10 flex items-center justify-between gap-1 shrink-0">
-                  <div className="min-w-0 flex-1">
-                    <h3 className="text-[10px] md:text-[11px] font-bold font-mono tracking-wide text-black uppercase truncate">
-                      {culture.title}
-                    </h3>
-                    <p className="text-[8px] font-mono text-neutral-600 truncate">
-                      {culture.author}
-                    </p>
-                  </div>
-
-                  <div className="shrink-0">
-                    {isSel ? (
-                      <button
-                        onClick={() => onLaunch(index)}
-                        className={`py-1 px-2 font-mono font-bold text-[8px] uppercase tracking-wider flex items-center justify-center gap-1 transition-all ${cardAccent.button}`}
-                      >
-                        <Play className="w-2.5 h-2.5 fill-current" />
-                        <span>{isPlayable ? "ENTER [A]" : "VIEW [A]"}</span>
-                      </button>
-                    ) : (
-                      <span className="text-[8px] font-mono text-neutral-500 font-bold">
-                        SELECT →
-                      </span>
-                    )}
-                  </div>
+                <div className="flex items-center gap-1 text-black font-bold">
+                  <span>• Aisah:</span> <span className="font-normal text-neutral-600">Acoustic resonance &amp; floral calling</span>
+                </div>
+                <div className="flex items-center gap-1 text-black font-bold">
+                  <span>• Mana:</span> <span className="font-normal text-neutral-600">Exospheric vapors &amp; viral spores</span>
                 </div>
               </div>
-            );
-          })}
+            </div>
+
+            <div className="mt-3 pt-2 border-t border-black text-[9px] text-neutral-500 font-bold">
+              TEAM: MAXIME • MARTIN • AISAH • MANA
+            </div>
+          </div>
+
+          {/* Center Column: Square Exhibition Card (The Game Poster & Target) */}
+          <div className="md:col-span-4 flex flex-col items-center">
+            <div
+              onClick={() => onLaunch(selectedIndex)}
+              className="relative aspect-square w-full max-w-[260px] border-4 border-black bg-white shadow-[8px_8px_0px_#000000] overflow-hidden cursor-pointer group transition-transform hover:scale-[1.02]"
+            >
+              {/* Top Cap */}
+              <div className="p-1.5 bg-black text-white flex items-center justify-between text-[9px] font-bold z-10 relative">
+                <span className="flex items-center gap-1">
+                  <Radio className="w-3 h-3 animate-pulse text-purple-400" />
+                  SECTOR 01: SUB-ABYSS
+                </span>
+                <span className="bg-white text-black px-1.5 py-0.2 uppercase">ONLINE</span>
+              </div>
+
+              {/* Artwork */}
+              <div className="relative flex-1 w-full min-h-[190px] bg-black">
+                <Image
+                  src={current.imageSrc || "/assets/martin/echoes-in-the-dark.svg"}
+                  alt={current.title}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+
+                <div className="absolute top-1.5 right-1.5 text-white z-10 pointer-events-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+                  <Crosshair className="w-4 h-4 animate-spin" style={{ animationDuration: "12s" }} />
+                </div>
+
+                {/* Glyphs */}
+                <div className="absolute top-1.5 left-1.5 z-10 flex flex-col gap-0.5 text-[10px] font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none">
+                  {alien.alienGlyphs.split("").slice(0, 4).map((g, i) => (
+                    <span key={i}>{g}</span>
+                  ))}
+                </div>
+
+                {/* Bottom telemetry strip */}
+                <div className="absolute bottom-1 left-1.5 right-1.5 z-10 pointer-events-none bg-black/90 text-white border border-white/40 px-1.5 py-0.5 flex items-center justify-between text-[8px] font-mono">
+                  <span className="font-bold truncate">{alien.planetCoords.split("•")[0]}</span>
+                  <span className="text-neutral-300 text-[7px]">{alien.beamLock}</span>
+                </div>
+              </div>
+
+              {/* Card Footer Plinth */}
+              <div className="p-2 bg-white border-t-2 border-black flex items-center justify-between">
+                <div>
+                  <h3 className="text-xs font-black uppercase text-black">{current.title}</h3>
+                  <p className="text-[8px] text-neutral-600 font-bold">PROTOTYPE: 3D THREE.JS</p>
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onLaunch(selectedIndex);
+                  }}
+                  className="py-1 px-3 bg-black hover:bg-neutral-800 text-white font-bold text-[9px] uppercase tracking-wider flex items-center gap-1 shadow-[2px_2px_0px_#8b5cf6]"
+                >
+                  <Play className="w-2.5 h-2.5 fill-current" />
+                  <span>PLAY [A]</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Panel: Mechanics & Controls */}
+          <div className="md:col-span-4 bg-neutral-100 border-2 border-black p-3.5 shadow-[4px_4px_0px_#000000] flex flex-col justify-between h-full max-h-[340px]">
+            <div>
+              <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-black text-white text-[9px] font-bold uppercase mb-2">
+                <Cpu className="w-3 h-3 text-cyan-400" />
+                <span>EXPEDITION CONTROLS</span>
+              </div>
+              <h2 className="text-xs md:text-sm font-black uppercase mb-1.5">
+                HOW TO PLAY
+              </h2>
+              <div className="space-y-1.5 text-[9px] text-neutral-800 leading-snug">
+                <div>• <strong>LiDAR Scan:</strong> Click Left or Arcade [X] to map walls</div>
+                <div>• <strong>Focus Beam:</strong> Click Right or Arcade [Y] to burn spores</div>
+                <div>• <strong>Move:</strong> WASD or 8BitDo Joystick</div>
+                <div>• <strong>Bloom Flower:</strong> Hold [E] or Arcade [A] near beacons</div>
+              </div>
+              <div className="mt-3 pt-2 border-t border-black/20 text-[9px] text-neutral-600">
+                <span>GOAL: Discover all 4 floral beacons, bloom them to summon your mate, and defend the petals from infection.</span>
+              </div>
+            </div>
+
+            <button
+              onClick={() => onLaunch(selectedIndex)}
+              className="w-full mt-3 py-2 bg-black hover:bg-neutral-800 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 border-2 border-black shadow-[3px_3px_0px_#000000] cursor-pointer"
+            >
+              <Play className="w-3.5 h-3.5 fill-current" />
+              <span>LAUNCH GAME [ENTER / A]</span>
+            </button>
+          </div>
         </div>
       </div>
 
       {/* 3. SOLID BLACK BRUTALIST STATUS BAR */}
-      <div className="w-full bg-black text-white px-3 py-1.5 flex items-center justify-between text-[10px] font-mono mb-1 border-2 border-black">
+      <footer className="w-full pt-1.5 border-t-4 border-black text-[10px] text-neutral-800 flex items-center justify-between select-none">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-white animate-ping inline-block" />
-          <span className="font-bold text-white uppercase tracking-wider">
-            PORTAL LOCK: {alien.sectorId}
-          </span>
-          <span className="text-neutral-400 hidden sm:inline">
-            // {alien.environmentalTelemetry}
-          </span>
-        </div>
-        <div className="text-neutral-300 font-bold tracking-widest">
-          STATUS: 15kHz ANALOG RGB
-        </div>
-      </div>
-
-      {/* 4. FOOTER CONTROLS */}
-      <footer className="w-full pt-1 border-t-4 border-black text-[10px] text-neutral-800 flex items-center justify-between select-none">
-        <div className="flex items-center gap-2">
-          <span className="text-black font-bold">JOYSTICK:</span>
-          <span>Left / Right Exhibit</span>
-          <span className="text-neutral-400">|</span>
           <span className="text-black font-bold">[A]</span>
-          <span>Enter Portal</span>
+          <span>Launch Game</span>
+          <span className="text-neutral-400">|</span>
+          <span className="text-black font-bold">[Y]</span>
+          <span>Expo Dossier</span>
           <span className="text-neutral-400">|</span>
           <span className="text-black font-bold">[T]</span>
           <span>Switch Recalbox Theme</span>
         </div>
         <div className="text-black font-bold">
-          EXHIBIT 0{selectedIndex + 1} OF 04
+          COLLABORATIVE SPECULATIVE EXHIBITION • HYPER ISLAND WEEK 51, 2026
         </div>
       </footer>
     </div>

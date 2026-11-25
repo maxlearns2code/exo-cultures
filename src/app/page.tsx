@@ -2,73 +2,20 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { CultureCard, CultureInfo, ALIEN_CULTURE_METADATA } from "@/components/hub/CultureCard";
+import { CultureInfo, ALIEN_CULTURE_METADATA, COLLABORATIVE_GAME } from "@/components/hub/CultureCard";
 import { AttractMode } from "@/components/hub/AttractMode";
 import { CRTOverlay, AttractionFXMode, AlienHubDesign } from "@/components/arcade/CRTOverlay";
 import { ExpoDossierModal } from "@/components/hub/ExpoDossierModal";
 import { TranslatorHubView } from "@/components/hub/views/TranslatorHubView";
 import { GatewayHubView } from "@/components/hub/views/GatewayHubView";
 import { SpecimenHubView } from "@/components/hub/views/SpecimenHubView";
+import { MartinGame } from "@/components/games/martin/MartinGame";
 import { useArcadeInput, ArcadeInputs } from "@/hooks/useArcadeInput";
 import { ArcadeAudio } from "@/utils/audio";
-import { Gamepad2, Play, Tv, Info, ArrowLeft, BookOpen } from "lucide-react";
+import { Play, BookOpen, Sparkles, Radio } from "lucide-react";
 
-const CULTURES: CultureInfo[] = [
-  {
-    id: "chromatic-symbiosis",
-    name: "Chromatic Symbiosis",
-    author: "Maxime Dewynter",
-    title: "Harmonic Waves",
-    subtitle: "Sub-Ice Abyssal Light & Color Refraction",
-    route: "/games/chromatic-symbiosis",
-    themeColor: "cyan",
-    status: "READY TO PLAY",
-    description:
-      "Deep in Saturn's ocean abyss, guide twin brothers running, jumping, and shooting light fireballs to gather warm autumn leaves and awaken the Living Portal Tree.",
-    mechanics: ["Playable Platformer", "Mario-Style Physics", "Layered Artwork"],
-    imageSrc: "/assets/chromatic-symbiosis/ai-designs/ai-poster-01.png",
-  },
-  {
-    id: "aisah",
-    name: "Alien Culture II",
-    author: "Aisah",
-    title: "Portal Chamber II",
-    subtitle: "Awaiting Alien Transmission",
-    route: "/games/aisah",
-    themeColor: "emerald",
-    status: "COMING SOON",
-    description:
-      "Dimensional receiving bay reserved for Aisah's alien culture. The portal chamber is primed and calibrated for incoming design assets.",
-    mechanics: ["Chamber Primed", "Signal Pending"],
-  },
-  {
-    id: "martin",
-    name: "Echoes in the Dark",
-    author: "Martin",
-    title: "Echoes in the Dark",
-    subtitle: "3D Photonic LiDAR & Floral Resonance",
-    route: "/games/martin",
-    themeColor: "violet",
-    status: "READY TO PLAY",
-    description:
-      "Navigate an extraterrestrial subterranean abyss using 3D photonic LiDAR echolocation. Charge floral beacons to bloom resonant flowers, defend them from viral spores, and summon your distant mate across the dark.",
-    mechanics: ["3D LiDAR Echolocation", "Bloom Defense", "Photonic Scan"],
-    imageSrc: "/assets/martin/echoes-in-the-dark.svg",
-  },
-  {
-    id: "mana",
-    name: "Alien Culture IV",
-    author: "Mana",
-    title: "Portal Chamber IV",
-    subtitle: "Awaiting Alien Transmission",
-    route: "/games/mana",
-    themeColor: "amber",
-    status: "COMING SOON",
-    description:
-      "Dimensional receiving bay reserved for Mana's alien culture. The portal chamber is primed and calibrated for incoming design assets.",
-    mechanics: ["Chamber Primed", "Signal Pending"],
-  },
-];
+// Single collaborative game on the website combining the stories of all 4 team members
+const CULTURES: CultureInfo[] = [COLLABORATIVE_GAME];
 
 const IDLE_RETURN_TO_WELCOME_MS = 60000;
 const ALIEN_GLYPHS = ["⍙", "⟒", "⌰", "☊", "⍜", "⋔", "⎎", "⏁", "⊑", "⌇", "▲", "◈", "⬡", "☵", "☲", "0x45", "0x58", "0x4F"];
@@ -76,8 +23,8 @@ const ALIEN_GLYPHS = ["⍙", "⟒", "⌰", "☊", "⍜", "⋔", "⎎", "⏁", "�
 export default function ArcadeLauncherHub() {
   const router = useRouter();
 
-  // Navigation mode: "welcome" (Exhibition Presentation) vs "hub" (Cabinet Selection)
-  const [viewMode, setViewMode] = useState<"welcome" | "hub">("welcome");
+  // Navigation mode: "welcome" (Exhibition Presentation) | "hub" (Themed Showcase) | "game" (Active 3D LiDAR Engine)
+  const [viewMode, setViewMode] = useState<"welcome" | "hub" | "game">("welcome");
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [isAttractMode, setIsAttractMode] = useState<boolean>(false);
   const [isDossierOpen, setIsDossierOpen] = useState<boolean>(false);
@@ -88,7 +35,7 @@ export default function ArcadeLauncherHub() {
   const [displayTitle, setDisplayTitle] = useState<string>("EXO-CULTURES");
 
   // Alien Hub Design Modes ("translator" | "gateway" | "specimen")
-  const [hubDesign, setHubDesign] = useState<AlienHubDesign>("translator");
+  const [hubDesign, setHubDesign] = useState<AlienHubDesign>("gateway");
 
   const lastInteractionRef = useRef<number>(Date.now());
   const prevInputsRef = useRef<ArcadeInputs | null>(null);
@@ -117,16 +64,15 @@ export default function ArcadeLauncherHub() {
     setViewMode("hub");
   }, []);
 
-  const launchGame = useCallback(
-    (index: number) => {
-      const culture = CULTURES[index];
-      if (culture) {
-        ArcadeAudio.playSelect();
-        router.push(culture.route);
-      }
-    },
-    [router]
-  );
+  const launchGame = useCallback(() => {
+    ArcadeAudio.playSelect();
+    setViewMode("game");
+  }, []);
+
+  const returnToWelcome = useCallback(() => {
+    ArcadeAudio.playCancel();
+    setViewMode("welcome");
+  }, []);
 
   const registerActivity = useCallback(() => {
     lastInteractionRef.current = Date.now();
@@ -136,7 +82,7 @@ export default function ArcadeLauncherHub() {
     }
   }, [isAttractMode]);
 
-  // Trigger Eye-Catcher Animation: Phosphor Flash, Cryo-Glitch, or Dual Combo
+  // Trigger Eye-Catcher Animation
   const triggerFX = useCallback((mode: AttractionFXMode) => {
     if (mode === "off") return;
 
@@ -170,7 +116,6 @@ export default function ArcadeLauncherHub() {
     }
 
     if (mode === "dual") {
-      // First run cryo-glitch and text scramble, then burst with phosphor strobe flash!
       ArcadeAudio.playAlienGlitch();
       setActiveFXType("glitch");
 
@@ -200,7 +145,6 @@ export default function ArcadeLauncherHub() {
     setFxMode((prev) => {
       const modes: AttractionFXMode[] = ["dual", "flash", "glitch", "off"];
       const nextMode = modes[(modes.indexOf(prev) + 1) % modes.length];
-      // Trigger instant live preview of the new mode
       setTimeout(() => triggerFX(nextMode), 60);
       return nextMode;
     });
@@ -241,6 +185,9 @@ export default function ArcadeLauncherHub() {
 
       if (isAttractMode) return;
 
+      // If in active 3D game: exit handled by universal hold
+      if (viewMode === "game") return;
+
       // Action 4 [Y Button] opens the Expo Dossier from anywhere
       if (currentInputs.action4 && (!prev || !prev.action4)) {
         ArcadeAudio.playSelect();
@@ -250,9 +197,9 @@ export default function ArcadeLauncherHub() {
 
       // In Welcome Screen:
       if (viewMode === "welcome") {
-        // [A] Button or START opens the Arcade Hub
+        // [A] Button or START launches the game directly or opens hub
         if ((currentInputs.action1 && (!prev || !prev.action1)) || (currentInputs.start && (!prev || !prev.start))) {
-          enterHub();
+          launchGame();
         }
         // [X] Button manually tests the active eye-catcher FX
         if (currentInputs.action3 && (!prev || !prev.action3)) {
@@ -261,52 +208,37 @@ export default function ArcadeLauncherHub() {
         return;
       }
 
-      // In Hub View: Navigation between culture cards
-      if (currentInputs.right && (!prev || !prev.right)) {
-        ArcadeAudio.playNavMove();
-        setSelectedIndex((prevIdx) => (prevIdx + 1) % CULTURES.length);
-      } else if (currentInputs.left && (!prev || !prev.left)) {
-        ArcadeAudio.playNavMove();
-        setSelectedIndex((prevIdx) => (prevIdx - 1 + CULTURES.length) % CULTURES.length);
-      } else if (currentInputs.down && (!prev || !prev.down)) {
-        ArcadeAudio.playNavMove();
-        setSelectedIndex((prevIdx) => (prevIdx + 2) % CULTURES.length);
-      } else if (currentInputs.up && (!prev || !prev.up)) {
-        ArcadeAudio.playNavMove();
-        setSelectedIndex((prevIdx) => (prevIdx - 2 + CULTURES.length) % CULTURES.length);
-      }
+      // In Themed Hub View:
+      if (viewMode === "hub") {
+        // Action 1: Launch game
+        if (currentInputs.action1 && (!prev || !prev.action1)) {
+          launchGame();
+        }
 
-      // Action 1: Launch game
-      if (currentInputs.action1 && (!prev || !prev.action1)) {
-        launchGame(selectedIndex);
-      }
+        // Action 2: Return to Welcome Screen
+        if (currentInputs.action2 && (!prev || !prev.action2)) {
+          returnToWelcome();
+        }
 
-      // Action 2: Return to Welcome Screen
-      if (currentInputs.action2 && (!prev || !prev.action2)) {
-        ArcadeAudio.playCancel();
-        setViewMode("welcome");
-      }
-
-      // Action 3: Trigger Attract Mode
-      if (currentInputs.action3 && (!prev || !prev.action3)) {
-        setIsAttractMode(true);
+        // Action 3: Trigger Attract Mode
+        if (currentInputs.action3 && (!prev || !prev.action3)) {
+          setIsAttractMode(true);
+        }
       }
     },
-    [enterHub, fxMode, isAttractMode, isDossierOpen, launchGame, registerActivity, selectedIndex, triggerFX, viewMode]
+    [fxMode, isAttractMode, isDossierOpen, launchGame, registerActivity, returnToWelcome, triggerFX, viewMode]
   );
 
-  const { exitHoldProgress, hasGamepad } = useArcadeInput(handleInputs);
+  const { exitHoldProgress, hasGamepad } = useArcadeInput(handleInputs, returnToWelcome);
 
-  // Periodic Eye-Catcher on Welcome Screen: Attracts visitors from across the exhibition room!
+  // Periodic Eye-Catcher on Welcome Screen
   useEffect(() => {
     if (viewMode !== "welcome" || isDossierOpen || fxMode === "off") return;
 
     const interval = setInterval(() => {
       const idleTime = Date.now() - lastInteractionRef.current;
-      // Trigger flash/glitch pulse every 18 seconds of idle stillness
       if (idleTime >= 18000) {
         triggerFX(fxMode);
-        // Refresh idle timer so it pulses periodically without accumulating
         lastInteractionRef.current = Date.now();
       }
     }, 4000);
@@ -314,7 +246,7 @@ export default function ArcadeLauncherHub() {
     return () => clearInterval(interval);
   }, [fxMode, isDossierOpen, triggerFX, viewMode]);
 
-  // Idle timeout: When away from the initial screen, return after 60s of inactivity
+  // Idle timeout: Return to welcome after 60s of inactivity if in hub
   useEffect(() => {
     if (viewMode === "welcome" && !isDossierOpen && !isAttractMode) return;
 
@@ -336,7 +268,7 @@ export default function ArcadeLauncherHub() {
       fxMode={fxMode}
       onToggleFX={handleToggleFX}
       activeFXType={activeFXType}
-      theme={viewMode === "welcome" ? "black" : hubDesign === "gateway" ? "white" : "black"}
+      theme={viewMode === "welcome" || viewMode === "game" ? "black" : hubDesign === "gateway" ? "white" : "black"}
       hubDesign={hubDesign}
       onToggleHubDesign={handleToggleHubDesign}
     >
@@ -346,7 +278,6 @@ export default function ArcadeLauncherHub() {
       {/* Attract Mode Screensaver Overlay */}
       {isAttractMode && (
         <AttractMode
-          cultures={CULTURES}
           onDismiss={() => {
             setIsAttractMode(false);
             registerActivity();
@@ -355,13 +286,21 @@ export default function ArcadeLauncherHub() {
       )}
 
       {/* =================================================================== */}
-      {/* 1. EXHIBITION PRESENTATION WELCOME SCREEN (STARK NEGATIVE B&W)     */}
+      {/* 1. ACTIVE 3D GAME MODE                                              */}
       {/* =================================================================== */}
-      {viewMode === "welcome" ? (
+      {viewMode === "game" && (
+        <MartinGame onReturnToHub={returnToWelcome} />
+      )}
+
+      {/* =================================================================== */}
+      {/* 2. EXHIBITION PRESENTATION WELCOME SCREEN (STARK NEGATIVE B&W)     */}
+      {/* =================================================================== */}
+      {viewMode === "welcome" && (
         <div className="flex-1 flex flex-col justify-between p-4 md:p-6 text-center select-none font-mono bg-black text-white relative">
           {/* Header Marquee */}
           <div className="flex flex-col items-center">
-            <div className="inline-flex items-center px-3 py-1 bg-white text-black border-2 border-white mb-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white text-black border-2 border-white mb-2">
+              <Sparkles className="w-3.5 h-3.5" />
               <span className="text-[10px] font-bold uppercase tracking-widest">
                 INTERGALACTIC WORLDS EXPO • WEEK 51, 2026 • HYPER ISLAND
               </span>
@@ -370,72 +309,86 @@ export default function ArcadeLauncherHub() {
               {displayTitle}
             </h1>
             <p className="text-xs text-neutral-300 tracking-wider mt-1">
-              GROUP PAVILION: 4 SPECULATIVE ALIEN CIVILIZATIONS
+              ECHOES IN THE DARK • COLLABORATIVE 3D PHOTONIC EXPEDITION
             </p>
           </div>
 
-          {/* Exhibition Statement Card (Negative Contrast Block) */}
+          {/* Exhibition Statement Card */}
           <div className="w-full max-w-lg mx-auto bg-black border-2 border-white p-5 md:p-6 shadow-[8px_8px_0px_#ffffff] flex flex-col items-center text-center my-auto">
             <div className="w-full flex items-center justify-between border-b-2 border-white/20 pb-2 mb-3 text-[11px]">
-              <span className="text-white font-bold uppercase tracking-wider">
-                TEAM CREATORS
+              <span className="text-white font-bold uppercase tracking-wider flex items-center gap-1.5">
+                <Radio className="w-3.5 h-3.5 text-purple-400 animate-pulse" />
+                COLLABORATIVE CREATORS
               </span>
               <span className="text-white font-bold tracking-wide">
-                Maxime • Aisah • Martin • Mana
+                Maxime • Martin • Aisah • Mana
               </span>
             </div>
 
-            <p className="text-xs md:text-sm text-neutral-200 leading-relaxed mb-5">
-              Welcome to the Earth pavilion of the <strong>Intergalactic Worlds Expo</strong>. Due to limited space, four neighbouring extraterrestrial civilizations have joined together to present their cultural fragments in a shared interactive installation. Step forward, choose an alien world, and explore their living environments, sensory languages, and dimensional gateways.
+            <p className="text-xs md:text-sm text-neutral-200 leading-relaxed mb-4">
+              Welcome to the Earth pavilion of the <strong>Intergalactic Worlds Expo</strong>.
+              Four creators joined forces to fuse their speculative fiction into <strong>one common interactive game</strong>.
+              Equipped with photonic LiDAR sensors, illuminate a pitch-black subterranean void, charge dormant floral beacons, and survive hostile viral spores.
             </p>
 
             {/* Concept & Experience Pills */}
-            <div className="flex flex-wrap justify-center gap-2 mb-5">
+            <div className="flex flex-wrap justify-center gap-2 mb-4">
               <span className="flex items-center text-[10px] px-2.5 py-1 bg-black border-2 border-white text-white font-bold uppercase">
-                4 Speculative Worlds
+                One Shared Story
               </span>
               <span className="flex items-center text-[10px] px-2.5 py-1 bg-black border-2 border-white text-white font-bold uppercase">
-                Joint Group Pavilion
+                3D LiDAR Point Cloud
               </span>
               <span className="flex items-center text-[10px] px-2.5 py-1 bg-black border-2 border-white text-white font-bold uppercase">
-                Interactive Fragments
+                Floral Resonance
               </span>
             </div>
 
-            {/* ACTION BUTTONS (Negative Black & White) */}
+            {/* ACTION BUTTONS */}
             <div className="w-full max-w-sm flex flex-col gap-2.5">
               <button
-                onClick={enterHub}
+                onClick={launchGame}
                 className="w-full flex items-center justify-center gap-3 py-3 px-6 bg-white hover:bg-black text-black hover:text-white border-2 border-white font-bold text-xs md:text-sm tracking-[0.15em] uppercase shadow-[5px_5px_0px_#888888] transition-all cursor-pointer active:translate-x-1 active:translate-y-1"
               >
                 <Play className="w-4 h-4 fill-current" />
-                <span>ENTER THE EXHIBITION [A]</span>
+                <span>START COLLABORATIVE GAME [A]</span>
               </button>
 
-              <button
-                onClick={() => setIsDossierOpen(true)}
-                className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-black hover:bg-neutral-900 text-white border-2 border-white/60 hover:border-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
-              >
-                <BookOpen className="w-3.5 h-3.5" />
-                <span>OUR PROCESS & EXPO DOSSIER [Y]</span>
-              </button>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={enterHub}
+                  className="flex items-center justify-center gap-1.5 py-2 px-3 bg-black hover:bg-neutral-900 text-white border-2 border-white/60 hover:border-white font-bold text-[11px] uppercase tracking-wider transition-colors cursor-pointer"
+                >
+                  <span>EXHIBITION HUB</span>
+                </button>
+
+                <button
+                  onClick={() => setIsDossierOpen(true)}
+                  className="flex items-center justify-center gap-1.5 py-2 px-3 bg-black hover:bg-neutral-900 text-white border-2 border-white/60 hover:border-white font-bold text-[11px] uppercase tracking-wider transition-colors cursor-pointer"
+                >
+                  <BookOpen className="w-3.5 h-3.5" />
+                  <span>DOSSIER [Y]</span>
+                </button>
+              </div>
             </div>
 
-            <span className="text-[10px] text-neutral-400 mt-2 font-mono">
-              Press [A] to Enter • Press [Y] for Process • Press [X] to Test FX
+            <span className="text-[10px] text-neutral-400 mt-3 font-mono">
+              Press [A] to Play • Press [Y] for Process • Press [X] to Test FX
             </span>
           </div>
 
           {/* Exhibition Footer */}
           <div className="text-[10px] text-neutral-400 border-t-2 border-white/20 pt-2 flex items-center justify-between">
             <span>HYPER ISLAND CAMPUS • WEEK 51, 2026</span>
-            <span>EXHIBITION PAVILION</span>
+            <span>8BITDO ARCADE &amp; KEYBOARD/MOUSE COMPATIBLE</span>
           </div>
         </div>
-      ) : (
-        /* =================================================================== */
-        /* 2. ARCADE CABINET 4-CULTURES SELECTION HUB (3 UNIQUE DESIGNS)      */
-        /* =================================================================== */
+      )}
+
+      {/* =================================================================== */}
+      {/* 3. ARCADE CABINET SHOWCASE HUB (3 RECALBOX THEMES)                  */}
+      {/* =================================================================== */}
+      {viewMode === "hub" && (
         <>
           {hubDesign === "translator" && (
             <TranslatorHubView
@@ -445,7 +398,7 @@ export default function ArcadeLauncherHub() {
               onLaunch={launchGame}
               onOpenDossier={() => setIsDossierOpen(true)}
               onOpenAttract={() => setIsAttractMode(true)}
-              onReturnToIntro={() => setViewMode("welcome")}
+              onReturnToIntro={returnToWelcome}
               onToggleDesign={handleToggleHubDesign}
             />
           )}
@@ -458,7 +411,7 @@ export default function ArcadeLauncherHub() {
               onLaunch={launchGame}
               onOpenDossier={() => setIsDossierOpen(true)}
               onOpenAttract={() => setIsAttractMode(true)}
-              onReturnToIntro={() => setViewMode("welcome")}
+              onReturnToIntro={returnToWelcome}
               onToggleDesign={handleToggleHubDesign}
             />
           )}
@@ -471,7 +424,7 @@ export default function ArcadeLauncherHub() {
               onLaunch={launchGame}
               onOpenDossier={() => setIsDossierOpen(true)}
               onOpenAttract={() => setIsAttractMode(true)}
-              onReturnToIntro={() => setViewMode("welcome")}
+              onReturnToIntro={returnToWelcome}
               onToggleDesign={handleToggleHubDesign}
             />
           )}

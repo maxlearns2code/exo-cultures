@@ -2,14 +2,14 @@
 
 import React, { useState } from "react";
 import NextImage from "next/image";
-import { X, BookOpen, Rocket, Tv, Cpu, Palette, CheckCircle2, Radio, Terminal } from "lucide-react";
+import { X, BookOpen, Rocket, Tv, Cpu, Palette, CheckCircle2, Radio, Terminal, Sparkles } from "lucide-react";
 
 interface ExpoDossierModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-type DossierTab = "expo" | "unlimited" | "prototype" | "tech" | "team" | "scenography" | "brief1";
+type DossierTab = "expo" | "unlimited" | "prototype" | "tech" | "team" | "scenography" | "story";
 
 export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
   const [activeTab, setActiveTab] = useState<DossierTab>("expo");
@@ -34,7 +34,7 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
                 EXPO DOSSIER • HYPER ISLAND WEEK 51, 2026
               </h2>
               <p className="text-[10px] text-neutral-800">
-                The Intergalactic Worlds Expo — Group Pavilion Deliverable
+                The Intergalactic Worlds Expo — Unified Group Pavilion &amp; Collaborative Game
               </p>
             </div>
           </div>
@@ -55,7 +55,7 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
             { id: "prototype", label: "03. OUR PROTOTYPE" },
             { id: "tech", label: "04. OUR PROCESS & HARDWARE" },
             { id: "scenography", label: "05. SCENOGRAPHY" },
-            { id: "brief1", label: "06. BRIEF 1: POSTER & LETTER" },
+            { id: "story", label: "06. THE COMBINED STORY" },
             { id: "team", label: "07. TEAM ROLES" },
           ].map((tab) => (
             <button
@@ -94,22 +94,21 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
                 <p className="italic text-neutral-300 text-xs">
                   &ldquo;The Intergalactic Worlds Expo is taking place on Earth, Hyper Island campus, Week 51, 2026.
                   Due to the limited space, neighbouring worlds will join together to present in group pavilions;
-                  however, each culture should advertise themselves and the expo with an individual poster ahead of time.&rdquo;
+                  however, each culture should advertise themselves and the expo ahead of time.&rdquo;
                 </p>
               </div>
 
               <div className="space-y-2">
-                <h4 className="font-bold text-white uppercase text-xs">Our Group Pavilion Strategy</h4>
+                <h4 className="font-bold text-white uppercase text-xs">Our Unified Group Pavilion Strategy</h4>
                 <p>
-                  To externalize and &ldquo;alienate&rdquo; human sensory assumptions, four neighbouring exoplanetary cultures
-                  co-habitate in a single shared exhibition pavilion. Rather than displaying passive static mockups,
-                  our group built a <strong>hybrid physical and digital installation</strong> centered on an authentic
-                  14&quot; CRT retro-futuristic arcade cabinet powered by a Raspberry Pi 400 and custom 8BitDo arcade sticks,
-                  enveloped by tactile alien scenography.
+                  Rather than fragmenting the pavilion into disconnected, isolated mini-demos, our team (Maxime Dewynter, Martin, Aisah, and Mana) decided to
+                  <strong> combine our speculative fiction into one common collaborative game</strong>.
                 </p>
                 <p>
-                  Each visitor physically steps up to the arcade stick to explore interactive fragments of each alien world,
-                  experiencing how alien beings interact with light, energy, and dimensional travel.
+                  We built a <strong>hybrid physical and digital arcade installation</strong> centered on an authentic
+                  14&quot; CRT retro-futuristic arcade cabinet powered by a Raspberry Pi 400 and custom 8BitDo arcade stick,
+                  enveloped by tactile alien scenography. Visitors step up to the physical controls to navigate an alien subterranean abyss
+                  using real-time 3D photonic LiDAR echolocation.
                 </p>
               </div>
             </div>
@@ -120,10 +119,10 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
             <div className="space-y-4">
               <div className="border-l-4 border-white pl-3">
                 <h3 className="text-base font-bold text-white uppercase tracking-wider">
-                  Question 1: With Unlimited Time & Resources, What Would We Have Built?
+                  Question 1: With Unlimited Time &amp; Resources, What Would We Have Built?
                 </h3>
                 <p className="text-xs text-neutral-400">
-                  The Speculative Vision of the Intergalactic Pavilion
+                  The Speculative Vision of the Unified Pavilion
                 </p>
               </div>
 
@@ -131,45 +130,44 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
                 <div className="p-4 bg-neutral-950 border border-white/30 space-y-2">
                   <h4 className="font-bold text-white text-xs uppercase flex items-center gap-1.5">
                     <Radio className="w-3.5 h-3.5 text-white" />
-                    Full-Scale Cryo-Immersion Pod
+                    Full-Scale Subterranean Immersion Pod
                   </h4>
                   <p className="text-xs text-neutral-300">
-                    A life-sized biometric immersion chamber maintaining a chilled sub-ice oceanic atmosphere,
-                    where visitors wear optical neural feedback helmets that translate pure light wavelengths into tactile warmth
-                    and synthetic bio-frequencies.
+                    A physical sensory chamber maintaining a zero-lux subterranean atmosphere with micro-climate mist,
+                    where visitors wear photonic haptic feedback suits translating raycasted LiDAR points into gentle tactile vibrations across their skin.
                   </p>
                 </div>
 
                 <div className="p-4 bg-neutral-950 border border-white/30 space-y-2">
                   <h4 className="font-bold text-white text-xs uppercase flex items-center gap-1.5">
                     <Palette className="w-3.5 h-3.5 text-white" />
-                    Living Bioluminescent Algae Vats
+                    Physical Resonant Floral Beacons
                   </h4>
                   <p className="text-xs text-neutral-300">
-                    Physical translucent tubes surrounding the pavilion filled with genetically engineered bioluminescent algae
-                    that dynamically pulse in sync with the player&apos;s actions, light fireballs, and portal activation.
+                    Kinetic mechanical sculptures surrounding the cabinet that physically bloom in real time when charged by the player&apos;s focused beam,
+                    emitting ultrasonic acoustic frequencies and warm amber warmth.
                   </p>
                 </div>
 
                 <div className="p-4 bg-neutral-950 border border-white/30 space-y-2">
                   <h4 className="font-bold text-white text-xs uppercase flex items-center gap-1.5">
                     <Rocket className="w-3.5 h-3.5 text-white" />
-                    4-Player Holographic Projection Ring
+                    Volumetric 3D Laser Echolocation Tank
                   </h4>
                   <p className="text-xs text-neutral-300">
-                    A central 360-degree volumetric glass prism displaying all four alien worlds simultaneously colliding and
-                    trading cultural fragments across cosmic boundaries in real-time.
+                    A 360-degree holographic glass sphere projecting 220,000 real-time LiDAR particles floating in mid-air,
+                    allowing onlookers outside the cabinet to watch the player illuminate the pitch-black cavern from every angle.
                   </p>
                 </div>
 
                 <div className="p-4 bg-neutral-950 border border-white/30 space-y-2">
                   <h4 className="font-bold text-white text-xs uppercase flex items-center gap-1.5">
                     <Cpu className="w-3.5 h-3.5 text-white" />
-                    Sensory Translation Odor & Temperature Emitters
+                    Bioluminescent Spore Defense Grid
                   </h4>
                   <p className="text-xs text-neutral-300">
-                    Micro-climate vents dispensing geothermal mist and scent molecules representing sub-ice hydrothermal minerals,
-                    bringing non-visual alien senses directly to the human visitor.
+                    Chilled nitrogen tubes venting synthetic aerosol vapors when viral spores approach, challenging players to defend
+                    the resonant ecosystem across both physical and digital space.
                   </p>
                 </div>
               </div>
@@ -184,7 +182,7 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
                   Question 2: What Did We Build? (Our Working Prototype)
                 </h3>
                 <p className="text-xs text-neutral-400">
-                  The Physical Cabinet + Digital Multi-World Suite
+                  The Physical Kiosk + Unified 3D WebGL LiDAR Simulator
                 </p>
               </div>
 
@@ -207,18 +205,22 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
                     </p>
                   </div>
                   <div className="p-3 bg-neutral-900 border border-white/20">
-                    <div className="font-bold text-white mb-1 uppercase">3. Digital Software</div>
+                    <div className="font-bold text-white mb-1 uppercase">3. Digital Game Software</div>
                     <p className="text-neutral-400">
-                      Custom 4-in-1 Next.js 15 arcade launcher running locked at 60 FPS with offline procedural 8-bit sound synthesis and zero internet dependency.
+                      Custom Next.js 15 + Three.js 3D LiDAR game running locked at 60 FPS with raycasted point-cloud terrain mapping and procedural Web Audio.
                     </p>
                   </div>
                 </div>
 
                 <div className="p-4 bg-neutral-950 border-2 border-white">
-                  <h4 className="font-bold text-white text-xs uppercase mb-2">Maxime&apos;s Playable World: Chromatic Symbiosis</h4>
+                  <h4 className="font-bold text-white text-xs uppercase mb-2">Our Playable Game: Echoes in the Dark</h4>
+                  <p className="text-xs text-neutral-300 mb-2">
+                    A real-time 3D subterranean simulation built in Three.js and WebGL. The world is initially pitch-black (0 lux).
+                    The player operates an extraterrestrial LiDAR scanner, shooting photonic raycasts into the void that stick to invisible obstacles and reveal the alien geometry.
+                  </p>
                   <p className="text-xs text-neutral-300">
-                    A side-scrolling platformer crafted from 8 individual Photoshop poster layers. Players control twin alien brothers running, jumping,
-                    and launching light fireballs through sub-ice abyssal caverns to awaken the ancient Living Portal Tree.
+                    Four dormant floral beacons must be discovered, charged with a focused laser beam, and bloomed into resonant blossoms.
+                    Blooming flowers emit ultrasonic mating calls across the cosmos—attracting both the player&apos;s distant counterpart and hostile viral spores that must be defended against.
                   </p>
                 </div>
               </div>
@@ -230,10 +232,10 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
             <div className="space-y-4">
               <div className="border-l-4 border-white pl-3">
                 <h3 className="text-base font-bold text-white uppercase tracking-wider">
-                  Our Process: Hardware Choices & Technical Architecture
+                  Our Process: Hardware Choices &amp; Technical Architecture
                 </h3>
                 <p className="text-xs text-neutral-400">
-                  Why We Chose 15kHz CRT, Raspberry Pi 400, 8BitDo & Next.js
+                  Why We Chose 15kHz CRT, Raspberry Pi 400, 8BitDo &amp; Next.js + Three.js
                 </p>
               </div>
 
@@ -242,31 +244,30 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
                   <div className="font-bold text-white text-xs uppercase mb-1">Why 14&quot; Analog RGB CRT TV (15kHz SCART)?</div>
                   <p className="text-xs text-neutral-300">
                     True CRT phosphors emit light organically with zero digital latency and authentic natural scanlines.
-                    It provides physical weight, warmth, and nostalgia to contrast with speculative futuristic alien lore.
+                    It provides physical weight, warmth, and retro-futuristic realism to ground our speculative alien universe.
                   </p>
                 </div>
 
                 <div className="p-3 bg-neutral-900 border-l-2 border-white">
-                  <div className="font-bold text-white text-xs uppercase mb-1">Why Raspberry Pi 400 & 8BitDo Arcade Stick?</div>
+                  <div className="font-bold text-white text-xs uppercase mb-1">Why Raspberry Pi 400 &amp; 8BitDo Arcade Stick?</div>
                   <p className="text-xs text-neutral-300">
-                    An arcade cabinet must be an uncrashable standalone appliance. The Pi 400 auto-boots directly into fullscreen kiosk mode.
+                    An exhibition cabinet must be an uncrashable standalone appliance. The Pi 400 auto-boots directly into fullscreen kiosk mode.
                     The heavy arcade stick with sanwa-style switches gives visitors immediate, tactile, intuitive play without needing instructions.
                   </p>
                 </div>
 
                 <div className="p-3 bg-neutral-900 border-l-2 border-white">
-                  <div className="font-bold text-white text-xs uppercase mb-1">Why Next.js, HTML5 Canvas 60 FPS & Web Audio?</div>
+                  <div className="font-bold text-white text-xs uppercase mb-1">Why Next.js, Three.js 3D &amp; Procedural Web Audio?</div>
                   <p className="text-xs text-neutral-300">
                     Universal portability: the same codebase powers the physical arcade machine offline AND the public web exhibition on Vercel.
-                    Procedural Web Audio guarantees 100% offline audio with zero audio file load lag.
+                    Three.js provides high-performance 220,000-point dynamic buffer geometries, while procedural Web Audio guarantees 100% offline audio with zero audio file load lag.
                   </p>
                 </div>
 
                 <div className="p-3 bg-neutral-900 border-l-2 border-white">
-                  <div className="font-bold text-white text-xs uppercase mb-1">AI Reflection & Academic Integrity</div>
+                  <div className="font-bold text-white text-xs uppercase mb-1">Universal Arcade &amp; Keyboard Controls</div>
                   <p className="text-xs text-neutral-300">
-                    In strict accordance with Brief 1 rules, no prompt-based generative AI was used to produce the deliverable poster.
-                    AI was utilized as a coding accelerator for scaffolding Next.js and canvas mathematics, demonstrating conscious, transparent tool adoption.
+                    Dual input architecture: physical arcade stick mapped via Gamepad API (`useArcadeInput`), alongside standard keyboard WASD and mouse PointerLock for desktop visitors.
                   </p>
                 </div>
               </div>
@@ -292,9 +293,9 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                   <div className="p-3 bg-neutral-950 border border-white/20">
-                    <div className="font-bold text-white mb-1 uppercase">1. Black Bedrock & Preserved Moss Base</div>
+                    <div className="font-bold text-white mb-1 uppercase">1. Black Bedrock &amp; Preserved Moss Base</div>
                     <p className="text-neutral-400">
-                      The wooden podium supporting the 14&quot; CRT monitor is wrapped in textured matte black fabric, covered with volcanic rock fragments and preserved moss echoing the sub-ice bedrock layer.
+                      The wooden podium supporting the 14&quot; CRT monitor is wrapped in textured matte black fabric, covered with volcanic rock fragments and preserved moss echoing the subterranean bedrock layer.
                     </p>
                   </div>
 
@@ -315,7 +316,7 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
                   <div className="p-3 bg-neutral-950 border border-white/20">
                     <div className="font-bold text-white mb-1 uppercase">4. Gallery Wall Poster Hangings</div>
                     <p className="text-neutral-400">
-                      The four individual posters (from Brief 1) are printed and mounted directly above and beside the cabinet, acting as the speculative advertisements for each world.
+                      The official collaborative exhibition poster is printed and mounted directly beside the cabinet, acting as the speculative beacon for the shared world.
                     </p>
                   </div>
                 </div>
@@ -323,48 +324,48 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
             </div>
           )}
 
-          {/* TAB 6: BRIEF 1 DELIVERABLE */}
-          {activeTab === "brief1" && (
+          {/* TAB 6: THE COMBINED STORY */}
+          {activeTab === "story" && (
             <div className="space-y-4">
               <div className="border-l-4 border-white pl-3">
                 <h3 className="text-base font-bold text-white uppercase tracking-wider">
-                  Brief 1 Deliverable: Chromatic Symbiosis (Maxime Dewynter)
+                  The Combined Story: Four Worlds, One Journey
                 </h3>
                 <p className="text-xs text-neutral-400">
-                  Individual Poster Deliverable + 1-Page Letter of Intent
+                  Narrative Fusion of Maxime, Martin, Aisah &amp; Mana
                 </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="md:col-span-1 flex flex-col items-center">
-                  <div className="relative w-full aspect-[1043/1477] border-2 border-white overflow-hidden shadow-[6px_6px_0px_#ffffff] mb-2">
+                  <div className="relative w-full aspect-square border-2 border-white overflow-hidden shadow-[6px_6px_0px_#ffffff] mb-2 bg-black">
                     <NextImage
-                      src="/assets/chromatic-symbiosis/ai-designs/ai-poster-01.png"
-                      alt="Chromatic Symbiosis Poster"
+                      src="/assets/martin/echoes-in-the-dark.svg"
+                      alt="Exo-Cultures Poster"
                       fill
                       className="object-cover"
                     />
                   </div>
-                  <span className="text-[10px] text-neutral-400 uppercase font-bold">
-                    Official Exhibition Poster
+                  <span className="text-[10px] text-neutral-400 uppercase font-bold text-center">
+                    Official Collaborative Poster
                   </span>
                 </div>
 
                 <div className="md:col-span-2 space-y-3 bg-neutral-950 p-4 border border-white/30 text-xs">
                   <div className="font-bold text-white uppercase border-b border-white/20 pb-1">
-                    Letter of Intent (Out of Character Design Rationale)
+                    How We Merged Our Four Narratives
                   </div>
                   <p className="text-neutral-300">
-                    <strong>1. Concept:</strong> An abyssal culture inhabiting the subterranean oceans of Saturn&apos;s moon. Deprived of sunlight, evolution replaced linguistic and verbal interaction with chromocommunication—projecting harmonic light wavelengths and radiating thermal heat.
+                    <strong>1. The Sub-Ice Oceanic Abyss (Maxime):</strong> The environmental foundation—a subterranean cavern deprived of star-light where acoustic and light frequencies replace conventional speech.
                   </p>
                   <p className="text-neutral-300">
-                    <strong>2. Familial Guidelines:</strong> The central guiding father acts as a thermal anchor, emitting protective red/amber warmth. The twin sons project complementary cyan and magenta light frequencies, which combine to catalyze dormant leaves and activate the ancient Portal Tree.
+                    <strong>2. The 3D LiDAR &amp; Floral Resonance (Martin):</strong> The core interaction mechanic—photonic echolocation scans that carve out the physical room, and dormant floral beacons that catalyze energy when bloomed.
                   </p>
                   <p className="text-neutral-300">
-                    <strong>3. Workshop Skills Used:</strong> Photoshop layer composition, precise non-destructive raster masking, spatial depth mapping across 8 distinct planes, optical color harmony, and visual hierarchy.
+                    <strong>3. Acoustic Harmony &amp; Calling Chambers (Aisah):</strong> The resonant chamber ecology—where bloomed flowers project acoustic frequencies across celestial distances to summon a distant mate.
                   </p>
                   <p className="text-neutral-300">
-                    <strong>4. Alienation & Reflection:</strong> By stripping spoken language and replacing it with pure optical frequencies, the work encourages visitors to reflect on how deeply human communication relies on invisible conventions.
+                    <strong>4. Atmospheric Vectors &amp; Spore Threats (Mana):</strong> The dynamic exospheric hazards—airborne viral spore colonies carried through geothermal vents that threaten to infect the resonant blooms.
                   </p>
                 </div>
               </div>
@@ -376,10 +377,10 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
             <div className="space-y-4">
               <div className="border-l-4 border-white pl-3">
                 <h3 className="text-base font-bold text-white uppercase tracking-wider">
-                  Team Members & Exhibition Roles
+                  Team Members &amp; Collaborative Contributions
                 </h3>
                 <p className="text-xs text-neutral-400">
-                  Hyper Island Group Collaboration
+                  Hyper Island Group Collaboration • Week 51, 2026
                 </p>
               </div>
 
@@ -389,42 +390,42 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
                     <span className="font-bold text-white uppercase">Maxime Dewynter</span>
                     <span className="px-1.5 py-0.5 bg-white text-black text-[9px] font-bold">ARCADE LEAD</span>
                   </div>
-                  <p className="text-neutral-400 mb-1">World: <strong>Chromatic Symbiosis</strong></p>
+                  <p className="text-neutral-400 mb-1">Role: <strong>Arcade Framework &amp; Narrative Integration</strong></p>
                   <p className="text-neutral-300 text-[11px]">
-                    Created the sub-ice platformer using 8 Photoshop layer assets, designed the unified 8BitDo arcade stick input engine, and assembled the CRT kiosk framework.
-                  </p>
-                </div>
-
-                <div className="p-3 bg-neutral-950 border border-white/30">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-white uppercase">Aisah</span>
-                    <span className="px-1.5 py-0.5 bg-neutral-800 text-neutral-300 text-[9px] font-bold">WORLD CREATOR</span>
-                  </div>
-                  <p className="text-neutral-400 mb-1">World: <strong>Alien Culture II</strong></p>
-                  <p className="text-neutral-300 text-[11px]">
-                    Portal chamber primed and calibrated for incoming design assets, speculative artifacts, and individual exhibition deliverable.
+                    Built the unified arcade launcher, 8BitDo gamepad input engine, CRT display architecture, and merged the collective story into a cohesive exhibition experience.
                   </p>
                 </div>
 
                 <div className="p-3 bg-neutral-950 border-2 border-white">
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-bold text-white uppercase">Martin</span>
-                    <span className="px-1.5 py-0.5 bg-violet-600 text-white text-[9px] font-bold">GAME AUTHOR</span>
+                    <span className="px-1.5 py-0.5 bg-purple-600 text-white text-[9px] font-bold">GAME LEAD</span>
                   </div>
-                  <p className="text-neutral-400 mb-1">World: <strong>Echoes in the Dark</strong></p>
+                  <p className="text-neutral-400 mb-1">Role: <strong>3D Three.js Engine &amp; LiDAR Mechanics</strong></p>
                   <p className="text-neutral-300 text-[11px]">
-                    Created the 3D LiDAR echolocation WebGL simulator with raycasted point-cloud terrain mapping, floral beacon charging, bloom defense, and mate summoning.
+                    Designed and engineered the 3D LiDAR point-cloud raycasting engine, floral beacon charging and blooming systems, and viral spore defense mechanics.
                   </p>
                 </div>
 
-                <div className="p-3 bg-neutral-950 border border-white/30">
+                <div className="p-3 bg-neutral-950 border border-white/40">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-bold text-white uppercase">Aisah</span>
+                    <span className="px-1.5 py-0.5 bg-emerald-600 text-white text-[9px] font-bold">WORLD CREATOR</span>
+                  </div>
+                  <p className="text-neutral-400 mb-1">Role: <strong>Acoustic Lore &amp; World Ecology</strong></p>
+                  <p className="text-neutral-300 text-[11px]">
+                    Contributed speculative acoustic chamber lore, floral resonance concepts, and visual telemetry for the extraterrestrial ecosystem.
+                  </p>
+                </div>
+
+                <div className="p-3 bg-neutral-950 border border-white/40">
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-bold text-white uppercase">Mana</span>
-                    <span className="px-1.5 py-0.5 bg-neutral-800 text-neutral-300 text-[9px] font-bold">WORLD CREATOR</span>
+                    <span className="px-1.5 py-0.5 bg-amber-500 text-black text-[9px] font-bold">WORLD CREATOR</span>
                   </div>
-                  <p className="text-neutral-400 mb-1">World: <strong>Alien Culture IV</strong></p>
+                  <p className="text-neutral-400 mb-1">Role: <strong>Atmospheric Vectors &amp; Threat Design</strong></p>
                   <p className="text-neutral-300 text-[11px]">
-                    Portal chamber primed and calibrated for incoming design assets, speculative artifacts, and individual exhibition deliverable.
+                    Contributed exospheric gas concepts, viral spore vector behaviors, and narrative worldbuilding for the hostile subterranean abyss.
                   </p>
                 </div>
               </div>
@@ -439,7 +440,7 @@ export function ExpoDossierModal({ isOpen, onClose }: ExpoDossierModalProps) {
             onClick={onClose}
             className="px-3 py-1 bg-white text-black font-bold uppercase hover:bg-neutral-200 transition-colors"
           >
-            RETURN TO EXHIBITION [ESC]
+            [B / ESC] RETURN
           </button>
         </div>
       </div>
