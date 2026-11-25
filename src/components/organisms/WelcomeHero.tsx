@@ -73,7 +73,7 @@ export function WelcomeHero({
             onClick={onExplain}
             className="w-full py-3"
           >
-            <span>◆ WHAT WE DID</span>
+            <span>WHAT WE DID</span>
           </ArcadeButton>
         </div>
       </div>
