@@ -381,11 +381,11 @@ export function ExpoDossierModal({
                     Orbiting a binary star system in the Andromeda Galaxy with 4D spatial perception. To reproduce and communicate across the void, beings interact with rare resonant flowers that pulse, sing, and dance, mapped through 3D photonic LiDAR echolocation scans.
                   </p>
                   <p className="text-neutral-300">
-                    <strong>3. The Mycelium Forest &amp; The Silent Hill (Mana &mdash; &ldquo;Cutting Exchange&rdquo;):</strong>
+                    <strong>3. The Mycelium Forest &amp; The Silent Hill (Aisah &mdash; &ldquo;Cutting Exchange&rdquo;):</strong>
                     A vast moss forest operating as one interconnected consciousness like fungal mycelium. An invasive virus weakens the network, severing senses (&ldquo;We used to hear the hill from here&rdquo;). Survival depends on passing rare virus-eating root cuttings hand-to-hand at the communal gathering.
                   </p>
                   <p className="text-neutral-300">
-                    <strong>4. The Non-Digital Society (Aisah &mdash; &ldquo;Wanna Go To A Better Planet? // NewLife&rdquo;):</strong>
+                    <strong>4. The Non-Digital Society (Mana &mdash; &ldquo;Wanna Go To A Better Planet? // NewLife&rdquo;):</strong>
                     A provocative satire questioning digital overload, artificial intelligence, and capitalist power. It envisions an organic existence stripped of screens, mirrors, and technology, proving that tactile, physical community and love prevail over darkness.
                   </p>
                 </div>
@@ -431,22 +431,22 @@ export function ExpoDossierModal({
                 <div className="p-3 bg-neutral-950 border border-white/40">
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-bold text-white uppercase">Mana</span>
-                    <span className="px-1.5 py-0.5 bg-amber-500 text-black text-[9px] font-bold">MYCELIUM &amp; THREAT</span>
+                    <span className="px-1.5 py-0.5 bg-amber-500 text-black text-[9px] font-bold">SPECULATIVE SATIRE</span>
                   </div>
-                  <p className="text-neutral-400 mb-1">Concept: <strong>We used to hear the hill from here</strong></p>
+                  <p className="text-neutral-400 mb-1">Concept: <strong>NewLife // Anti-Digital Society</strong></p>
                   <p className="text-neutral-300 text-[11px]">
-                    Moss forest collective mycelium consciousness, invasive viral disruption, and communal cutting exchanges. Inspired the in-game airborne viral spore hazard and beacon salvation mechanics.
+                    Satirical critique of digital alienation, AI marketing, and cosmetic pressure vs pure organic existence. Established the physical, hands-on arcade philosophy of our installation.
                   </p>
                 </div>
 
                 <div className="p-3 bg-neutral-950 border border-white/40">
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-bold text-white uppercase">Aisah</span>
-                    <span className="px-1.5 py-0.5 bg-emerald-600 text-white text-[9px] font-bold">SPECULATIVE SATIRE</span>
+                    <span className="px-1.5 py-0.5 bg-emerald-600 text-white text-[9px] font-bold">MYCELIUM &amp; THREAT</span>
                   </div>
-                  <p className="text-neutral-400 mb-1">Concept: <strong>NewLife // Anti-Digital Society</strong></p>
+                  <p className="text-neutral-400 mb-1">Concept: <strong>We used to hear the hill from here</strong></p>
                   <p className="text-neutral-300 text-[11px]">
-                    Satirical critique of digital alienation, AI marketing, and cosmetic pressure vs pure organic existence. Co-designed alien anatomical skeletons and established the physical, hands-on arcade philosophy.
+                    Moss forest collective mycelium consciousness, invasive viral disruption, and communal cutting exchanges. Co-constructed alien skeletal anatomy and inspired the in-game viral spore hazard.
                   </p>
                 </div>
               </div>

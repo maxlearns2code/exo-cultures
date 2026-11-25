@@ -60,10 +60,10 @@ export function GatewayTemplate({
                   <span>• Martin:</span> <span className="font-normal text-neutral-600">3D LiDAR point-cloud echolocation</span>
                 </div>
                 <div className="flex items-center gap-1 text-black font-bold">
-                  <span>• Aisah:</span> <span className="font-normal text-neutral-600">Acoustic resonance &amp; floral calling</span>
+                  <span>• Aisah:</span> <span className="font-normal text-neutral-600">Mycelium moss network &amp; viral cutting exchange</span>
                 </div>
                 <div className="flex items-center gap-1 text-black font-bold">
-                  <span>• Mana:</span> <span className="font-normal text-neutral-600">Exospheric vapors &amp; viral spores</span>
+                  <span>• Mana:</span> <span className="font-normal text-neutral-600">Anti-digital society &amp; satirical philosophy</span>
                 </div>
               </div>
             </div>
