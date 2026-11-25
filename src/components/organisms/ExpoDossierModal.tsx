@@ -89,11 +89,6 @@ export function ExpoDossierModal({
       : isPhosphor
       ? "border-t-2 border-emerald-500/40 bg-black text-emerald-400/80"
       : "border-t-2 border-purple-500/40 bg-[#0a0014] text-purple-300/80",
-    footerButton: isBrutalist
-      ? "bg-white text-black hover:bg-neutral-200"
-      : isPhosphor
-      ? "bg-emerald-500 text-black hover:bg-emerald-400"
-      : "bg-purple-600 text-white hover:bg-purple-500",
   };
 
   return (
@@ -531,12 +526,7 @@ export function ExpoDossierModal({
         {/* Modal Footer */}
         <div className={`p-3 flex items-center justify-between text-[10px] ${themeStyles.footer}`}>
           <span>THE INTERGALACTIC WORLDS EXPO • WEEK 51, 2026</span>
-          <button
-            onClick={onClose}
-            className={`px-3 py-1 font-bold uppercase transition-colors cursor-pointer ${themeStyles.footerButton}`}
-          >
-            [B / ESC] RETURN
-          </button>
+          <span className="opacity-70">EARTH PAVILION // HYPER ISLAND</span>
         </div>
       </div>
     </div>
