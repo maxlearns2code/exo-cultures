@@ -37,13 +37,13 @@ export function CRTOverlay({
 
   return (
     <div className="crt-viewport bg-black">
-      {/* 4:3 Aspect Ratio Display Box */}
+      {/* Full-Screen Responsive Display Box */}
       <div
         className={`crt-aspect-box relative transition-colors duration-200 ${
           isWhite
-            ? "bg-white text-black border-l border-r border-neutral-300"
+            ? "bg-white text-black"
             : isPhosphor
-            ? "phosphor-crt-screen text-[#4ade80] border-l border-r border-[#0e3a1c]"
+            ? "phosphor-crt-screen text-[#4ade80]"
             : "bg-black text-white"
         } ${activeFXType === "flash" ? "fx-phosphor-flash" : ""} ${
           activeFXType === "glitch" ? "fx-cryo-glitch" : ""

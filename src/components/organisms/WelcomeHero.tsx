@@ -18,7 +18,7 @@ export function WelcomeHero({
     <div className="flex-1 flex flex-col items-center justify-center p-6 text-center select-none relative">
       <div className="flex flex-col items-center gap-10 md:gap-12 w-full max-w-md">
         {/* Phosphor Green CRT Terminal Title */}
-        <h1 className="arcade-text phosphor-text-glow text-2xl sm:text-3xl md:text-4xl uppercase tracking-wider leading-relaxed">
+        <h1 className="arcade-text phosphor-text-glow text-xl sm:text-3xl md:text-4xl uppercase tracking-wider leading-relaxed">
           {displayTitle}
         </h1>
 
