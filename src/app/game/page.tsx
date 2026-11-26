@@ -11,7 +11,7 @@ const IDLE_RETURN_TO_MAIN_MS = 5 * 60 * 1000; // 5 minutes of inactivity
 
 export default function GamePage() {
   const router = useRouter();
-  const [hubDesign, setHubDesign] = useState<AlienHubDesign>("translator");
+  const [hubDesign, setHubDesign] = useState<AlienHubDesign>("specimen");
   const lastInteractionRef = useRef<number>(Date.now());
 
   const handleReturnToHub = useCallback(() => {
@@ -80,7 +80,7 @@ export default function GamePage() {
       hasGamepad={hasGamepad}
       hubDesign={hubDesign}
       onToggleHubDesign={handleToggleHubDesign}
-      theme={hubDesign === "gateway" ? "white" : "black"}
+      theme={hubDesign === "gateway" ? "white" : hubDesign === "specimen" ? "phosphor" : "black"}
       onClose={handleReturnToHub}
     >
       <Game onReturnToHub={handleReturnToHub} theme={hubDesign} />

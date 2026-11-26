@@ -32,7 +32,7 @@ export default function ArcadeLauncherHub() {
   const [displayTitle, setDisplayTitle] = useState<string>("EXO-CULTURES");
 
   // Alien Hub Design Modes ("translator" | "gateway" | "specimen")
-  const [hubDesign, setHubDesign] = useState<AlienHubDesign>("gateway");
+  const [hubDesign, setHubDesign] = useState<AlienHubDesign>("specimen");
 
   const lastInteractionRef = useRef<number>(Date.now());
   const lastEyeCatcherRef = useRef<number>(Date.now());
@@ -308,10 +308,12 @@ export default function ArcadeLauncherHub() {
       onToggleFX={handleToggleFX}
       activeFXType={activeFXType}
       theme={
-        viewMode === "welcome" && !isDossierOpen
+        viewMode === "welcome" || isDossierOpen
           ? "phosphor"
           : viewMode === "hub" && hubDesign === "gateway"
           ? "white"
+          : hubDesign === "specimen"
+          ? "phosphor"
           : "black"
       }
       hubDesign={viewMode === "welcome" && !isDossierOpen ? undefined : hubDesign}

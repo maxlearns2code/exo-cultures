@@ -32,7 +32,7 @@ interface Virus {
   ph: number;
 }
 
-export function Game({ onReturnToHub, theme = "translator" }: GameProps) {
+export function Game({ onReturnToHub, theme = "specimen" }: GameProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -820,7 +820,9 @@ export function Game({ onReturnToHub, theme = "translator" }: GameProps) {
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-full bg-black select-none overflow-hidden font-mono text-white flex flex-col justify-between"
+      className={`relative w-full h-full select-none overflow-hidden font-mono flex flex-col justify-between ${
+        theme === "specimen" ? "bg-[#010803] text-[#4ade80]" : "bg-black text-white"
+      }`}
     >
       {/* 3D WebGL Canvas */}
       <canvas
@@ -846,6 +848,7 @@ export function Game({ onReturnToHub, theme = "translator" }: GameProps) {
         gameOver={gameOver}
         onReturnToHub={safeReturnToHub}
         onRestart={() => window.location.reload()}
+        theme={theme}
       />
     </div>
   );
