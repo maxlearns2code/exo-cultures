@@ -1,6 +1,13 @@
 import React from "react";
 
-export type ButtonVariant = "primary" | "secondary" | "brutalist" | "neon" | "ghost";
+export type ButtonVariant =
+  | "primary"
+  | "secondary"
+  | "brutalist"
+  | "neon"
+  | "ghost"
+  | "phosphor-primary"
+  | "phosphor-secondary";
 
 interface ArcadeButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -19,6 +26,10 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
     "bg-purple-600 hover:bg-purple-500 text-white border border-purple-300 shadow-[0_0_15px_#c084fc] font-bold",
   ghost:
     "bg-transparent hover:bg-white/10 text-neutral-300 hover:text-white border border-transparent font-medium",
+  "phosphor-primary":
+    "bg-[#4ade80] hover:bg-[#86efac] text-[#021206] border-2 border-[#86efac] shadow-[0_0_20px_rgba(74,222,128,0.45)] font-bold active:translate-x-0.5 active:translate-y-0.5",
+  "phosphor-secondary":
+    "bg-[#021609]/80 hover:bg-[#22c55e]/20 text-[#4ade80] hover:text-[#86efac] border-2 border-[#22c55e]/70 hover:border-[#4ade80] shadow-[0_0_14px_rgba(34,197,94,0.2)] font-bold active:translate-x-0.5 active:translate-y-0.5",
 };
 
 const SIZE_CLASSES = {

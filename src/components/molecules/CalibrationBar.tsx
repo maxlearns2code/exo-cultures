@@ -10,7 +10,7 @@ interface CalibrationBarProps {
   onToggleFX?: () => void;
   hubDesign?: AlienHubDesign;
   onToggleHubDesign?: () => void;
-  theme?: "black" | "white";
+  theme?: "black" | "white" | "phosphor";
 }
 
 export function CalibrationBar({
@@ -30,6 +30,13 @@ export function CalibrationBar({
   };
 
   const isWhite = theme === "white";
+  const isPhosphor = theme === "phosphor";
+
+  const buttonClass = isWhite
+    ? "bg-white hover:bg-neutral-100 text-black border-black shadow-[2px_2px_0px_#000000]"
+    : isPhosphor
+    ? "bg-[#021509]/85 hover:bg-[#4ade80] hover:text-[#021206] text-[#4ade80] border-[#22c55e]/60 shadow-[0_0_10px_rgba(34,197,94,0.2)]"
+    : "bg-black hover:bg-white hover:text-black text-white border-white shadow-[2px_2px_0px_#ffffff]";
 
   const getThemeButtonText = (design?: AlienHubDesign) => {
     switch (design) {
@@ -50,7 +57,11 @@ export function CalibrationBar({
       {hasGamepad && (
         <div
           className={`hidden sm:flex items-center gap-1 px-2 py-0.5 text-[9px] border font-bold uppercase ${
-            isWhite ? "bg-white border-black text-black" : "bg-black border-white text-white"
+            isWhite
+              ? "bg-white border-black text-black"
+              : isPhosphor
+              ? "bg-[#021509]/85 border-[#22c55e]/60 text-[#4ade80]"
+              : "bg-black border-white text-white"
           }`}
         >
           <span>[STICK ACTIVE]</span>
@@ -61,11 +72,7 @@ export function CalibrationBar({
       {onToggleHubDesign && hubDesign && (
         <button
           onClick={onToggleHubDesign}
-          className={`px-2 py-0.5 text-[9px] font-bold border transition-all cursor-pointer ${
-            isWhite
-              ? "bg-white hover:bg-neutral-100 text-black border-black shadow-[2px_2px_0px_#000000]"
-              : "bg-black hover:bg-white hover:text-black text-white border-white shadow-[2px_2px_0px_#ffffff]"
-          }`}
+          className={`px-2 py-0.5 text-[9px] font-bold border transition-all cursor-pointer ${buttonClass}`}
           title="Switch Recalbox Theme [T]"
         >
           <span>[{getThemeButtonText(hubDesign)}]</span>
@@ -76,11 +83,7 @@ export function CalibrationBar({
       {onToggleFX && fxMode && (
         <button
           onClick={onToggleFX}
-          className={`px-2 py-0.5 text-[9px] font-bold border transition-all cursor-pointer ${
-            isWhite
-              ? "bg-white hover:bg-neutral-100 text-black border-black shadow-[2px_2px_0px_#000000]"
-              : "bg-black hover:bg-white hover:text-black text-white border-white shadow-[2px_2px_0px_#ffffff]"
-          }`}
+          className={`px-2 py-0.5 text-[9px] font-bold border transition-all cursor-pointer ${buttonClass}`}
           title="Toggle Screen Attraction FX"
         >
           <span>FX: {fxMode.toUpperCase()}</span>
@@ -90,11 +93,7 @@ export function CalibrationBar({
       {/* Mute/Sound Button */}
       <button
         onClick={handleToggleSound}
-        className={`px-2 py-0.5 text-[9px] font-bold border transition-colors cursor-pointer ${
-          isWhite
-            ? "bg-white hover:bg-neutral-100 text-black border-black shadow-[2px_2px_0px_#000000]"
-            : "bg-black hover:bg-white hover:text-black text-white border-white shadow-[2px_2px_0px_#ffffff]"
-        }`}
+        className={`px-2 py-0.5 text-[9px] font-bold border transition-colors cursor-pointer ${buttonClass}`}
         title={isMuted ? "Unmute audio" : "Mute audio"}
       >
         <span>{isMuted ? "[MUTED]" : "[AUDIO ON]"}</span>

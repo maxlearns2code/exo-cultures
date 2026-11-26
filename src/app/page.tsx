@@ -307,7 +307,13 @@ export default function ArcadeLauncherHub() {
       fxMode={fxMode}
       onToggleFX={handleToggleFX}
       activeFXType={activeFXType}
-      theme={viewMode === "hub" && hubDesign === "gateway" ? "white" : "black"}
+      theme={
+        viewMode === "welcome" && !isDossierOpen
+          ? "phosphor"
+          : viewMode === "hub" && hubDesign === "gateway"
+          ? "white"
+          : "black"
+      }
       hubDesign={viewMode === "welcome" && !isDossierOpen ? undefined : hubDesign}
       onToggleHubDesign={viewMode === "welcome" && !isDossierOpen ? undefined : handleToggleHubDesign}
       onClose={isDossierOpen ? () => setIsDossierOpen(false) : viewMode !== "welcome" ? returnToWelcome : undefined}
