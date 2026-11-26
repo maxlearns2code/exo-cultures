@@ -409,6 +409,7 @@ export function Game({ onReturnToHub, theme = "translator" }: GameProps) {
     let pz = 9;
     let yaw = Math.PI;
     let pitch = 0;
+    let scrollImpulse = 0;
     const keys: Record<string, boolean> = {};
     const mouse: boolean[] = [false, false, false];
     let isPointerLocked = false;
@@ -442,6 +443,31 @@ export function Game({ onReturnToHub, theme = "translator" }: GameProps) {
 
     const handleContextMenu = (e: MouseEvent) => {
       e.preventDefault();
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      // Check if mouse is interacting with the game canvas or locked
+      const isTarget = isPointerLocked || (container && container.contains(e.target as Node));
+      if (!isTarget || ended) return;
+
+      e.preventDefault();
+
+      // Normalize delta across browsers and devices
+      let delta = e.deltaY;
+      if (e.deltaMode === 1) delta *= 30; // lines to px
+      else if (e.deltaMode === 2) delta *= 300; // pages to px
+
+      // Clamp single event delta to avoid extreme spikes from fast flicking
+      const clampedDelta = Math.max(-180, Math.min(180, delta));
+
+      // Scrolling up (delta < 0): move further forward
+      // Scrolling down (delta > 0): move back
+      // 0.007 factor: a standard 100px notch provides ~0.7 units of movement
+      const impulse = -clampedDelta * 0.007;
+      scrollImpulse += impulse;
+
+      // Cap maximum accumulated impulse to prevent runaway velocity
+      scrollImpulse = Math.max(-3.5, Math.min(3.5, scrollImpulse));
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -480,6 +506,7 @@ export function Game({ onReturnToHub, theme = "translator" }: GameProps) {
     window.addEventListener("mousedown", handleMouseDown);
     window.addEventListener("mouseup", handleMouseUp);
     window.addEventListener("contextmenu", handleContextMenu);
+    window.addEventListener("wheel", handleWheel, { passive: false });
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
     window.addEventListener("resize", handleResize);
@@ -533,9 +560,9 @@ export function Game({ onReturnToHub, theme = "translator" }: GameProps) {
         }
       }
 
-      // Arcade interaction or KeyE
+      // Arcade interaction, KeyE, or mouse middle-click (wheel press)
       const arc = arcadeInputsRef.current;
-      const isHoldingBloom = keys.KeyE || (arc && (arc.action1 || arc.action3));
+      const isHoldingBloom = keys.KeyE || mouse[1] || (arc && (arc.action1 || arc.action3));
 
       if (near) {
         setPromptVisible(true);
@@ -704,6 +731,17 @@ export function Game({ onReturnToHub, theme = "translator" }: GameProps) {
 
         px += (-Math.sin(yaw) * f + Math.cos(yaw) * s) * sp;
         pz += (-Math.cos(yaw) * f - Math.sin(yaw) * s) * sp;
+
+        // Process smooth scroll wheel forward/backward movement
+        if (Math.abs(scrollImpulse) > 0.0001) {
+          const decayRate = 12;
+          const step = scrollImpulse * Math.min(1, dt * decayRate);
+          scrollImpulse -= step;
+
+          px += -Math.sin(yaw) * step;
+          pz += -Math.cos(yaw) * step;
+        }
+
         collide();
 
         camera.position.set(px, 1.6, pz);
@@ -716,6 +754,20 @@ export function Game({ onReturnToHub, theme = "translator" }: GameProps) {
         }
 
         update(dt);
+      }
+
+      // Process smooth scroll wheel forward/backward movement when not pointer locked
+      if (!isPointerLocked && !ended && Math.abs(scrollImpulse) > 0.0001) {
+        const decayRate = 12;
+        const step = scrollImpulse * Math.min(1, dt * decayRate);
+        scrollImpulse -= step;
+
+        px += -Math.sin(yaw) * step;
+        pz += -Math.cos(yaw) * step;
+        collide();
+
+        camera.position.set(px, 1.6, pz);
+        camera.rotation.set(pitch, yaw, 0);
       }
 
       // Update HUD state every frame
@@ -744,6 +796,7 @@ export function Game({ onReturnToHub, theme = "translator" }: GameProps) {
       window.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mouseup", handleMouseUp);
       window.removeEventListener("contextmenu", handleContextMenu);
+      window.removeEventListener("wheel", handleWheel);
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
       window.removeEventListener("resize", handleResize);

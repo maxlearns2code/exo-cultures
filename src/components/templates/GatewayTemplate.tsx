@@ -96,7 +96,7 @@ export function GatewayTemplate({
               <div className="space-y-1.5 text-[9px] text-neutral-800 leading-snug">
                 <div>• <strong>LiDAR Scan:</strong> Click Left or Arcade [X] to map walls</div>
                 <div>• <strong>Focus Beam:</strong> Click Right or Arcade [Y] to burn spores</div>
-                <div>• <strong>Move:</strong> WASD or 8BitDo Joystick</div>
+                <div>• <strong>Move:</strong> WASD, Mouse Scroll, or Joystick</div>
                 <div>• <strong>Bloom Flower:</strong> Hold [E] or Arcade [A] near beacons</div>
               </div>
               <div className="mt-3 pt-2 border-t border-black/20 text-[9px] text-neutral-600">

@@ -211,7 +211,7 @@ export function GameHUD({
         {/* Diagnostic point cloud & active spores counter */}
         <div className="flex items-center gap-3 text-neutral-400 text-[9px]">
           <span className="hidden sm:inline text-neutral-300 font-bold">
-            [ESC]: UNLOCK • [B]: MENU • [WASD]: MOVE
+            [ESC]: UNLOCK • [B]: MENU • [WASD / SCROLL]: MOVE
           </span>
           <span className="hidden sm:inline text-neutral-600">|</span>
           <span>
