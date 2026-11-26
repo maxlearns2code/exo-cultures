@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { ArcadeButton } from "@/components/atoms/Button";
 
 interface WelcomeHeroProps {
