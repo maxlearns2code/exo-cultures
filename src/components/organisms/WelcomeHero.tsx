@@ -39,7 +39,7 @@ export function WelcomeHero({
             onClick={onExplain}
             className="w-full py-3.5 arcade-text text-[11px] sm:text-xs tracking-wider"
           >
-            <span>WHAT WE DID</span>
+            <span>THE CONCEPT</span>
           </ArcadeButton>
         </div>
       </div>
