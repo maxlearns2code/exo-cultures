@@ -1,17 +1,14 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { CRTOverlay, Game } from "@/components";
-import { AlienHubDesign } from "@/components/molecules/CalibrationBar";
 import { useArcadeInput } from "@/hooks/useArcadeInput";
-import { ArcadeAudio } from "@/utils/audio";
 
 const IDLE_RETURN_TO_MAIN_MS = 5 * 60 * 1000; // 5 minutes of inactivity
 
 export default function GamePage() {
   const router = useRouter();
-  const [hubDesign, setHubDesign] = useState<AlienHubDesign>("specimen");
   const lastInteractionRef = useRef<number>(Date.now());
 
   const handleReturnToHub = useCallback(() => {
@@ -50,27 +47,16 @@ export default function GamePage() {
     };
   }, [handleReturnToHub]);
 
-  const handleToggleHubDesign = useCallback(() => {
-    ArcadeAudio.playAlienGlitch();
-    setHubDesign((prev) => {
-      const designs: AlienHubDesign[] = ["translator", "gateway", "specimen"];
-      return designs[(designs.indexOf(prev) + 1) % designs.length];
-    });
-  }, []);
-
-  // Keyboard shortcut [T] or [U] toggles theme in game; [Escape] exits immediately
+  // Keyboard shortcut [Escape] exits immediately
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "t" || e.key === "T" || e.key === "u" || e.key === "U") {
-        handleToggleHubDesign();
-      }
       if (e.key === "Escape" || e.code === "Escape") {
         handleReturnToHub();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleToggleHubDesign, handleReturnToHub]);
+  }, [handleReturnToHub]);
 
   const { exitHoldProgress, hasGamepad } = useArcadeInput(undefined, handleReturnToHub);
 
@@ -78,12 +64,9 @@ export default function GamePage() {
     <CRTOverlay
       exitHoldProgress={exitHoldProgress}
       hasGamepad={hasGamepad}
-      hubDesign={hubDesign}
-      onToggleHubDesign={handleToggleHubDesign}
-      theme={hubDesign === "gateway" ? "white" : hubDesign === "specimen" ? "phosphor" : "black"}
       onClose={handleReturnToHub}
     >
-      <Game onReturnToHub={handleReturnToHub} theme={hubDesign} />
+      <Game onReturnToHub={handleReturnToHub} />
     </CRTOverlay>
   );
 }

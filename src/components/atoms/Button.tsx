@@ -1,13 +1,6 @@
 import React from "react";
 
-export type ButtonVariant =
-  | "primary"
-  | "secondary"
-  | "brutalist"
-  | "neon"
-  | "ghost"
-  | "phosphor-primary"
-  | "phosphor-secondary";
+export type ButtonVariant = "phosphor-primary" | "phosphor-secondary";
 
 interface ArcadeButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -16,16 +9,6 @@ interface ArcadeButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement
 }
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
-  primary:
-    "bg-white hover:bg-neutral-200 text-black border-2 border-white shadow-[4px_4px_0px_#888888] font-bold active:translate-x-0.5 active:translate-y-0.5",
-  secondary:
-    "bg-black hover:bg-neutral-900 text-white border-2 border-white/60 hover:border-white font-bold active:translate-x-0.5 active:translate-y-0.5",
-  brutalist:
-    "bg-black hover:bg-neutral-800 text-white border-2 border-black shadow-[3px_3px_0px_#000000] font-black active:translate-x-0.5 active:translate-y-0.5",
-  neon:
-    "bg-purple-600 hover:bg-purple-500 text-white border border-purple-300 shadow-[0_0_15px_#c084fc] font-bold",
-  ghost:
-    "bg-transparent hover:bg-white/10 text-neutral-300 hover:text-white border border-transparent font-medium",
   "phosphor-primary":
     "bg-[#4ade80] hover:bg-[#86efac] text-[#021206] border-2 border-[#86efac] shadow-[0_0_20px_rgba(74,222,128,0.45)] font-bold active:translate-x-0.5 active:translate-y-0.5",
   "phosphor-secondary":
@@ -39,7 +22,7 @@ const SIZE_CLASSES = {
 };
 
 export function ArcadeButton({
-  variant = "primary",
+  variant = "phosphor-primary",
   size = "md",
   className = "",
   children,

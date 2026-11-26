@@ -2,24 +2,17 @@ import React, { useState } from "react";
 import { ArcadeAudio } from "@/utils/audio";
 
 export type AttractionFXMode = "dual" | "flash" | "glitch" | "off";
-export type AlienHubDesign = "translator" | "gateway" | "specimen";
 
 interface CalibrationBarProps {
   hasGamepad?: boolean;
   fxMode?: AttractionFXMode;
   onToggleFX?: () => void;
-  hubDesign?: AlienHubDesign;
-  onToggleHubDesign?: () => void;
-  theme?: "black" | "white" | "phosphor";
 }
 
 export function CalibrationBar({
   hasGamepad = false,
   fxMode,
   onToggleFX,
-  hubDesign,
-  onToggleHubDesign,
-  theme = "black",
 }: CalibrationBarProps) {
   const [isMuted, setIsMuted] = useState(false);
 
@@ -29,54 +22,16 @@ export function CalibrationBar({
     setIsMuted(muted);
   };
 
-  const isWhite = theme === "white";
-  const isPhosphor = theme === "phosphor";
-
-  const buttonClass = isWhite
-    ? "bg-white hover:bg-neutral-100 text-black border-black shadow-[2px_2px_0px_#000000]"
-    : isPhosphor
-    ? "bg-[#021509]/85 hover:bg-[#4ade80] hover:text-[#021206] text-[#4ade80] border-[#22c55e]/60 shadow-[0_0_10px_rgba(34,197,94,0.2)]"
-    : "bg-black hover:bg-white hover:text-black text-white border-white shadow-[2px_2px_0px_#ffffff]";
-
-  const getThemeButtonText = (design?: AlienHubDesign) => {
-    switch (design) {
-      case "translator":
-        return "THEME: ARCADE";
-      case "gateway":
-        return "THEME: GALLERY";
-      case "specimen":
-        return "THEME: PHOSPHOR";
-      default:
-        return "THEME: ARCADE";
-    }
-  };
+  const buttonClass =
+    "bg-[#021509]/85 hover:bg-[#4ade80] hover:text-[#021206] text-[#4ade80] border-[#22c55e]/60 shadow-[0_0_10px_rgba(34,197,94,0.2)]";
 
   return (
     <div className="absolute top-2 right-2 z-[300] flex items-center gap-1.5 font-mono select-none">
       {/* Gamepad status indicator */}
       {hasGamepad && (
-        <div
-          className={`hidden sm:flex items-center gap-1 px-2 py-0.5 text-[9px] border font-bold uppercase ${
-            isWhite
-              ? "bg-white border-black text-black"
-              : isPhosphor
-              ? "bg-[#021509]/85 border-[#22c55e]/60 text-[#4ade80]"
-              : "bg-black border-white text-white"
-          }`}
-        >
+        <div className="hidden sm:flex items-center gap-1 px-2 py-0.5 text-[9px] border font-bold uppercase bg-[#021509]/85 border-[#22c55e]/60 text-[#4ade80]">
           <span>[STICK ACTIVE]</span>
         </div>
-      )}
-
-      {/* Recalbox Theme Quick Switcher Button */}
-      {onToggleHubDesign && hubDesign && (
-        <button
-          onClick={onToggleHubDesign}
-          className={`px-2 py-0.5 text-[9px] font-bold border transition-all cursor-pointer ${buttonClass}`}
-          title="Switch Recalbox Theme [T]"
-        >
-          <span>[{getThemeButtonText(hubDesign)}]</span>
-        </button>
       )}
 
       {/* Attraction FX Button */}

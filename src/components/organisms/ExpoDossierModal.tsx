@@ -1,13 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { AlienHubDesign } from "@/components/molecules/CalibrationBar";
 
 interface ExpoDossierModalProps {
   isOpen: boolean;
   onClose: () => void;
-  hubDesign?: AlienHubDesign;
-  onToggleHubDesign?: () => void;
 }
 
 type DossierTab = "vision" | "story" | "prototype" | "tech" | "team";

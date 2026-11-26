@@ -4,11 +4,10 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import * as THREE from "three";
 import { ArcadeAudio } from "../../utils/audio";
 import { useArcadeInput, ArcadeInputs } from "../../hooks/useArcadeInput";
-import { GameHUD, GameModal, AlienHubDesign } from "@/components/molecules";
+import { GameHUD, GameModal } from "@/components/molecules";
 
 interface GameProps {
   onReturnToHub: () => void;
-  theme?: AlienHubDesign;
 }
 
 interface FlowerState {
@@ -32,7 +31,7 @@ interface Virus {
   ph: number;
 }
 
-export function Game({ onReturnToHub, theme = "specimen" }: GameProps) {
+export function Game({ onReturnToHub }: GameProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -820,9 +819,7 @@ export function Game({ onReturnToHub, theme = "specimen" }: GameProps) {
   return (
     <div
       ref={containerRef}
-      className={`relative w-full h-full select-none overflow-hidden font-mono flex flex-col justify-between ${
-        theme === "specimen" ? "bg-[#010803] text-[#4ade80]" : "bg-black text-white"
-      }`}
+      className="relative w-full h-full select-none overflow-hidden font-mono flex flex-col justify-between bg-[#010803] text-[#4ade80]"
     >
       {/* 3D WebGL Canvas */}
       <canvas
@@ -832,7 +829,6 @@ export function Game({ onReturnToHub, theme = "specimen" }: GameProps) {
       />
 
       <GameHUD
-        onReturnToHub={safeReturnToHub}
         lureProgress={lureProgress}
         isLocked={isLocked}
         gameOver={gameOver}
@@ -841,14 +837,12 @@ export function Game({ onReturnToHub, theme = "specimen" }: GameProps) {
         flowerStatus={flowerStatus}
         activeSporesCount={activeSporesCount}
         mappedPoints={mappedPoints}
-        theme={theme}
       />
 
       <GameModal
         gameOver={gameOver}
         onReturnToHub={safeReturnToHub}
         onRestart={() => window.location.reload()}
-        theme={theme}
       />
     </div>
   );

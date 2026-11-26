@@ -3,17 +3,11 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   CRTOverlay,
-  AttractMode,
   ExpoDossierModal,
   WelcomeHero,
   Game,
-  GatewayTemplate,
-  TranslatorTemplate,
-  SpecimenTemplate,
   AttractionFXMode,
-  AlienHubDesign,
 } from "@/components";
-import { COLLABORATIVE_GAME } from "@/types";
 import { useArcadeInput, ArcadeInputs } from "@/hooks/useArcadeInput";
 import { ArcadeAudio } from "@/utils/audio";
 
@@ -21,9 +15,8 @@ const IDLE_RETURN_TO_WELCOME_MS = 5 * 60 * 1000; // 5 minutes of inactivity
 const ALIEN_GLYPHS = ["⍙", "⟒", "⌰", "☊", "⍜", "⋔", "⎎", "⏁", "⊑", "⌇", "▲", "◈", "⬡", "☵", "☲", "0x45", "0x58", "0x4F"];
 
 export default function ArcadeLauncherHub() {
-  // Navigation state: "welcome" (Title Hero) | "hub" (Themed Showcase) | "game" (Active 3D Engine)
-  const [viewMode, setViewMode] = useState<"welcome" | "hub" | "game">("welcome");
-  const [isAttractMode, setIsAttractMode] = useState<boolean>(false);
+  // Navigation state: "welcome" (Title Hero) | "game" (Active 3D Engine)
+  const [viewMode, setViewMode] = useState<"welcome" | "game">("welcome");
   const [isDossierOpen, setIsDossierOpen] = useState<boolean>(false);
 
   // Attraction Eye-Catcher FX Mode ("dual" | "flash" | "glitch" | "off")
@@ -31,20 +24,9 @@ export default function ArcadeLauncherHub() {
   const [activeFXType, setActiveFXType] = useState<"flash" | "glitch" | null>(null);
   const [displayTitle, setDisplayTitle] = useState<string>("EXO-CULTURES");
 
-  // Alien Hub Design Modes ("translator" | "gateway" | "specimen")
-  const [hubDesign, setHubDesign] = useState<AlienHubDesign>("specimen");
-
   const lastInteractionRef = useRef<number>(Date.now());
   const lastEyeCatcherRef = useRef<number>(Date.now());
   const prevInputsRef = useRef<ArcadeInputs | null>(null);
-
-  const handleToggleHubDesign = useCallback(() => {
-    ArcadeAudio.playAlienGlitch();
-    setHubDesign((prev) => {
-      const designs: AlienHubDesign[] = ["gateway", "translator", "specimen"];
-      return designs[(designs.indexOf(prev) + 1) % designs.length];
-    });
-  }, []);
 
   const returnToWelcome = useCallback(() => {
     ArcadeAudio.playCancel();
@@ -61,14 +43,9 @@ export default function ArcadeLauncherHub() {
     setViewMode("game");
   }, []);
 
-  // Keyboard shortcut [T] or [U] toggles themes; [Escape] exits game or closes modal immediately
+  // Keyboard shortcut [Escape] exits game or closes modal immediately
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "t" || e.key === "T" || e.key === "u" || e.key === "U") {
-        if (viewMode === "game" || isDossierOpen || viewMode === "hub") {
-          handleToggleHubDesign();
-        }
-      }
       if (e.key === "Escape" || e.code === "Escape") {
         if (isDossierOpen) {
           setIsDossierOpen(false);
@@ -80,15 +57,11 @@ export default function ArcadeLauncherHub() {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleToggleHubDesign, viewMode, isDossierOpen, returnToWelcome]);
+  }, [viewMode, isDossierOpen, returnToWelcome]);
 
   const registerActivity = useCallback(() => {
     lastInteractionRef.current = Date.now();
-    if (isAttractMode) {
-      setIsAttractMode(false);
-      ArcadeAudio.playSelect();
-    }
-  }, [isAttractMode]);
+  }, []);
 
   // Trigger Eye-Catcher Animation
   const triggerFX = useCallback((mode: AttractionFXMode) => {
@@ -192,8 +165,6 @@ export default function ArcadeLauncherHub() {
         return;
       }
 
-      if (isAttractMode) return;
-
       // In active game: allow pressing Action 2 [B Button] or select to immediately exit to welcome
       if (viewMode === "game") {
         if (
@@ -220,23 +191,9 @@ export default function ArcadeLauncherHub() {
         if (currentInputs.action3 && (!prev || !prev.action3)) {
           triggerFX(fxMode);
         }
-        return;
-      }
-
-      // In Themed Hub Showcase:
-      if (viewMode === "hub") {
-        if (currentInputs.action1 && (!prev || !prev.action1)) {
-          launchGame();
-        }
-        if (currentInputs.action2 && (!prev || !prev.action2)) {
-          returnToWelcome();
-        }
-        if (currentInputs.action3 && (!prev || !prev.action3)) {
-          setIsAttractMode(true);
-        }
       }
     },
-    [fxMode, isAttractMode, isDossierOpen, launchGame, registerActivity, returnToWelcome, triggerFX, viewMode]
+    [fxMode, isDossierOpen, launchGame, registerActivity, returnToWelcome, triggerFX, viewMode]
   );
 
   const { exitHoldProgress, hasGamepad } = useArcadeInput(handleInputs, returnToWelcome);
@@ -246,10 +203,6 @@ export default function ArcadeLauncherHub() {
     const handleUserActivity = () => {
       lastInteractionRef.current = Date.now();
       lastEyeCatcherRef.current = Date.now();
-      if (isAttractMode) {
-        setIsAttractMode(false);
-        ArcadeAudio.playSelect();
-      }
     };
 
     window.addEventListener("mousemove", handleUserActivity, { passive: true });
@@ -265,7 +218,7 @@ export default function ArcadeLauncherHub() {
       window.removeEventListener("touchstart", handleUserActivity);
       window.removeEventListener("wheel", handleUserActivity);
     };
-  }, [isAttractMode]);
+  }, []);
 
   // Periodic Eye-Catcher
   useEffect(() => {
@@ -284,7 +237,7 @@ export default function ArcadeLauncherHub() {
 
   // Idle timeout: Return to main page (welcome) after 5 minutes of inactivity
   useEffect(() => {
-    if (viewMode === "welcome" && !isDossierOpen && !isAttractMode) return;
+    if (viewMode === "welcome" && !isDossierOpen) return;
 
     const interval = setInterval(() => {
       const idleTime = Date.now() - lastInteractionRef.current;
@@ -294,11 +247,10 @@ export default function ArcadeLauncherHub() {
         }
         setViewMode("welcome");
         setIsDossierOpen(false);
-        setIsAttractMode(false);
       }
     }, 2000);
     return () => clearInterval(interval);
-  }, [viewMode, isDossierOpen, isAttractMode]);
+  }, [viewMode, isDossierOpen]);
 
   return (
     <CRTOverlay
@@ -307,40 +259,17 @@ export default function ArcadeLauncherHub() {
       fxMode={fxMode}
       onToggleFX={handleToggleFX}
       activeFXType={activeFXType}
-      theme={
-        viewMode === "welcome" || isDossierOpen
-          ? "phosphor"
-          : viewMode === "hub" && hubDesign === "gateway"
-          ? "white"
-          : hubDesign === "specimen"
-          ? "phosphor"
-          : "black"
-      }
-      hubDesign={viewMode === "welcome" && !isDossierOpen ? undefined : hubDesign}
-      onToggleHubDesign={viewMode === "welcome" && !isDossierOpen ? undefined : handleToggleHubDesign}
       onClose={isDossierOpen ? () => setIsDossierOpen(false) : viewMode !== "welcome" ? returnToWelcome : undefined}
     >
       {/* Dossier Modal Overlay (Organism) */}
       <ExpoDossierModal
         isOpen={isDossierOpen}
         onClose={() => setIsDossierOpen(false)}
-        hubDesign={hubDesign}
-        onToggleHubDesign={handleToggleHubDesign}
       />
-
-      {/* Attract Mode Screensaver Overlay (Organism) */}
-      {isAttractMode && (
-        <AttractMode
-          onDismiss={() => {
-            setIsAttractMode(false);
-            registerActivity();
-          }}
-        />
-      )}
 
       {/* 1. ACTIVE 3D GAME (Organism) */}
       {viewMode === "game" && (
-        <Game onReturnToHub={returnToWelcome} theme={hubDesign} />
+        <Game onReturnToHub={returnToWelcome} />
       )}
 
       {/* 2. EXHIBITION PRESENTATION WELCOME HERO (Organism) */}
@@ -350,44 +279,6 @@ export default function ArcadeLauncherHub() {
           onStartGame={launchGame}
           onExplain={enterDossier}
         />
-      )}
-
-      {/* 3. RECALBOX THEMED SHOWCASES (Templates) */}
-      {viewMode === "hub" && (
-        <>
-          {hubDesign === "gateway" && (
-            <GatewayTemplate
-              culture={COLLABORATIVE_GAME}
-              onLaunch={launchGame}
-              onOpenDossier={() => setIsDossierOpen(true)}
-              onOpenAttract={() => setIsAttractMode(true)}
-              onReturnToIntro={returnToWelcome}
-              onToggleDesign={handleToggleHubDesign}
-            />
-          )}
-
-          {hubDesign === "translator" && (
-            <TranslatorTemplate
-              culture={COLLABORATIVE_GAME}
-              onLaunch={launchGame}
-              onOpenDossier={() => setIsDossierOpen(true)}
-              onOpenAttract={() => setIsAttractMode(true)}
-              onReturnToIntro={returnToWelcome}
-              onToggleDesign={handleToggleHubDesign}
-            />
-          )}
-
-          {hubDesign === "specimen" && (
-            <SpecimenTemplate
-              culture={COLLABORATIVE_GAME}
-              onLaunch={launchGame}
-              onOpenDossier={() => setIsDossierOpen(true)}
-              onOpenAttract={() => setIsAttractMode(true)}
-              onReturnToIntro={returnToWelcome}
-              onToggleDesign={handleToggleHubDesign}
-            />
-          )}
-        </>
       )}
     </CRTOverlay>
   );
