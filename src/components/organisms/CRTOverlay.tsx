@@ -36,7 +36,7 @@ export function CRTOverlay({
       >
         <CRTEffects activeFXType={activeFXType} />
 
-        {/* Phosphor CRT Scanlines & Vignette Overlay */}
+        {/* Subtle CRT Edge Vignette Overlay (no horizontal scanlines) */}
         <div className="absolute inset-0 phosphor-crt-scanlines pointer-events-none z-[150]" />
 
         {/* Main Content inside Safe-Zone */}

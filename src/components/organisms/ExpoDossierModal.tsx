@@ -23,12 +23,9 @@ export function ExpoDossierModal({
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-4xl max-h-[86vh] phosphor-crt-screen border-2 border-[#4ade80] shadow-[0_0_36px_rgba(34,197,94,0.3)] flex flex-col overflow-hidden"
+        className="relative w-full max-w-4xl h-[82vh] phosphor-crt-screen border-2 border-[#4ade80] shadow-[0_0_36px_rgba(34,197,94,0.3)] flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Subtle CRT Scanline Overlay inside Modal */}
-        <div className="absolute inset-0 phosphor-crt-scanlines pointer-events-none opacity-45 z-20" />
-
         {/* Modal Header */}
         <div className="relative z-10 p-3 md:p-4 border-b-2 border-[#22c55e]/60 bg-[#031b0b]/95">
           <h2 className="arcade-text phosphor-text-glow text-[11px] md:text-xs font-bold uppercase tracking-wider leading-relaxed">
@@ -51,10 +48,10 @@ export function ExpoDossierModal({
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as DossierTab)}
-              className={`px-3 py-2 font-bold uppercase transition-colors cursor-pointer ${
+              className={`flex-auto text-center whitespace-nowrap px-3 py-2 font-bold uppercase transition-colors cursor-pointer border-r border-[#22c55e]/25 last:border-r-0 ${
                 activeTab === tab.id
                   ? "bg-[#4ade80] text-[#021206] font-bold shadow-[0_0_12px_rgba(74,222,128,0.45)]"
-                  : "text-[#4ade80]/70 hover:text-[#86efac] hover:bg-[#052912] border-r border-[#22c55e]/25"
+                  : "text-[#4ade80]/70 hover:text-[#86efac] hover:bg-[#052912]"
               }`}
             >
               {tab.label}
@@ -62,8 +59,8 @@ export function ExpoDossierModal({
           ))}
         </div>
 
-        {/* Tab Content Body (Scrollable) */}
-        <div className="relative z-10 flex-1 overflow-y-auto p-4 md:p-6 space-y-6 text-xs md:text-sm leading-relaxed text-[#bbf7d0]/90">
+        {/* Tab Content Body (Scrollable, hidden scrollbar) */}
+        <div className="relative z-10 flex-1 min-h-0 overflow-y-auto no-scrollbar p-4 md:p-6 space-y-6 text-xs md:text-sm leading-relaxed text-[#bbf7d0]/90">
           {/* TAB 1: EXPO & SPECULATIVE VISION */}
           {activeTab === "vision" && (
             <div className="space-y-4">
@@ -164,49 +161,26 @@ export function ExpoDossierModal({
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="md:col-span-1 flex flex-col items-center">
-                  <div className="relative w-full aspect-square border-2 border-[#4ade80] overflow-hidden shadow-[0_0_18px_rgba(74,222,128,0.25)] mb-2 bg-[#010b04] p-3 font-mono flex flex-col justify-between select-none">
-                    <div className="flex justify-between items-start border-b border-[#22c55e]/40 pb-1">
-                      <span className="text-[8px] font-bold text-[#4ade80]/75">EXO-CULTURES 2026</span>
-                      <span className="text-[8px] bg-[#4ade80] text-[#021206] px-1 font-bold">SCHEMATIC</span>
-                    </div>
-                    <div className="text-center py-2 space-y-1">
-                      <div className="text-[11px] font-black tracking-widest phosphor-text-glow uppercase">ECHOES IN THE DARK</div>
-                      <div className="text-[7px] text-[#4ade80]/75">3D LIDAR • RAYCASTING ENGINE</div>
-                      <div className="text-[9px] text-[#86efac] tracking-widest pt-1 font-bold">☲ 0x45 ⋔ ⎎ ▲</div>
-                    </div>
-                    <div className="border-t border-[#22c55e]/40 pt-1 text-[7px] text-[#4ade80]/75 flex justify-between">
-                      <span>RIGEL-VII SUB-ABYSS</span>
-                      <span>4 CREATORS • 1 WORLD</span>
-                    </div>
-                  </div>
-                  <span className="text-[10px] text-[#4ade80]/75 uppercase font-bold text-center">
-                    Typographic Exhibition Diagram
-                  </span>
+              <div className="space-y-3 bg-[#021208]/90 p-4 border border-[#22c55e]/45 text-xs">
+                <div className="font-bold text-[#4ade80] uppercase border-b border-[#22c55e]/30 pb-1">
+                  How We Merged Our Four Real Concepts &amp; Letters of Intent
                 </div>
-
-                <div className="md:col-span-2 space-y-3 bg-[#021208]/90 p-4 border border-[#22c55e]/45 text-xs">
-                  <div className="font-bold text-[#4ade80] uppercase border-b border-[#22c55e]/30 pb-1">
-                    How We Merged Our Four Real Concepts &amp; Letters of Intent
-                  </div>
-                  <p className="text-[#bbf7d0]/85">
-                    <strong className="text-[#86efac]">1. The Mycelium Forest &amp; The Silent Hill (Aisah &mdash; &ldquo;Cutting Exchange&rdquo;):</strong>{" "}
-                    A vast moss forest operating as one interconnected consciousness like fungal mycelium. An invasive virus weakens the network, severing senses (&ldquo;We used to hear the hill from here&rdquo;). Survival depends on passing rare virus-eating root cuttings hand-to-hand at the communal gathering.
-                  </p>
-                  <p className="text-[#bbf7d0]/85">
-                    <strong className="text-[#86efac]">2. The Non-Digital Society (Mana &mdash; &ldquo;Wanna Go To A Better Planet? // NewLife&rdquo;):</strong>{" "}
-                    A provocative satire questioning digital overload, artificial intelligence, and capitalist power. It envisions an organic existence stripped of screens, mirrors, and technology, proving that tactile, physical community and love prevail over darkness.
-                  </p>
-                  <p className="text-[#bbf7d0]/85">
-                    <strong className="text-[#86efac]">3. 3D LiDAR, Astronomy &amp; Floral Mate-Summoning (Martin &mdash; &ldquo;Ørgäæ&rdquo;):</strong>{" "}
-                    Orbiting a binary star system in the Andromeda Galaxy with 4D spatial perception. To reproduce and communicate across the void, beings interact with rare resonant flowers that pulse, sing, and dance, mapped through 3D photonic LiDAR echolocation scans.
-                  </p>
-                  <p className="text-[#bbf7d0]/85">
-                    <strong className="text-[#86efac]">4. Life Beneath the Ice &amp; Light Wave Communication (Maxime &mdash; &ldquo;Chromatic Symbiosis&rdquo;):</strong>{" "}
-                    Set on a rocky moon of Saturn where zero sunlight penetrates the thick frozen crust. Beings communicate and navigate by projecting colored light waves and heat energy. A father guides his twin sons to discover living warm forms that unlock a swirling portal to our collaborative world.
-                  </p>
-                </div>
+                <p className="text-[#bbf7d0]/85">
+                  <strong className="text-[#86efac]">1. The Mycelium Forest &amp; The Silent Hill (Aisah &mdash; &ldquo;Cutting Exchange&rdquo;):</strong>{" "}
+                  A vast moss forest operating as one interconnected consciousness like fungal mycelium. An invasive virus weakens the network, severing senses (&ldquo;We used to hear the hill from here&rdquo;). Survival depends on passing rare virus-eating root cuttings hand-to-hand at the communal gathering.
+                </p>
+                <p className="text-[#bbf7d0]/85">
+                  <strong className="text-[#86efac]">2. The Non-Digital Society (Mana &mdash; &ldquo;Wanna Go To A Better Planet? // NewLife&rdquo;):</strong>{" "}
+                  A provocative satire questioning digital overload, artificial intelligence, and capitalist power. It envisions an organic existence stripped of screens, mirrors, and technology, proving that tactile, physical community and love prevail over darkness.
+                </p>
+                <p className="text-[#bbf7d0]/85">
+                  <strong className="text-[#86efac]">3. 3D LiDAR, Astronomy &amp; Floral Mate-Summoning (Martin &mdash; &ldquo;Ørgäæ&rdquo;):</strong>{" "}
+                  Orbiting a binary star system in the Andromeda Galaxy with 4D spatial perception. To reproduce and communicate across the void, beings interact with rare resonant flowers that pulse, sing, and dance, mapped through 3D photonic LiDAR echolocation scans.
+                </p>
+                <p className="text-[#bbf7d0]/85">
+                  <strong className="text-[#86efac]">4. Life Beneath the Ice &amp; Light Wave Communication (Maxime &mdash; &ldquo;Chromatic Symbiosis&rdquo;):</strong>{" "}
+                  Set on a rocky moon of Saturn where zero sunlight penetrates the thick frozen crust. Beings communicate and navigate by projecting colored light waves and heat energy. A father guides his twin sons to discover living warm forms that unlock a swirling portal to our collaborative world.
+                </p>
               </div>
             </div>
           )}
@@ -214,14 +188,14 @@ export function ExpoDossierModal({
           {/* TAB 3: OUR PROTOTYPE */}
           {activeTab === "prototype" && (
             <div className="space-y-4">
-              <div className="border-l-4 border-[#4ade80] pl-3">
-                <h3 className="text-base font-bold phosphor-text-glow uppercase tracking-wider">
-                  Question 2: What Did We Build? (Our Working Prototype)
-                </h3>
-                <p className="text-xs text-[#4ade80]/75">
-                  The Physical Kiosk + Unified 3D WebGL LiDAR Simulator
-                </p>
-              </div>
+                <div className="border-l-4 border-[#4ade80] pl-3">
+                  <h3 className="text-base font-bold phosphor-text-glow uppercase tracking-wider">
+                    Question 2: What Did We Build? (Our Working Prototype)
+                  </h3>
+                  <p className="text-xs text-[#4ade80]/75">
+                    The Physical Kiosk + 2D Surface Intro &amp; First-Person 3D Helmet Light-Painting Engine
+                  </p>
+                </div>
 
               <div className="space-y-3">
                 <p>
@@ -244,20 +218,21 @@ export function ExpoDossierModal({
                   <div className="p-3 bg-[#021409]/85 border border-[#22c55e]/40">
                     <div className="font-bold text-[#4ade80] mb-1 uppercase">3. Digital Game Software</div>
                     <p className="text-[#bbf7d0]/80">
-                      Custom Next.js 15 + Three.js 3D LiDAR game running locked at 60 FPS with raycasted point-cloud terrain mapping and procedural Web Audio.
+                      Custom Next.js 15, HTML5 Canvas 2D, and Three.js 3D WebGL experience running at 60 FPS with first-person light-painted point clouds and procedural Web Audio.
                     </p>
                   </div>
                 </div>
 
                 <div className="p-4 bg-[#021208]/90 border-2 border-[#4ade80]/80">
-                  <h4 className="font-bold text-[#4ade80] text-xs uppercase mb-2">Our Playable Game: Echoes in the Dark</h4>
+                  <h4 className="font-bold text-[#4ade80] text-xs uppercase mb-2">Our Playable Game: Echoes in the Dark (2D Intro → 3D Building)</h4>
                   <p className="text-xs text-[#bbf7d0]/85 mb-2">
-                    A real-time 3D subterranean simulation built in Three.js and WebGL. The world is initially pitch-black (0 lux).
-                    The player operates an extraterrestrial LiDAR scanner, shooting photonic raycasts into the void that stick to invisible obstacles and reveal the alien geometry.
+                    <strong className="text-[#86efac]">Act I — Surface Expedition (2D):</strong> The human explorer disembarks the lander across pixel-art alien ridges, passing bioluminescent flora before entering the monolith doorway.
+                  </p>
+                  <p className="text-xs text-[#bbf7d0]/85 mb-2">
+                    <strong className="text-[#86efac]">Act II — Inside the Helmet (3D):</strong> Viewed from inside the explorer&apos;s amber-rimmed visor, you see his gloved hand wielding a photonic light-painting tool. Sweeping beams paint up to 220,000 luminous points onto pitch-black arches, ceiling trusses, pilasters, and vents.
                   </p>
                   <p className="text-xs text-[#bbf7d0]/85">
-                    Four dormant floral beacons must be discovered, charged with a focused laser beam, and bloomed into resonant blossoms.
-                    Blooming flowers emit ultrasonic mating calls across the cosmos—attracting both the player&apos;s distant counterpart and hostile viral spores that must be defended against.
+                    Four dormant floral beacons must be uncovered, charged with a focused beam, and bloomed into resonant blossoms—calling your distant counterpart while burning away incoming viral spores.
                   </p>
                 </div>
               </div>
