@@ -24,10 +24,6 @@ export const ArcadeAudio = {
     return isMutedState;
   },
 
-  isMuted(): boolean {
-    return isMutedState;
-  },
-
   playSelect() {
     if (isMutedState) return;
     const ctx = getAudioContext();
