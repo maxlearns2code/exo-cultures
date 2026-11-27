@@ -154,4 +154,42 @@ export const ArcadeAudio = {
     osc.start();
     osc.stop(ctx.currentTime + 0.15);
   },
+
+  playFootstep() {
+    if (isMutedState) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(115 + Math.random() * 25, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(48, ctx.currentTime + 0.055);
+    gain.gain.setValueAtTime(0.045, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.06);
+  },
+
+  playFlowerChime(seed: number = 0) {
+    if (isMutedState) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    const notes = [392, 440, 523.25, 587.33];
+    const freq = notes[seed % notes.length];
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(freq * 1.25, ctx.currentTime + 0.35);
+    gain.gain.setValueAtTime(0.04, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.38);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.38);
+  },
 };

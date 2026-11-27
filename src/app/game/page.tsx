@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useCallback, useRef } from "react";
+import React, { useEffect, useCallback, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CRTOverlay, Game } from "@/components";
+import { CRTOverlay, Intro2DGame, Game } from "@/components";
 import { useArcadeInput } from "@/hooks/useArcadeInput";
 
 const IDLE_RETURN_TO_MAIN_MS = 5 * 60 * 1000; // 5 minutes of inactivity
@@ -10,6 +10,7 @@ const IDLE_RETURN_TO_MAIN_MS = 5 * 60 * 1000; // 5 minutes of inactivity
 export default function GamePage() {
   const router = useRouter();
   const lastInteractionRef = useRef<number>(Date.now());
+  const [stage, setStage] = useState<"intro2d" | "game">("intro2d");
 
   const handleReturnToHub = useCallback(() => {
     if (typeof document !== "undefined" && document.exitPointerLock) {
@@ -66,7 +67,14 @@ export default function GamePage() {
       hasGamepad={hasGamepad}
       onClose={handleReturnToHub}
     >
-      <Game onReturnToHub={handleReturnToHub} />
+      {stage === "intro2d" ? (
+        <Intro2DGame
+          onEnterBuilding={() => setStage("game")}
+          onReturnToHub={handleReturnToHub}
+        />
+      ) : (
+        <Game onReturnToHub={handleReturnToHub} />
+      )}
     </CRTOverlay>
   );
 }

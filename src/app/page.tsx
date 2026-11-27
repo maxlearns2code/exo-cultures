@@ -5,6 +5,7 @@ import {
   CRTOverlay,
   ExpoDossierModal,
   WelcomeHero,
+  Intro2DGame,
   Game,
   AttractionFXMode,
 } from "@/components";
@@ -15,8 +16,8 @@ const IDLE_RETURN_TO_WELCOME_MS = 5 * 60 * 1000; // 5 minutes of inactivity
 const ALIEN_GLYPHS = ["⍙", "⟒", "⌰", "☊", "⍜", "⋔", "⎎", "⏁", "⊑", "⌇", "▲", "◈", "⬡", "☵", "☲", "0x45", "0x58", "0x4F"];
 
 export default function ArcadeLauncherHub() {
-  // Navigation state: "welcome" (Title Hero) | "game" (Active 3D Engine)
-  const [viewMode, setViewMode] = useState<"welcome" | "game">("welcome");
+  // Navigation state: "welcome" (Title Hero) | "intro2d" (Part 1 Surface) | "game" (Active 3D Engine)
+  const [viewMode, setViewMode] = useState<"welcome" | "intro2d" | "game">("welcome");
   const [isDossierOpen, setIsDossierOpen] = useState<boolean>(false);
 
   // Attraction Eye-Catcher FX Mode ("dual" | "flash" | "glitch" | "off")
@@ -40,6 +41,10 @@ export default function ArcadeLauncherHub() {
 
   const launchGame = useCallback(() => {
     ArcadeAudio.playSelect();
+    setViewMode("intro2d");
+  }, []);
+
+  const enter3DGame = useCallback(() => {
     setViewMode("game");
   }, []);
 
@@ -50,7 +55,7 @@ export default function ArcadeLauncherHub() {
         if (isDossierOpen) {
           setIsDossierOpen(false);
           ArcadeAudio.playCancel();
-        } else if (viewMode === "game") {
+        } else if (viewMode === "intro2d" || viewMode === "game") {
           returnToWelcome();
         }
       }
@@ -165,8 +170,8 @@ export default function ArcadeLauncherHub() {
         return;
       }
 
-      // In active game: allow pressing Action 2 [B Button] or select to immediately exit to welcome
-      if (viewMode === "game") {
+      // In active game (2D Part 1 or 3D Part 2): allow pressing Action 2 [B Button] or select to exit to welcome
+      if (viewMode === "intro2d" || viewMode === "game") {
         if (
           (currentInputs.action2 && (!prev || !prev.action2)) ||
           (currentInputs.select && (!prev || !prev.select))
@@ -267,7 +272,15 @@ export default function ArcadeLauncherHub() {
         onClose={() => setIsDossierOpen(false)}
       />
 
-      {/* 1. ACTIVE 3D GAME (Organism) */}
+      {/* 1. PART 1: 2D SURFACE EXPEDITION (Organism) */}
+      {viewMode === "intro2d" && (
+        <Intro2DGame
+          onEnterBuilding={enter3DGame}
+          onReturnToHub={returnToWelcome}
+        />
+      )}
+
+      {/* 2. PART 2: ACTIVE 3D LIDAR GAME (Organism) */}
       {viewMode === "game" && (
         <Game onReturnToHub={returnToWelcome} />
       )}
