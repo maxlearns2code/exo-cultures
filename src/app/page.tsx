@@ -10,9 +10,9 @@ import {
   AttractionFXMode,
 } from "@/components";
 import { useArcadeInput, ArcadeInputs } from "@/hooks/useArcadeInput";
+import { useIdleTimeout } from "@/hooks/useIdleTimeout";
 import { ArcadeAudio } from "@/utils/audio";
 
-const IDLE_RETURN_TO_WELCOME_MS = 5 * 60 * 1000; // 5 minutes of inactivity
 const ALIEN_GLYPHS = ["⍙", "⟒", "⌰", "☊", "⍜", "⋔", "⎎", "⏁", "⊑", "⌇", "▲", "◈", "⬡", "☵", "☲", "0x45", "0x58", "0x4F"];
 
 export default function ArcadeLauncherHub() {
@@ -25,7 +25,6 @@ export default function ArcadeLauncherHub() {
   const [activeFXType, setActiveFXType] = useState<"flash" | "glitch" | null>(null);
   const [displayTitle, setDisplayTitle] = useState<string>("EXO-CULTURES");
 
-  const lastInteractionRef = useRef<number>(Date.now());
   const lastEyeCatcherRef = useRef<number>(Date.now());
   const prevInputsRef = useRef<ArcadeInputs | null>(null);
 
@@ -64,9 +63,23 @@ export default function ArcadeLauncherHub() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [viewMode, isDossierOpen, returnToWelcome]);
 
-  const registerActivity = useCallback(() => {
-    lastInteractionRef.current = Date.now();
+  const handleIdleTimeout = useCallback(() => {
+    if (typeof document !== "undefined" && document.exitPointerLock) {
+      document.exitPointerLock();
+    }
+    setViewMode("welcome");
+    setIsDossierOpen(false);
   }, []);
+
+  const handleUserActivity = useCallback(() => {
+    lastEyeCatcherRef.current = Date.now();
+  }, []);
+
+  const { registerActivity } = useIdleTimeout({
+    enabled: viewMode !== "welcome" || isDossierOpen,
+    onTimeout: handleIdleTimeout,
+    onActivity: handleUserActivity,
+  });
 
   // Trigger Eye-Catcher Animation
   const triggerFX = useCallback((mode: AttractionFXMode) => {
@@ -203,28 +216,6 @@ export default function ArcadeLauncherHub() {
 
   const { exitHoldProgress, hasGamepad } = useArcadeInput(handleInputs, returnToWelcome);
 
-  // Register all user activity (mouse movement, clicks, touches, wheel, keys) to reset idle timer
-  useEffect(() => {
-    const handleUserActivity = () => {
-      lastInteractionRef.current = Date.now();
-      lastEyeCatcherRef.current = Date.now();
-    };
-
-    window.addEventListener("mousemove", handleUserActivity, { passive: true });
-    window.addEventListener("mousedown", handleUserActivity, { passive: true });
-    window.addEventListener("keydown", handleUserActivity, { passive: true });
-    window.addEventListener("touchstart", handleUserActivity, { passive: true });
-    window.addEventListener("wheel", handleUserActivity, { passive: true });
-
-    return () => {
-      window.removeEventListener("mousemove", handleUserActivity);
-      window.removeEventListener("mousedown", handleUserActivity);
-      window.removeEventListener("keydown", handleUserActivity);
-      window.removeEventListener("touchstart", handleUserActivity);
-      window.removeEventListener("wheel", handleUserActivity);
-    };
-  }, []);
-
   // Periodic Eye-Catcher
   useEffect(() => {
     if (viewMode !== "welcome" || isDossierOpen || fxMode === "off") return;
@@ -239,23 +230,6 @@ export default function ArcadeLauncherHub() {
 
     return () => clearInterval(interval);
   }, [fxMode, isDossierOpen, triggerFX, viewMode]);
-
-  // Idle timeout: Return to main page (welcome) after 5 minutes of inactivity
-  useEffect(() => {
-    if (viewMode === "welcome" && !isDossierOpen) return;
-
-    const interval = setInterval(() => {
-      const idleTime = Date.now() - lastInteractionRef.current;
-      if (idleTime >= IDLE_RETURN_TO_WELCOME_MS) {
-        if (typeof document !== "undefined" && document.exitPointerLock) {
-          document.exitPointerLock();
-        }
-        setViewMode("welcome");
-        setIsDossierOpen(false);
-      }
-    }, 2000);
-    return () => clearInterval(interval);
-  }, [viewMode, isDossierOpen]);
 
   return (
     <CRTOverlay
