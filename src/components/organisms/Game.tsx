@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import * as THREE from "three";
-import { GameHUD, GameModal } from "@/components/molecules";
+import { GameHUD, GameModal, HelmetVisorOverlay } from "@/components/molecules";
 import { useArcadeInput, ArcadeInputs } from "@/hooks/useArcadeInput";
 import { buildLidarWorld, FLOWER_NAMES } from "@/lib/lidar3d/level";
 import {
@@ -12,6 +12,11 @@ import {
   resolvePlayerCollision,
   updateLidarSimulation,
 } from "@/lib/lidar3d/simulation";
+import {
+  createExplorerViewmodel,
+  PaintMode,
+  updateExplorerViewmodel,
+} from "@/lib/lidar3d/viewmodel";
 import { ArcadeAudio } from "@/utils/audio";
 
 interface GameProps {
@@ -26,7 +31,9 @@ export function Game({ onReturnToHub }: GameProps) {
   const [gameOver, setGameOver] = useState<"win" | "lose" | null>(null);
   const [mappedPoints, setMappedPoints] = useState<number>(0);
   const [lureProgress, setLureProgress] = useState<number>(0);
-  const [systemMessage, setSystemMessage] = useState<string>("Click anywhere on screen to look around & scan");
+  const [paintMode, setPaintMode] = useState<PaintMode>("idle");
+  const [bloomProgress, setBloomProgress] = useState<number>(0);
+  const [systemMessage, setSystemMessage] = useState<string>("Click viewport to look around & paint lights with your tool");
   const [promptVisible, setPromptVisible] = useState<boolean>(false);
   const [activeSporesCount, setActiveSporesCount] = useState<number>(0);
   const [flowerStatus, setFlowerStatus] = useState<{ name: string; state: number; hp: number }[]>([
@@ -72,7 +79,7 @@ export function Game({ onReturnToHub }: GameProps) {
 
     const renderer = new THREE.WebGLRenderer({
       canvas: canvasRef.current || undefined,
-      antialias: false,
+      antialias: true,
       powerPreference: "high-performance",
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -81,10 +88,17 @@ export function Game({ onReturnToHub }: GameProps) {
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(70, width / height, 0.05, 120);
     camera.rotation.order = "YXZ";
+    scene.add(camera);
 
     const world = buildLidarWorld(scene);
+    const viewmodel = createExplorerViewmodel(camera);
+    const muzzleWorldPos = new THREE.Vector3();
 
     let sayTimeout: ReturnType<typeof setTimeout> | null = null;
+    let latestBloomProgress = 0;
+    let lastUiMode: PaintMode = "idle";
+    let lastUiBloom = 0;
+
     const callbacks: LidarCallbacks = {
       onMessage: (text) => {
         setSystemMessage(text);
@@ -96,6 +110,9 @@ export function Game({ onReturnToHub }: GameProps) {
       onSporeBurnCue: () => ArcadeAudio.playEnemyDefeat(),
       onPromptVisible: setPromptVisible,
       onLureProgress: setLureProgress,
+      onBloomProgress: (progress) => {
+        latestBloomProgress = progress;
+      },
       onFinish: (win) => {
         setGameOver(win ? "win" : "lose");
         if (document.exitPointerLock) {
@@ -193,6 +210,8 @@ export function Game({ onReturnToHub }: GameProps) {
 
     let animId: number;
     let lastTime = performance.now();
+    let prevYaw = yaw;
+    let prevPitch = pitch;
 
     function frame(ts: number) {
       animId = requestAnimationFrame(frame);
@@ -200,8 +219,12 @@ export function Game({ onReturnToHub }: GameProps) {
       lastTime = ts;
       world.now = ts;
 
+      const prevPx = px;
+      const prevPz = pz;
+      let frameMode: PaintMode = "idle";
+
       const arc = arcadeInputsRef.current;
-      if (arc) {
+      if (arc && !world.ended) {
         const f = (arc.up ? 1 : 0) - (arc.down ? 1 : 0);
         const s = (arc.right ? 1 : 0) - (arc.left ? 1 : 0);
         if (f !== 0 || s !== 0) {
@@ -213,10 +236,10 @@ export function Game({ onReturnToHub }: GameProps) {
           );
         }
 
-        if (arc.action2 || arc.action4) {
-          emitLidarScan(world, camera, Math.ceil(4500 * dt), 0.05, 1, callbacks);
+        if (arc.action4) {
+          frameMode = "focus";
         } else if (arc.action1 || arc.action3) {
-          emitLidarScan(world, camera, Math.ceil(11000 * dt), 0.24, 0.12, callbacks);
+          frameMode = "wide";
         }
       }
 
@@ -236,20 +259,13 @@ export function Game({ onReturnToHub }: GameProps) {
         }
 
         [px, pz] = resolvePlayerCollision(world.boxes, px, pz);
-        camera.position.set(px, 1.6, pz);
-        camera.rotation.set(pitch, yaw, 0);
 
-        if (mouse[2]) {
-          emitLidarScan(world, camera, Math.ceil(4500 * dt), 0.05, 1, callbacks);
-        } else if (mouse[0]) {
-          emitLidarScan(world, camera, Math.ceil(11000 * dt), 0.24, 0.12, callbacks);
+        if (mouse[2] || keys.KeyQ) {
+          frameMode = "focus";
+        } else if (mouse[0] || keys.Space) {
+          frameMode = "wide";
         }
-
-        const isHoldingBloom = Boolean(keys.KeyE || mouse[1] || (arc && (arc.action1 || arc.action3)));
-        updateLidarSimulation(world, px, pz, dt, isHoldingBloom, callbacks);
-      }
-
-      if (!isPointerLocked && !world.ended && Math.abs(scrollImpulse) > 0.0001) {
+      } else if (!world.ended && Math.abs(scrollImpulse) > 0.0001) {
         const step = scrollImpulse * Math.min(1, dt * 12);
         scrollImpulse -= step;
         [px, pz] = resolvePlayerCollision(
@@ -257,8 +273,58 @@ export function Game({ onReturnToHub }: GameProps) {
           px + -Math.sin(yaw) * step,
           pz + -Math.cos(yaw) * step
         );
-        camera.position.set(px, 1.6, pz);
-        camera.rotation.set(pitch, yaw, 0);
+      }
+
+      camera.position.set(px, 1.6, pz);
+      camera.rotation.set(pitch, yaw, 0);
+
+      const isHoldingBloom = Boolean(
+        isPointerLocked &&
+          !world.ended &&
+          (keys.KeyE || mouse[1] || (arc && (arc.action1 || arc.action3)))
+      );
+      if (isPointerLocked && !world.ended) {
+        updateLidarSimulation(world, px, pz, dt, isHoldingBloom, callbacks);
+      }
+      if (latestBloomProgress > 0.01) {
+        frameMode = "bloom";
+      }
+
+      const moveDist = Math.hypot(px - prevPx, pz - prevPz);
+      const moveSpeed = dt > 0 ? moveDist / dt : 0;
+      const yawVel = yaw - prevYaw;
+      const pitchVel = pitch - prevPitch;
+      prevYaw = yaw;
+      prevPitch = pitch;
+
+      updateExplorerViewmodel(viewmodel, {
+        moveSpeed,
+        yawVel,
+        pitchVel,
+        mode: frameMode,
+        aspect: width / Math.max(1, height),
+        bloomProgress: latestBloomProgress,
+        time: ts / 1000,
+        dt,
+      });
+
+      camera.updateMatrixWorld(true);
+      viewmodel.muzzleAnchor.getWorldPosition(muzzleWorldPos);
+
+      if (frameMode === "focus") {
+        emitLidarScan(world, camera, Math.ceil(4500 * dt), 0.05, 1, callbacks, muzzleWorldPos);
+      } else if (frameMode === "wide") {
+        emitLidarScan(world, camera, Math.ceil(11000 * dt), 0.24, 0.12, callbacks, muzzleWorldPos);
+      }
+
+      if (frameMode !== lastUiMode) {
+        lastUiMode = frameMode;
+        setPaintMode(frameMode);
+      }
+      const roundedBloom = Math.round(latestBloomProgress * 20) / 20;
+      if (roundedBloom !== lastUiBloom) {
+        lastUiBloom = roundedBloom;
+        setBloomProgress(roundedBloom);
       }
 
       setMappedPoints(world.totalCount);
@@ -271,7 +337,7 @@ export function Game({ onReturnToHub }: GameProps) {
         }))
       );
 
-      animateLidarWorld(world);
+      animateLidarWorld(world, dt);
       renderer.render(scene, camera);
     }
 
@@ -292,8 +358,11 @@ export function Game({ onReturnToHub }: GameProps) {
       window.removeEventListener("keyup", handleKeyUp);
       window.removeEventListener("resize", handleResize);
 
+      viewmodel.dispose();
       world.geo.dispose();
       world.vgeo.dispose();
+      world.beamFX.lineGeo.dispose();
+      world.beamFX.lineMat.dispose();
       renderer.dispose();
     };
   }, []);
@@ -317,6 +386,12 @@ export function Game({ onReturnToHub }: GameProps) {
         ref={canvasRef}
         onClick={handleCanvasClick}
         className="absolute inset-0 w-full h-full cursor-crosshair z-0"
+      />
+
+      <HelmetVisorOverlay
+        mode={paintMode}
+        isLocked={isLocked}
+        bloomProgress={bloomProgress}
       />
 
       <GameHUD

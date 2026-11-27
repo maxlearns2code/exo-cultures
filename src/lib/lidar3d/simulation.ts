@@ -9,6 +9,7 @@ export interface LidarCallbacks {
   onSporeBurnCue: () => void;
   onPromptVisible: (visible: boolean) => void;
   onLureProgress: (progress: number) => void;
+  onBloomProgress?: (progress: number) => void;
   onFinish: (win: boolean) => void;
 }
 
@@ -55,11 +56,14 @@ function castRay(boxes: LevelBox[]): { t: number; box: LevelBox | null; axis: nu
   return { t: best, box: bb, axis: ba };
 }
 
-function addLidarPoint(world: LidarWorld, t: number, b: LevelBox, ax: number) {
+function addLidarPoint(world: LidarWorld, t: number, b: LevelBox, ax: number, isFocus: boolean): [number, number, number] {
   const i = world.headIdx * 3;
-  world.pos[i] = rayOrigin[0] + rayDir[0] * t;
-  world.pos[i + 1] = rayOrigin[1] + rayDir[1] * t;
-  world.pos[i + 2] = rayOrigin[2] + rayDir[2] * t;
+  const px = rayOrigin[0] + rayDir[0] * t;
+  const py = rayOrigin[1] + rayDir[1] * t;
+  const pz = rayOrigin[2] + rayDir[2] * t;
+  world.pos[i] = px;
+  world.pos[i + 1] = py;
+  world.pos[i + 2] = pz;
 
   let r: number;
   let g: number;
@@ -67,20 +71,33 @@ function addLidarPoint(world: LidarWorld, t: number, b: LevelBox, ax: number) {
   if (b.t === 1) {
     // Beacon: Gold / Amber
     r = 1;
-    g = 0.7;
-    bl = 0.15;
+    g = 0.72;
+    bl = 0.18;
   } else if (b.t === 2) {
     // Flower: Magenta
     r = 1;
     g = 0.35;
-    bl = 0.7;
+    bl = 0.72;
+  } else if (b.t === 3) {
+    // Architectural Trims (arches, ribs, trusses, vents): Luminous Phosphor Mint / Teal
+    const f = Math.min(1, t / 24);
+    const sh = ax === 1 ? 1.0 : 0.78;
+    r = (0.35 - 0.22 * f) * sh;
+    g = (1.0 - 0.38 * f) * sh;
+    bl = (0.76 - 0.32 * f) * sh;
   } else {
-    // Level Geometry: Cyan / Blue depth attenuation
+    // Building Walls & Floors: Cyan / Blue depth attenuation with warm tint if painted by focused beam
     const f = Math.min(1, t / 24);
     const sh = ax === 1 ? 1 : 0.68;
-    r = (0.75 - 0.65 * f) * sh;
-    g = (1 - 0.65 * f) * sh;
-    bl = (1 - 0.1 * f) * sh;
+    if (isFocus) {
+      r = (0.95 - 0.55 * f) * sh;
+      g = (0.98 - 0.45 * f) * sh;
+      bl = (0.65 - 0.4 * f) * sh;
+    } else {
+      r = (0.75 - 0.65 * f) * sh;
+      g = (1 - 0.65 * f) * sh;
+      bl = (1 - 0.1 * f) * sh;
+    }
   }
 
   world.col[i] = r;
@@ -89,16 +106,18 @@ function addLidarPoint(world: LidarWorld, t: number, b: LevelBox, ax: number) {
 
   world.headIdx = (world.headIdx + 1) % MAX_LIDAR_POINTS;
   if (world.totalCount < MAX_LIDAR_POINTS) world.totalCount++;
+  return [px, py, pz];
 }
 
-/** Casts a conical LiDAR pulse or focused laser beam, illuminating walls, beacons, and spores. */
+/** Casts a conical LiDAR paint pulse or focused beam from the camera aim, visually projecting from the tool nozzle. */
 export function emitLidarScan(
   world: LidarWorld,
   camera: THREE.PerspectiveCamera,
   rays: number,
   cone: number,
   weight: number,
-  callbacks: Pick<LidarCallbacks, "onMessage" | "onSelectCue">
+  callbacks: Pick<LidarCallbacks, "onMessage" | "onSelectCue">,
+  muzzlePos?: THREE.Vector3
 ) {
   camera.updateMatrixWorld();
   const m = camera.matrixWorld.elements;
@@ -106,6 +125,15 @@ export function emitLidarScan(
   rayOrigin[0] = m[12];
   rayOrigin[1] = m[13];
   rayOrigin[2] = m[14];
+
+  const isFocus = weight >= 0.5;
+  const beamOriginX = muzzlePos ? muzzlePos.x : rayOrigin[0];
+  const beamOriginY = muzzlePos ? muzzlePos.y : rayOrigin[1] - 0.18;
+  const beamOriginZ = muzzlePos ? muzzlePos.z : rayOrigin[2];
+
+  const { beamFX } = world;
+  const beamStride = Math.max(1, Math.floor(rays / (isFocus ? 14 : 24)));
+  let beamCount = 0;
 
   for (let k = 0; k < rays; k++) {
     const r = Math.sqrt(Math.random()) * tc;
@@ -147,7 +175,35 @@ export function emitLidarScan(
     }
 
     if (hit.box) {
-      addLidarPoint(world, hit.t, hit.box, hit.axis);
+      const [hx, hy, hz] = addLidarPoint(world, hit.t, hit.box, hit.axis, isFocus);
+
+      if (k % beamStride === 0 && beamCount < beamFX.maxBeams) {
+        const bi = beamCount * 6;
+        beamFX.linePos[bi] = beamOriginX;
+        beamFX.linePos[bi + 1] = beamOriginY;
+        beamFX.linePos[bi + 2] = beamOriginZ;
+        beamFX.linePos[bi + 3] = hx;
+        beamFX.linePos[bi + 4] = hy;
+        beamFX.linePos[bi + 5] = hz;
+
+        if (isFocus) {
+          beamFX.lineCol[bi] = 1.0;
+          beamFX.lineCol[bi + 1] = 0.85;
+          beamFX.lineCol[bi + 2] = 0.25;
+          beamFX.lineCol[bi + 3] = 1.0;
+          beamFX.lineCol[bi + 4] = 0.95;
+          beamFX.lineCol[bi + 5] = 0.6;
+        } else {
+          beamFX.lineCol[bi] = 0.22;
+          beamFX.lineCol[bi + 1] = 0.88;
+          beamFX.lineCol[bi + 2] = 0.95;
+          beamFX.lineCol[bi + 3] = 0.3;
+          beamFX.lineCol[bi + 4] = 1.0;
+          beamFX.lineCol[bi + 5] = 0.65;
+        }
+        beamCount++;
+      }
+
       if (hit.box.t === 1 && hit.box.flower !== undefined) {
         const fl = world.flowers[hit.box.flower];
         if (fl.state === 0) {
@@ -160,6 +216,13 @@ export function emitLidarScan(
         }
       }
     }
+  }
+
+  if (beamCount > 0) {
+    beamFX.fadeAlpha = isFocus ? 0.85 : 0.48;
+    beamFX.lineGeo.attributes.position.needsUpdate = true;
+    beamFX.lineGeo.attributes.color.needsUpdate = true;
+    beamFX.lineGeo.setDrawRange(0, beamCount * 2);
   }
 
   world.geo.attributes.position.needsUpdate = true;
@@ -175,7 +238,7 @@ export function resolvePlayerCollision(boxes: LevelBox[], px: number, pz: number
 
   for (let i = 0; i < boxes.length; i++) {
     const b = boxes[i];
-    if (b.t || b.max[1] < 0.5 || b.min[1] > 1.2) continue;
+    if (b.collide === false || b.t || b.max[1] < 0.5 || b.min[1] > 1.2) continue;
     const cx = Math.max(b.min[0], Math.min(nx, b.max[0]));
     const cz = Math.max(b.min[2], Math.min(nz, b.max[2]));
     const dx = nx - cx;
@@ -215,19 +278,23 @@ export function updateLidarSimulation(
     callbacks.onPromptVisible(true);
     if (isHoldingBloom) {
       near.bloomT += dt;
+      callbacks.onBloomProgress?.(Math.min(1, near.bloomT / 2));
       if (near.bloomT >= 2) {
         near.state = 2;
         near.g.visible = true;
         near.bloomT = 0;
         world.spawnT = Math.min(world.spawnT, 4);
+        callbacks.onBloomProgress?.(0);
         callbacks.onPowerupCue();
         callbacks.onMessage(`${FLOWER_NAMES[near.i]} blooms! The scent calls your mate, but attracts viral spores.`);
       }
     } else {
       near.bloomT = 0;
+      callbacks.onBloomProgress?.(0);
     }
   } else {
     callbacks.onPromptVisible(false);
+    callbacks.onBloomProgress?.(0);
   }
 
   // Spore Spawning
@@ -305,8 +372,8 @@ export function updateLidarSimulation(
   }
 }
 
-/** Updates flower swaying/withering animations and fades expired viral spore particle flashes. */
-export function animateLidarWorld(world: LidarWorld) {
+/** Updates flower swaying/withering animations, dynamic lights, paint beams, and fades expired spore flashes. */
+export function animateLidarWorld(world: LidarWorld, dt = 0.016) {
   const t = world.now / 1000;
   world.flowers.forEach((f) => {
     const g = f.g;
@@ -322,13 +389,25 @@ export function animateLidarWorld(world: LidarWorld) {
         0.5 + 0.12 * Math.sin(t * 3.2 + f.i * 1.3) - 0.15 * sick
       );
       f.head.rotation.x = sick * 0.9;
+      f.light.intensity = (1.6 + 0.55 * Math.sin(t * 3.2 + f.i * 1.3)) * (1 - 0.7 * sick);
     } else if (f.state === 3) {
       g.visible = true;
       g.rotation.z = 0.5;
       f.head.scale.setScalar(0.7);
       f.pm.color.setHex(0x3a2f33);
+      f.light.intensity = 0;
+    } else {
+      f.light.intensity = 0;
     }
   });
+
+  if (world.beamFX.fadeAlpha > 0) {
+    world.beamFX.fadeAlpha = Math.max(0, world.beamFX.fadeAlpha - dt * 5.5);
+    world.beamFX.lineMat.opacity = world.beamFX.fadeAlpha;
+    if (world.beamFX.fadeAlpha <= 0.001) {
+      world.beamFX.lineGeo.setDrawRange(0, 0);
+    }
+  }
 
   for (let i = 0; i < MAX_SPORE_POINTS; i++) {
     const a = (world.now - world.vbirth[i]) / 1000;

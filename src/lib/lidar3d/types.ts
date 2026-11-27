@@ -3,9 +3,10 @@ import * as THREE from "three";
 export interface LevelBox {
   min: number[];
   max: number[];
-  t: number;
+  t: number; // 0: architecture, 1: beacon, 2: flower, 3: architectural trim/accent
   hits: number;
   flower?: number;
+  collide?: boolean;
 }
 
 export interface FlowerState {
@@ -19,6 +20,7 @@ export interface FlowerState {
   g: THREE.Group;
   head: THREE.Group;
   pm: THREE.MeshBasicMaterial;
+  light: THREE.PointLight;
   warned: boolean;
   box: LevelBox;
 }
@@ -29,11 +31,21 @@ export interface Virus {
   ph: number;
 }
 
+export interface PaintBeamFX {
+  lineGeo: THREE.BufferGeometry;
+  linePos: Float32Array;
+  lineCol: Float32Array;
+  lineMat: THREE.LineBasicMaterial;
+  maxBeams: number;
+  fadeAlpha: number;
+}
+
 export interface LidarWorld {
   boxes: LevelBox[];
   flowers: FlowerState[];
   viruses: Virus[];
   mate: THREE.Mesh;
+  mateLight: THREE.PointLight;
   geo: THREE.BufferGeometry;
   pos: Float32Array;
   col: Float32Array;
@@ -41,6 +53,7 @@ export interface LidarWorld {
   vpos: Float32Array;
   vcol: Float32Array;
   vbirth: Float32Array;
+  beamFX: PaintBeamFX;
   headIdx: number;
   totalCount: number;
   vh: number;
